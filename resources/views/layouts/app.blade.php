@@ -16,84 +16,112 @@
         body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: #f3f4f6; overflow: hidden; }
         .main-wrapper { display: flex; height: 100vh; width: 100vw; }
 
-        /* SIDEBAR PREMIUM (DARK) */
-        .sidebar { width: 64px; background: #111827; display: flex; flex-direction: column; align-items: center; padding: 0; border-right: 1px solid rgba(255,255,255,0.05); transition: 0.3s; z-index: 50; }
-        
-        .nav-icon { 
-            width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; 
-            color: #9ca3af; margin-bottom: 1.2rem; cursor: pointer; text-decoration: none; font-size: 1.2rem;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); 
+        /* SIDEBAR PROFESIONAL (ANCHO) */
+        .sidebar { 
+            width: 260px; background: #0f172a; display: flex; flex-direction: column; 
+            padding: 0; border-right: 1px solid rgba(255,255,255,0.05); transition: 0.3s; z-index: 50; 
         }
         
-        .nav-icon:hover { 
-            background: rgba(255,255,255,0.1); color: white; transform: translateX(3px) scale(1.1);
-        }
-        
-        .nav-icon.active { 
-            background: #2563eb; color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4); 
+        .sidebar-brand {
+            padding: 2rem 1.5rem; display: flex; align-items: center; gap: 0.75rem;
+            color: white; font-weight: 800; font-size: 1.4rem; font-style: italic;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
+        .nav-item { 
+            display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1.5rem;
+            color: #94a3b8; cursor: pointer; text-decoration: none; font-size: 0.9rem; font-weight: 600;
+            transition: all 0.2s ease; margin: 0.25rem 1rem; border-radius: 12px;
+        }
+        
+        .nav-item:hover { 
+            background: rgba(255,255,255,0.05); color: white;
+        }
+        
+        .nav-item.active { 
+            background: #2563eb; color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); 
+        }
+
+        .nav-icon-span { font-size: 1.2rem; }
+
         /* ÁREA DE CONTENIDO */
-        .content-area { flex: 1; display: flex; flex-direction: column; background: #f9fafb; overflow-y: auto; position: relative; }
+        .content-area { flex: 1; display: flex; flex-direction: column; background: #f8fafc; overflow-y: auto; position: relative; }
 
         /* SCROLLBAR PERSONALIZADA */
         .content-area::-webkit-scrollbar { width: 6px; }
-        .content-area::-webkit-scrollbar-track { background: #f1f1f1; }
+        .content-area::-webkit-scrollbar-track { background: transparent; }
         .content-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .content-area::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body>
 
     <div class="main-wrapper">
-        <!-- BARRA LATERAL DINÁMICA -->
+        <!-- BARRA LATERAL RESTAURADA -->
         <div class="sidebar">
-            <div style="padding: 1.2rem 0; width: 100%; display: flex; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 2rem;">
-                <img src="{{ asset('images/logo.png') }}" style="width: 42px; height: 42px;" alt="🚀">
+            <div class="sidebar-brand">
+                <span style="color: #3b82f6;">MCHP</span> SOPORTE
             </div>
 
-            <nav style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+            <nav style="display: flex; flex-direction: column; margin-top: 1.5rem; flex: 1;">
                 
                 @php
                     $roleId = auth()->user()->role_id ?? 3;
                 @endphp
 
-                <!-- 🏠 DASHBOARD (Dinámico según rol) -->
+                <!-- 🏠 DASHBOARD -->
                 @if($roleId == 1)
-                    <a href="{{ route('admin.dashboard') }}" class="nav-icon {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" title="Admin Panel">📊</a>
+                    <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                        <span class="nav-icon-span">📊</span> DASHBOARD
+                    </a>
                 @elseif($roleId == 2)
-                    <a href="{{ route('boss.dashboard') }}" class="nav-icon {{ request()->routeIs('boss.dashboard') ? 'active' : '' }}" title="Boss Panel">📈</a>
+                    <a href="{{ route('boss.dashboard') }}" class="nav-item {{ request()->routeIs('boss.dashboard') ? 'active' : '' }}">
+                        <span class="nav-icon-span">📈</span> MI DASHBOARD
+                    </a>
                 @else
-                    <a href="{{ route('dashboard') }}" class="nav-icon {{ request()->routeIs('dashboard') ? 'active' : '' }}" title="Mi Dashboard">🏠</a>
+                    <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        <span class="nav-icon-span">🏠</span> MI DASHBOARD
+                    </a>
                 @endif
 
                 <!-- 🎟️ TICKETS -->
                 @if($roleId == 1)
-                    <a href="{{ route('admin.tickets.index') }}" class="nav-icon {{ request()->routeIs('admin.tickets.*') ? 'active' : '' }}" title="Gestión de Tickets">🎟️</a>
+                    <a href="{{ route('admin.tickets.index') }}" class="nav-item {{ request()->routeIs('admin.tickets.*') ? 'active' : '' }}">
+                        <span class="nav-icon-span">🎟️</span> GESTIÓN TICKETS
+                    </a>
                 @else
-                    <a href="{{ route('user.tickets.index') }}" class="nav-icon {{ request()->routeIs('user.tickets.*') ? 'active' : '' }}" title="Mis Tickets">🎟️</a>
+                    <a href="{{ route('user.tickets.index') }}" class="nav-item {{ request()->routeIs('user.tickets.*') ? 'active' : '' }}">
+                        <span class="nav-icon-span">🎟️</span> MIS TICKETS
+                    </a>
                 @endif
 
-                <!-- 📦 INVENTARIO (Solo Admin por ahora) -->
+                <!-- 📦 INVENTARIO (Solo Admin) -->
                 @if($roleId == 1)
-                    <a href="{{ route('admin.inventory.index') }}" class="nav-icon {{ request()->routeIs('admin.inventory.*') ? 'active' : '' }}" title="Inventario">📦</a>
+                    <a href="{{ route('admin.inventory.index') }}" class="nav-item {{ request()->routeIs('admin.inventory.*') ? 'active' : '' }}">
+                        <span class="nav-icon-span">🖥️</span> INVENTARIO (EQUIPOS)
+                    </a>
                 @endif
 
-                <!-- 📚 CONOCIMIENTO (Global) -->
-                <a href="{{ route('knowledge.index') }}" class="nav-icon {{ request()->routeIs('*knowledge*') ? 'active' : '' }}" title="Base de Conocimientos">📚</a>
+                <!-- 📚 CONOCIMIENTO -->
+                <a href="{{ route('knowledge.index') }}" class="nav-item {{ request()->routeIs('*knowledge*') ? 'active' : '' }}">
+                    <span class="nav-icon-span">📚</span> MANUALES
+                </a>
 
                 <!-- 👥 USUARIOS (Solo Admin) -->
                 @if($roleId == 1)
-                    <a href="{{ route('admin.users.index') }}" class="nav-icon {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" title="Usuarios">👥</a>
+                    <a href="{{ route('admin.users.index') }}" class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                        <span class="nav-icon-span">👥</span> USUARIOS
+                    </a>
                 @endif
 
             </nav>
 
             <!-- SALIR -->
-            <div style="margin-top: auto; padding-bottom: 2rem; width: 100%; display: flex; justify-content: center;">
+            <div style="padding: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05);">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="nav-icon" style="background: none; border: none; cursor: pointer;" title="Cerrar Sesión">🚪</button>
+                    <button type="submit" class="nav-item" style="background: none; border: none; cursor: pointer; width: calc(100% - 2rem); margin: 0; padding-left: 0.5rem;">
+                        <span class="nav-icon-span">🚪</span> CERRAR SESIÓN
+                    </button>
                 </form>
             </div>
         </div>
