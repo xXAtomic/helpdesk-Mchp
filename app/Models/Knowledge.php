@@ -9,10 +9,13 @@ class Knowledge extends Model
 {
     use HasFactory;
 
+    protected $table = 'knowledge_manuals';
+
     protected $fillable = [
         'title',
+        'slug',
         'content',
-        'icon',
-        'category'
+        'category',
+        'is_published'
     ];
 }
