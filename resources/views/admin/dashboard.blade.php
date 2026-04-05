@@ -1,7 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">
-        Dashboard de Administrador
-    </x-slot>
+@extends('layouts.app')
+
+@section('content')
 
     <div class="py-6">
         <!-- 🏁 TARJETAS DE MÉTRICAS (GRID 4 COLUMNAS) -->
@@ -89,4 +88,4 @@
 
         </div>
     </div>
-</x-app-layout>
+@endsection

@@ -1,4 +1,6 @@
-<x-app-layout>
+@extends('layouts.app')
+
+@section('content')
     <div class="py-2">
         <!-- CABECERA DE BIENVENIDA -->
         <div class="mb-12">
@@ -42,4 +44,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection
