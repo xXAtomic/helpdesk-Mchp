@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\KnowledgeBase;
+use App\Models\Knowledge;
 
 class KnowledgeBaseController extends Controller
 {
     public function index() {
-        $manuals = KnowledgeBase::orderBy('created_at', 'desc')->get();
+        $manuals = Knowledge::orderBy('created_at', 'desc')->get();
         return view('admin.knowledge.index', compact('manuals'));
     }
 
@@ -24,7 +24,7 @@ class KnowledgeBaseController extends Controller
             'icon' => 'nullable'
         ]);
 
-        KnowledgeBase::create([
+        Knowledge::create([
             'title' => $data['title'],
             'content' => $data['content'],
             'icon' => $request->icon ?? '📖'
@@ -34,12 +34,12 @@ class KnowledgeBaseController extends Controller
     }
 
     public function edit($id) {
-        $manual = KnowledgeBase::findOrFail($id);
+        $manual = Knowledge::findOrFail($id);
         return view('admin.knowledge.edit', compact('manual'));
     }
 
     public function update(Request $request, $id) {
-        $manual = KnowledgeBase::findOrFail($id);
+        $manual = Knowledge::findOrFail($id);
         
         $data = $request->validate([
             'title' => 'required|max:255',
@@ -53,7 +53,7 @@ class KnowledgeBaseController extends Controller
     }
 
     public function destroy($id) {
-        $manual = KnowledgeBase::findOrFail($id);
+        $manual = Knowledge::findOrFail($id);
         $manual->delete();
         return redirect()->route('admin.knowledge.index')->with('success', 'Manual eliminado.');
     }
