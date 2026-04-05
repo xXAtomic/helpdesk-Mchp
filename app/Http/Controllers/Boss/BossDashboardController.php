@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Boss;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ticket;
-use App\Models\Asset;
+use App\Models\Equipment;
 use App\Models\TicketStatus;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -24,7 +24,7 @@ class BossDashboardController extends Controller
         })->count();
 
         // 3. Número de equipos registrados en el inventario
-        $totalAssets = Asset::count();
+        $totalAssets = Equipment::count();
 
         // 4. Tickets en proceso (En Progreso)
         $inProcessTickets = Ticket::whereHas('status', function($q) {

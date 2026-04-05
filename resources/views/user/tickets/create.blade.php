@@ -1,86 +1,84 @@
-<x-app-layout>
-    <x-slot name="header">
-        Nueva Solicitud de Soporte 🚀
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-3xl mx-auto">
-            <form action="{{ route('user.tickets.store') }}" method="POST" enctype="multipart/form-data" 
-                  class="bg-white p-10 md:p-16 rounded-[3rem] shadow-2xl shadow-blue-50/50 border border-gray-100">
-                @csrf
+@section('content')
+<div class="max-w-4xl mx-auto py-4">
+    <!-- CABECERA -->
+    <div class="mb-10 text-center">
+        <h2 class="text-4xl font-extrabold text-[#020617] italic tracking-tighter uppercase mb-2">SOLICITAR SOPORTE TÉCNICO 🎟️</h2>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest leading-none">Describe tu requerimiento y nuestro equipo de TI te ayudará pronto.</p>
+    </div>
+
+    <form action="{{ route('user.tickets.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        @csrf
+        
+        <!-- TARJETA PRINCIPAL DEL FORMULARIO -->
+        <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-2xl relative overflow-hidden">
+            <!-- DECORACIÓN -->
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-blue-50/50 rounded-full blur-3xl"></div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
                 
-                <h2 class="text-3xl font-black text-gray-900 mb-10 italic tracking-tighter uppercase">NUEVA SOLICITUD DE APOYO 🔥</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    <!-- NOMBRE (Solo lectura) -->
-                    <div>
-                        <label class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-2 block">SOLICITANTE</label>
-                        <input type="text" value="{{ Auth::user()->name }}" readonly 
-                               class="w-full px-6 py-4 rounded-2xl bg-gray-50 border-2 border-gray-50 text-gray-400 font-bold text-sm outline-none">
-                    </div>
-                    <!-- EMAIL (Solo lectura) -->
-                    <div>
-                        <label class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-2 block">CORREO ELECTRÓNICO</label>
-                        <input type="text" value="{{ Auth::user()->email }}" readonly 
-                               class="w-full px-6 py-4 rounded-2xl bg-gray-50 border-2 border-gray-50 text-gray-400 font-bold text-sm outline-none">
-                    </div>
+                <!-- TÍTULO -->
+                <div class="md:col-span-2">
+                    <label class="block text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-3 italic">TÍTULO DEL PROBLEMA</label>
+                    <input type="text" name="title" required placeholder="Ej: Error al conectar con la impresora.."
+                        class="w-full bg-gray-50/50 border-0 p-5 rounded-2xl text-sm font-bold text-gray-900 focus:ring-4 focus:ring-blue-500/10 placeholder:text-gray-300 transition-all uppercase">
                 </div>
 
-                <!-- CATEGORÍA Y PRIORIDAD -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    <div>
-                        <label class="text-[0.65rem] font-black text-gray-450 uppercase tracking-widest mb-2 block">CATEGORÍA DEL PROBLEMA <span class="text-blue-500">*</span></label>
-                        <select name="category_id" required class="w-full px-6 py-4 rounded-2xl bg-gray-50 border-2 border-gray-100 font-black text-sm focus:border-blue-500 focus:bg-white transition outline-none">
-                            <option value="">SELECCIONA UNA...</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-[0.65rem] font-black text-gray-450 uppercase tracking-widest mb-2 block">PRIORIDAD / IMPACTO <span class="text-blue-500">*</span></label>
-                        <select name="priority_id" required class="w-full px-6 py-4 rounded-2xl bg-gray-50 border-2 border-gray-100 font-black text-sm focus:border-blue-500 focus:bg-white transition outline-none">
-                            @foreach($priorities as $priority)
-                                <option value="{{ $priority->id }}" {{ $priority->id == 1 ? 'selected' : '' }}>{{ $priority->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                <!-- CATEGORÍA -->
+                <div>
+                    <label class="block text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-3 italic">CATEGORÍA</label>
+                    <select name="category_id" required
+                        class="w-full bg-gray-50/50 border-0 p-5 rounded-2xl text-sm font-bold text-gray-900 focus:ring-4 focus:ring-blue-500/10 transition-all uppercase appearance-none">
+                        @foreach(\App\Models\TicketCategory::all() as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
-                <!-- ASUNTO -->
-                <div class="mb-8">
-                    <label class="text-[0.65rem] font-black text-gray-450 uppercase tracking-widest mb-2 block">ASUNTO DE LA SOLICITUD <span class="text-blue-500">*</span></label>
-                    <input type="text" name="title" required placeholder="EJ: EL CORREO NO CARGA EN OUTLOOK"
-                           class="w-full px-6 py-4 rounded-2xl bg-gray-50 border-2 border-gray-100 font-black text-sm focus:border-blue-500 focus:bg-white transition outline-none uppercase placeholder:text-gray-300">
+                <!-- PRIORIDAD -->
+                <div>
+                    <label class="block text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-3 italic">PRIORIDAD</label>
+                    <select name="priority_id" required
+                        class="w-full bg-gray-50/50 border-0 p-5 rounded-2xl text-sm font-bold text-gray-900 focus:ring-4 focus:ring-blue-500/10 transition-all uppercase appearance-none">
+                        @foreach(\App\Models\TicketPriority::orderBy('level', 'desc')->get() as $priority)
+                            <option value="{{ $priority->id }}">{{ $priority->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <!-- DESCRIPCIÓN -->
-                <div class="mb-10">
-                    <label class="text-[0.65rem] font-black text-gray-450 uppercase tracking-widest mb-2 block">DETALLE DEL PROBLEMA <span class="text-blue-500">*</span></label>
-                    <textarea name="description" required rows="5" placeholder="EXPLICA AQUÍ TU INCONVENIENTE..."
-                              class="w-full px-6 py-4 rounded-3xl bg-gray-50 border-2 border-gray-100 font-bold text-sm focus:border-blue-500 focus:bg-white transition outline-none placeholder:text-gray-300"></textarea>
+                <div class="md:col-span-2">
+                    <label class="block text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-3 italic">DESCRIPCIÓN DETALLADA</label>
+                    <textarea name="description" rows="5" required placeholder="Describe paso a paso lo que sucede.."
+                        class="w-full bg-gray-50/50 border-0 p-5 rounded-2xl text-sm font-bold text-gray-900 focus:ring-4 focus:ring-blue-500/10 placeholder:text-gray-300 transition-all uppercase"></textarea>
                 </div>
 
-                <!-- ADJUNTO -->
-                <div class="mb-12">
-                    <label class="text-[0.65rem] font-black text-gray-450 uppercase tracking-widest mb-2 block">ADJUNTAR CAPTURA O EVIDENCIA (OPCIONAL)</label>
-                    <div class="relative group">
-                        <input type="file" name="attachment" 
-                               class="w-full px-6 py-4 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 text-gray-400 font-black text-[0.65rem] cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition uppercase">
-                        <p class="mt-2 text-[0.6rem] text-gray-400 font-bold tracking-tighter">MAX 10MB • FORMATOS: JPG, PNG, PDF</p>
+                <!-- ADJUNTO (ESTILO PREMIUM) -->
+                <div class="md:col-span-2">
+                    <label class="block text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-3 italic">CAPTURAS O ARCHIVOS (OPCIONAL)</label>
+                    <div class="flex items-center justify-center w-full">
+                        <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-100 rounded-3xl cursor-pointer bg-gray-50/30 hover:bg-gray-50 hover:border-blue-400 transition-all duration-300">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <p class="mb-2 text-xs font-black text-gray-900 italic tracking-widest uppercase">Subir archivos &attach;</p>
+                                <p class="text-[0.6rem] text-gray-400 uppercase tracking-widest font-bold">Imágenes, PDF o Documentos (Max 10MB)</p>
+                            </div>
+                            <input type="file" name="attachments[]" multiple class="hidden" />
+                        </label>
                     </div>
                 </div>
-
-                <!-- BOTÓN ENVIAR -->
-                <div class="flex gap-4">
-                    <a href="{{ route('user.tickets.index') }}" class="flex-1 px-8 py-5 rounded-2xl bg-gray-100 text-gray-500 font-black text-xs text-center hover:bg-gray-200 transition uppercase tracking-widest">
-                        CANCELAR
-                    </a>
-                    <button type="submit" class="flex-[2] px-8 py-5 rounded-2xl bg-blue-600 text-white font-black text-sm shadow-xl shadow-blue-200 hover:bg-blue-700 transition uppercase tracking-widest">
-                        ENVIAR SOLICITUD AHORA 🚀
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
-</x-app-layout>
+
+        <!-- BOTONES DE ACCIÓN -->
+        <div class="flex items-center justify-end gap-4 pt-4">
+            <a href="{{ route('user.tickets.index') }}" class="text-[0.7rem] font-black text-gray-400 uppercase tracking-widest hover:text-gray-900 transition">
+                CANCELAR
+            </a>
+            <button type="submit" class="bg-[#020617] text-white px-12 py-5 rounded-[2rem] font-black text-[0.75rem] uppercase tracking-[0.2em] shadow-2xl hover:bg-blue-600 transition-all transform hover:-translate-y-1 active:scale-95">
+                ENVIAR TICKET SOPORTE →
+            </button>
+        </div>
+    </form>
+</div>
+@endsection

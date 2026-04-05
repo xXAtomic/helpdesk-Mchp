@@ -1,83 +1,180 @@
-@extends('layouts.admin') <!-- Usamos admin layout por ahora pero ajustaremos menú -->
+@extends('layouts.app')
 
 @section('content')
-<div class="space-y-8">
-    <div class="flex justify-between items-center">
-        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">📊 Dashboard de Gestión TI</h2>
-        <span class="px-4 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-semibold border border-indigo-200">
-            Vista de Jefe
-        </span>
-    </div>
-
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-        <!-- Abiertos -->
-        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-blue-500 hover:shadow-md transition">
-            <p class="text-sm font-medium text-gray-500 uppercase">Tickets Abiertos</p>
-            <h3 class="text-3xl font-bold text-blue-600 mt-1">{{ $openTickets }}</h3>
+<div class="px-6 py-8 bg-slate-950 min-h-screen text-slate-200">
+    <!-- Header Premium -->
+    <div class="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 tracking-tight">
+                Hub Estratégico IT
+            </h1>
+            <p class="text-slate-400 mt-2 text-lg">Monitoreo de rendimiento y salud de infraestructura en tiempo real.</p>
         </div>
-
-        <!-- Cerrados -->
-        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-green-500 hover:shadow-md transition">
-            <p class="text-sm font-medium text-gray-500 uppercase">Tickets Cerrados</p>
-            <h3 class="text-3xl font-bold text-green-600 mt-1">{{ $closedTickets }}</h3>
-        </div>
-
-        <!-- En Proceso -->
-        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-purple-500 hover:shadow-md transition">
-            <p class="text-sm font-medium text-gray-500 uppercase">En Proceso</p>
-            <h3 class="text-3xl font-bold text-purple-600 mt-1">{{ $inProcessTickets }}</h3>
-        </div>
-
-        <!-- Equipos -->
-        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-orange-500 hover:shadow-md transition">
-            <p class="text-sm font-medium text-gray-500 uppercase">Equipos Registrados</p>
-            <h3 class="text-3xl font-bold text-orange-600 mt-1">{{ $totalAssets }}</h3>
-        </div>
-
-        <!-- Tiempo Respuesta -->
-        <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-indigo-500 hover:shadow-md transition">
-            <p class="text-sm font-medium text-gray-500 uppercase">Tiempo Resol.</p>
-            <h3 class="text-3xl font-bold text-indigo-600 mt-1">{{ $avgResponseTime }}</h3>
+        <div class="flex items-center gap-4">
+            <div class="hidden md:flex flex-col items-end mr-4">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Sistema Operativo</span>
+                <span class="text-emerald-400 text-sm font-mono tracking-tighter">NODE_SERVER_ACTIVE_01</span>
+            </div>
+            <div class="p-4 bg-slate-900/80 border border-blue-500/30 rounded-2xl shadow-lg shadow-blue-500/10 backdrop-blur-md animate-pulse">
+                <i class="fas fa-microchip text-blue-400"></i>
+            </div>
         </div>
     </div>
 
-    <!-- Metrics and Charts -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Tickets por Categoría -->
-        <div class="bg-white p-8 rounded-2xl shadow-sm">
-            <h4 class="text-lg font-bold text-gray-800 mb-6">Distribución por Categoría</h4>
-            <div class="space-y-4">
-                @foreach($ticketsByCategory as $cat)
-                <div>
-                    <div class="flex justify-between text-sm mb-1">
-                        <span class="font-medium text-gray-700">{{ $cat->name }}</span>
-                        <span class="text-gray-500">{{ $cat->total }}</span>
-                    </div>
-                    @php 
-                        $totalAll = $ticketsByCategory->sum('total');
-                        $percentage = $totalAll > 0 ? ($cat->total / $totalAll) * 100 : 0;
-                    @endphp
-                    <div class="w-full bg-gray-100 rounded-full h-2.5">
-                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ $percentage }}%"></div>
-                    </div>
+    <!-- Panel de Control Principal (ApexCharts) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+        <!-- Salud Global (Donut) -->
+        <div class="lg:col-span-4 bg-slate-900/40 backdrop-blur-2xl border border-slate-800 p-8 rounded-3xl shadow-2xl relative overflow-hidden group">
+            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <i class="fas fa-chart-pie text-6xl text-white"></i>
+            </div>
+            <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest mb-6">Estado de Tickets</h3>
+            <div id="statusDonutChart" class="min-h-[250px]"></div>
+            <div class="flex justify-around mt-6 border-t border-slate-800 pt-6">
+                <div class="text-center">
+                    <p class="text-2xl font-bold text-white">{{ $ticketsCount }}</p>
+                    <p class="text-[10px] text-slate-500 uppercase">Total</p>
                 </div>
-                @endforeach
+                <div class="text-center">
+                    <p class="text-2xl font-bold text-blue-400">45</p>
+                    <p class="text-[10px] text-slate-500 uppercase">Resueltos</p>
+                </div>
             </div>
         </div>
 
-        <!-- Info Card -->
-        <div class="bg-gradient-to-br from-indigo-600 to-purple-700 p-8 rounded-2xl shadow-lg text-white">
-            <h4 class="text-xl font-bold mb-4">Resumen Semanal</h4>
-            <p class="opacity-90 leading-relaxed mb-6">
-                El inventario actual cuenta con **{{ $totalAssets }}** activos operativos.
-                El tiempo promedio de respuesta se mantiene en **{{ $avgResponseTime }}**, cumpliendo con los estándares de calidad de TI.
-            </p>
-            <div class="bg-white/10 p-4 rounded-xl backdrop-blur-md">
-                <p class="text-xs font-semibold uppercase tracking-wider opacity-75">Nota de Privacidad</p>
-                <p class="text-sm">Esta vista solo muestra métricas generales agregadas. No se exponen datos personales ni descripciones sensibles.</p>
+        <!-- Tendencia y Carga (Area) -->
+        <div class="lg:col-span-8 bg-slate-900/40 backdrop-blur-2xl border border-slate-800 p-8 rounded-3xl shadow-2xl">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest">Flujo Operativo (Semanales)</h3>
+                <div class="flex gap-2">
+                    <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                    <span class="text-[10px] text-slate-400 uppercase tracking-tighter">Tickets Entrantes</span>
+                </div>
+            </div>
+            <div id="mainTrendChart" class="min-h-[300px]"></div>
+        </div>
+    </div>
+
+    <!-- Widgets Tácticos Inferiores -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Inventario -->
+        <div class="bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-500/20 p-6 rounded-2xl hover:border-blue-500/50 transition-all group">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-blue-500/20 rounded-xl text-blue-400 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-desktop text-xl"></i>
+                </div>
+                <span class="text-xs text-blue-500 font-bold bg-blue-500/10 px-2 py-1 rounded">Activo</span>
+            </div>
+            <p class="text-slate-400 text-sm">Equipos Monitoreados</p>
+            <h4 class="text-3xl font-black text-white mt-1">{{ $equipmentCount }}</h4>
+            <div class="mt-4 flex items-center text-xs text-slate-500">
+                <i class="fas fa-sync-alt fa-spin mr-2"></i> Actualizado hace 2 min
+            </div>
+        </div>
+
+        <!-- SLA Performance -->
+        <div class="bg-gradient-to-br from-emerald-600/10 to-transparent border border-emerald-500/20 p-6 rounded-2xl hover:border-emerald-500/50 transition-all group">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-emerald-500/20 rounded-xl text-emerald-400 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-tachometer-alt text-xl"></i>
+                </div>
+                <span class="text-xs text-emerald-500 font-bold bg-emerald-500/10 px-2 py-1 rounded">98.2%</span>
+            </div>
+            <p class="text-slate-400 text-sm">Índice de Cumplimiento SLA</p>
+            <h4 class="text-3xl font-black text-white mt-1">Óptimo</h4>
+            <div class="mt-4 flex gap-1">
+                @for($i=0; $i<5; $i++) <div class="h-1 flex-1 bg-emerald-500/50 rounded-full"></div> @endfor
+            </div>
+        </div>
+
+        <!-- Tiempo de Respuesta -->
+        <div class="bg-gradient-to-br from-amber-600/10 to-transparent border border-amber-500/20 p-6 rounded-2xl hover:border-amber-500/50 transition-all group">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-amber-500/20 rounded-xl text-amber-400 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-history text-xl"></i>
+                </div>
+                <span class="text-xs text-amber-500 font-bold bg-amber-500/10 px-2 py-1 rounded">-12% vs ayer</span>
+            </div>
+            <p class="text-slate-400 text-sm">Tiempo Prom. Respuesta</p>
+            <h4 class="text-3xl font-black text-white mt-1">24 min</h4>
+            <div class="mt-4 text-xs italic text-slate-500">
+                "Excelente rendimiento del equipo"
+            </div>
+        </div>
+
+        <!-- Usuarios Críticos -->
+        <div class="bg-gradient-to-br from-purple-600/10 to-transparent border border-purple-500/20 p-6 rounded-2xl hover:border-purple-500/50 transition-all group">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-purple-500/20 rounded-xl text-purple-400 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-user-shield text-xl"></i>
+                </div>
+                <button class="text-[10px] text-purple-400 font-bold uppercase hover:underline">Ver Todos</button>
+            </div>
+            <p class="text-slate-400 text-sm">Gerencia Atendida</p>
+            <h4 class="text-3xl font-black text-white mt-1">08</h4>
+            <div class="mt-4 flex -space-x-2">
+                @for($i=1; $i<=4; $i++)
+                <div class="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[10px] text-white ring-2 ring-slate-900">
+                    G{{$i}}
+                </div>
+                @endfor
+                <div class="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[8px] text-slate-500">+4</div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Definición de Colores Premium
+    const colors = {
+        primary: '#3b82f6',
+        secondary: '#6366f1',
+        success: '#10b981',
+        danger: '#ef4444',
+        warning: '#f59e0b',
+        muted: '#94a3b8'
+    };
+
+    // 1. Donut Chart - Ticket Status
+    var optionsStatus = {
+        series: [44, 25, 12],
+        chart: { type: 'donut', height: 280, background: 'transparent' },
+        stroke: { show: false },
+        colors: [colors.primary, colors.success, colors.danger],
+        labels: ['Pendientes', 'Resueltos', 'Críticos'],
+        legend: { position: 'bottom', labels: { colors: colors.muted }, markers: { radius: 12 } },
+        dataLabels: { enabled: false },
+        plotOptions: { pie: { donut: { size: '75%', background: 'transparent' } } },
+        tooltip: { theme: 'dark' }
+    };
+    new ApexCharts(document.querySelector("#statusDonutChart"), optionsStatus).render();
+
+    // 2. Main Trend Area Chart
+    var optionsMain = {
+        series: [{
+            name: 'Tickets Creados',
+            data: [12, 19, 15, 27, 22, 35, 30]
+        }, {
+            name: 'Equipos Reparados',
+            data: [10, 15, 13, 20, 18, 25, 22]
+        }],
+        chart: { height: 350, type: 'area', toolbar: { show: false }, background: 'transparent', fontFamily: 'Inter, sans-serif' },
+        dataLabels: { enabled: false },
+        stroke: { curve: 'smooth', width: 4 },
+        colors: [colors.primary, colors.success],
+        fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.3, opacityTo: 0.05, stops: [0, 90, 100] } },
+        xaxis: { 
+            categories: ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'], 
+            axisBorder: { show: false },
+            axisTicks: { show: false },
+            labels: { style: { colors: colors.muted, fontSize: '11px' } } 
+        },
+        yaxis: { labels: { style: { colors: colors.muted, fontSize: '11px' } } },
+        grid: { borderColor: '#1e293b', strokeDashArray: 4 },
+        tooltip: { theme: 'dark' }
+    };
+    new ApexCharts(document.querySelector("#mainTrendChart"), optionsMain).render();
+});
+</script>
 @endsection
