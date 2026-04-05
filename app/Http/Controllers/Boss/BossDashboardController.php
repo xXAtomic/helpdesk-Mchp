@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Boss;
 use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use App\Models\Asset;
-use App\Models\Status;
+use App\Models\TicketStatus;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -45,9 +45,9 @@ class BossDashboardController extends Controller
 
         // Datos para gráficos (por ejemplo, tickets por categoría)
         $ticketsByCategory = DB::table('tickets')
-            ->join('categories', 'tickets.category_id', '=', 'categories.id')
-            ->select('categories.name', DB::raw('count(*) as total'))
-            ->groupBy('categories.name')
+            ->join('ticket_categories', 'tickets.category_id', '=', 'ticket_categories.id')
+            ->select('ticket_categories.name', DB::raw('count(*) as total'))
+            ->groupBy('ticket_categories.name')
             ->get();
 
         return view('boss.dashboard', compact(

@@ -8,51 +8,30 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
 {
-<<<<<<< HEAD
     /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  string[] ...$roles
      */
     public function handle(Request $request, Closure $next, ...$roles): Response
     {
-        if (!auth()->check()) {
-            return redirect('login');
-        }
-
         $user = auth()->user();
 
-        // Asegurarse de que si llegan roles separados por coma en un string, se procesen correctamente
-        $processedRoles = [];
-        foreach ($roles as $role) {
-            $processedRoles = array_merge($processedRoles, explode(',', $role));
-        }
-
-        if ($user->hasRole($processedRoles)) {
-            return $next($request);
-        }
-
-        abort(403, 'Unauthorized action.');
-    }
-}
-=======
-    public function handle(Request $request, Closure $next, ...$roles): Response
-    {
-        $user = auth()->user();
-
+        // 1. Si no hay usuario, mandarlo al login
         if (!$user) {
             return redirect('/login');
         }
 
-        // --- DEBUG DE SEGURIDAD ---
-        // Si el usuario es el que sabemos que es admin, DEJALO PASAR SÍ O SÍ
+        // 2. --- BYPASS DE SEGURIDAD PARA EL DUEÑO ---
+        // Esto garantiza que siempre puedas entrar si algo falla en la DB.
         if ($user->email === 'soporte.crisadones@gmail.com') {
             return $next($request);
         }
-        // -------------------------
 
-        // Procesamiento normal para el resto
+        // 3. Verificación normal de roles (usando slugs)
         foreach ($roles as $role) {
+            // El role puede llegar como string separado por comas: "admin,boss"
             $individualRoles = explode(',', $role);
             foreach ($individualRoles as $r) {
                 if ($user->hasRole(trim($r))) {
@@ -61,8 +40,7 @@ class CheckRole
             }
         }
 
-        abort(403, 'Unauthorized. Role: ' . ($user->role->slug ?? 'NONE'));
+        // 4. Si no tiene ninguno, denegar acceso
+        abort(403, 'Acceso denegado: No tienes el rol necesario (' . ($user->role->slug ?? 'Sin Rol') . ')');
     }
 }
-
->>>>>>> origin/servidor-maraton-ayer

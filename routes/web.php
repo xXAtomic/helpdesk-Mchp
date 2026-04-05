@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\EquipmentController;
 use App\Http\Controllers\Admin\KnowledgeBaseController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Boss\BossDashboardController;
+use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\AuthController;
 
 // --- 🔓 1. RUTAS PÚBLICAS (LOGIN) ---
@@ -62,7 +63,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // --- 🌍 RUTAS GLOBALES (COMO LAS PIDE TU NAVEGACIÓN) ---
-    // Vinculamos a los controladores nuevos corregidos
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
     Route::get('/inventory', [EquipmentController::class, 'index'])->name('inventory.index');
     Route::get('/knowledge-base', [KnowledgeBaseController::class, 'index'])->name('knowledge.index');
 
