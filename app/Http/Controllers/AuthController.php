@@ -7,31 +7,12 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-<<<<<<< HEAD
-    /**
-     * Muestra el formulario de login.
-     */
-    public function showLogin()
-    {
-        if (Auth::check()) {
-            return redirect()->route('dashboard');
-        }
-        return view('auth.login');
-    }
-
-    /**
-     * Maneja el intento de autenticación.
-     */
-    public function login(Request $request)
-    {
-=======
     public function showLogin() {
         if (Auth::check()) return redirect()->route('dashboard');
         return view('auth.login');
     }
 
     public function login(Request $request) {
->>>>>>> origin/servidor-maraton-ayer
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
@@ -39,29 +20,6 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-<<<<<<< HEAD
-
-            return redirect()->intended('/dashboard');
-        }
-
-        return back()->withErrors([
-            'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
-        ])->onlyInput('email');
-    }
-
-    /**
-     * Cierra la sesión del usuario.
-     */
-    public function logout(Request $request)
-    {
-        Auth::logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/login')->with('success', 'Sesión cerrada correctamente');
-    }
-=======
             return redirect()->intended('/dashboard');
         }
 
@@ -101,5 +59,4 @@ class AuthController extends Controller
     }
 
 
->>>>>>> origin/servidor-maraton-ayer
 }

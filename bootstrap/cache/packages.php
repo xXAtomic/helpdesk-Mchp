@@ -1,19 +1,9 @@
 <?php return array (
-<<<<<<< HEAD
-=======
   'laravel/breeze' => 
   array (
     'providers' => 
     array (
       0 => 'Laravel\\Breeze\\BreezeServiceProvider',
-    ),
-  ),
->>>>>>> origin/servidor-maraton-ayer
-  'laravel/pail' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Laravel\\Pail\\PailServiceProvider',
     ),
   ),
   'laravel/tinker' => 
