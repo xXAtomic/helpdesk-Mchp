@@ -16,7 +16,19 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        // 2. MODIFICAR Users
+        // 2. CREAR O MODIFICAR Users
+        if (!Schema::hasTable('users')) {
+            Schema::create('users', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('email')->unique();
+                $table->timestamp('email_verified_at')->nullable();
+                $table->string('password');
+                $table->rememberToken();
+                $table->timestamps();
+            });
+        }
+
         Schema::table('users', function (Blueprint $table) {
             if (!Schema::hasColumn('users', 'role_id')) {
                 $table->foreignId('role_id')->index()->default(4)->constrained('roles')->onDelete('cascade');
