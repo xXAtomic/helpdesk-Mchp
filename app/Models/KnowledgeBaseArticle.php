@@ -9,21 +9,19 @@ class KnowledgeBaseArticle extends Model
 {
     use HasFactory;
 
-    protected $table = 'knowledge_base_articles';
+    protected $table = 'knowledge_manuals';
 
     protected $fillable = [
         'title',
         'slug',
         'content',
-        'category_id',
-        'author_id',
+        'category',
         'is_published',
-        'views'
     ];
 
-    public function category()
+    public function ticket_category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(TicketCategory::class, 'category', 'slug');
     }
 
     public function author()
