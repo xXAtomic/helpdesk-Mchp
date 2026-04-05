@@ -1,215 +1,93 @@
-<<<<<<< HEAD
 @extends('layouts.admin')
 
 @section('content')
-<div class="bg-white shadow rounded-lg overflow-hidden">
-    <div class="px-6 py-4 border-b flex justify-between items-center bg-gray-50">
-        <h2 class="text-xl font-bold text-gray-800">Listado de Tickets</h2>
+<div class="py-2">
+    <!-- CABECERA Y MÉTRICAS RÁPIDAS -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
         <div>
-            <!-- Filters -->
-            <select class="border-gray-300 rounded-md text-sm">
-                <option>Todos los Estados</option>
-                <option>Abiertos</option>
-                <option>Cerrados</option>
-            </select>
+            <h2 class="text-2xl font-black text-gray-900 italic tracking-tighter uppercase">GESTIóN DE INCIDENTES 🎟️</h2>
+            <p class="text-xs font-bold text-gray-400 mt-1 uppercase tracking-widest leading-none">Monitoriza y da respuesta a todas las solicitudes de soporte técnico.</p>
         </div>
     </div>
-    <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="bg-gray-100 border-b border-gray-200 text-gray-600 text-xs uppercase tracking-wider">
-                    <th class="px-6 py-3">Número</th>
-                    <th class="px-6 py-3">Título</th>
-                    <th class="px-6 py-3">Usuario / Solicitante</th>
-                    <th class="px-6 py-3">Estado</th>
-                    <th class="px-6 py-3">Prioridad</th>
-                    <th class="px-6 py-3">Técnico</th>
-                    <th class="px-6 py-3 text-right">Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-                @forelse ($tickets as $ticket)
-                <tr class="hover:bg-gray-50 transition">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {{ $ticket->ticket_number }}
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-700">
-                        <span class="block truncate max-w-xs" title="{{ $ticket->title }}">{{ $ticket->title }}</span>
-                        <span class="text-xs text-gray-400">Hace {{ $ticket->created_at->diffForHumans() }}</span>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-500">
-                        {{ $ticket->user->name ?? 'N/A' }}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" 
-                                {!! 'style="background-color: ' . ($ticket->status->color ?? '#eee') . '20; color: ' . ($ticket->status->color ?? '#000') . ';"' !!}>
-                            {{ $ticket->status->name ?? 'Desconocido' }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        <span {!! 'style="color: ' . ($ticket->priority->color ?? '#000') . ';"' !!} class="font-bold">
-                            {{ $ticket->priority->name ?? 'Baja' }}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-500">
-                        {{ $ticket->technician->name ?? 'Sin asignar' }}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="{{ route('admin.tickets.show', $ticket) }}" class="text-blue-600 hover:text-blue-900">Detalles</a>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="7" class="px-6 py-8 text-center text-gray-500">No hay tickets registrados en el sistema.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+
+    <!-- TARJETAS DE ESTADO -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+            <p class="text-[0.6rem] font-black text-gray-400 uppercase tracking-widest mb-2">Abiertos hoy 🎟️</p>
+            <p class="text-3xl font-black text-blue-600">{{ $stats['open'] ?? $tickets->where('closed_at', null)->count() }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+            <p class="text-[0.6rem] font-black text-gray-400 uppercase tracking-widest mb-2">Resueltos ✅</p>
+            <p class="text-3xl font-black text-gray-900">{{ $stats['closed'] ?? $tickets->whereNotNull('closed_at')->count() }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+            <p class="text-[0.6rem] font-black text-gray-400 uppercase tracking-widest mb-2">T. Respuesta ⏱️</p>
+            <p class="text-3xl font-black text-gray-900">{{ $stats['avg_time'] ?? '--' }}</p>
+        </div>
+        <div class="bg-[#020617] p-6 rounded-3xl shadow-xl">
+            <p class="text-[0.6rem] font-black text-gray-500 uppercase tracking-widest mb-2">Total Histórico</p>
+            <p class="text-3xl font-black text-white">{{ $stats['total'] ?? $tickets->count() }}</p>
+        </div>
     </div>
-    @if ($tickets->hasPages())
-    <div class="px-6 py-4 border-t bg-gray-50">
+
+    <!-- TABLA DE TICKETS (ESTILO SAAS) -->
+    <div class="bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50/50 border-b border-gray-100">
+                        <th class="px-8 py-6 text-[0.65rem] font-black text-gray-400 uppercase tracking-widest">Ticket / Usuario</th>
+                        <th class="px-8 py-6 text-[0.65rem] font-black text-gray-400 uppercase tracking-widest">Asunto</th>
+                        <th class="px-8 py-6 text-[0.65rem] font-black text-gray-400 uppercase tracking-widest">Prioridad</th>
+                        <th class="px-8 py-6 text-[0.65rem] font-black text-gray-400 uppercase tracking-widest">Estado</th>
+                        <th class="px-8 py-6 text-[0.65rem] font-black text-gray-400 uppercase tracking-widest text-right">Acción</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($tickets as $ticket)
+                    <tr class="hover:bg-gray-50/80 transition duration-200">
+                        <td class="px-8 py-6">
+                            <div class="font-black text-blue-600 text-sm italic tracking-tighter">#{{ $ticket->ticket_number ?? 'TCK-'.$ticket->id }}</div>
+                            <div class="text-[0.65rem] font-bold text-gray-400 mt-1 uppercase">{{ $ticket->user->name ?? 'SISTEMA' }}</div>
+                        </td>
+                        <td class="px-8 py-6">
+                            <div class="font-black text-gray-900 text-sm uppercase max-w-xs truncate">{{ $ticket->title }}</div>
+                            <div class="text-[0.6rem] text-gray-400 font-bold mt-1 uppercase tracking-widest">{{ $ticket->created_at->diffForHumans() }}</div>
+                        </td>
+                        <td class="px-8 py-6">
+                            <span class="font-black text-[0.65rem] uppercase tracking-widest" style="color: {{ optional($ticket->priority)->color ?? '#94a3b8' }}">
+                                {{ optional($ticket->priority)->name ?? 'BAJA' }}
+                            </span>
+                        </td>
+                        <td class="px-8 py-6">
+                            <span class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[0.6rem] font-black uppercase tracking-widest border"
+                                  style="background-color: {{ optional($ticket->status)->color }}10; color: {{ optional($ticket->status)->color }}; border-color: {{ optional($ticket->status)->color }}30;">
+                                ● {{ optional($ticket->status)->name ?? 'ABIERTO' }}
+                            </span>
+                        </td>
+                        <td class="px-8 py-6 text-right">
+                            <a href="{{ route('admin.tickets.show', $ticket->id) }}" class="inline-block bg-[#020617] text-white px-6 py-3 rounded-xl font-black text-[0.65rem] tracking-widest hover:bg-blue-600 transition shadow-lg shadow-black/5 uppercase">
+                                GESTIONAR →
+                            </a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="px-8 py-20 text-center">
+                            <p class="text-gray-300 font-black text-sm uppercase italic tracking-widest">No hay tickets pendientes hoy ✨</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- PAGINACIÓN -->
+    @if(method_exists($tickets, 'links'))
+    <div class="mt-8">
         {{ $tickets->links() }}
     </div>
     @endif
 </div>
 @endsection
-=======
-<x-app-layout>
-    <div style="background: #fdfdfd; padding: 4rem 3.5rem; min-height: 100vh;">
-        
-        <!-- CABECERA Y BOTÓN -->
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4.5rem;">
-            <div>
-                <h1 style="font-size: 1.8rem; font-weight: 800; color: #111827; letter-spacing: -0.5px;">Gestión de Incidentes</h1>
-                <p style="font-size: 0.85rem; color: #64748b; font-weight: 500; margin-top: 0.4rem;">Monitoriza y da respuesta a todas las solicitudes de soporte técnico.</p>
-            </div>
-            <button class="btn-primary" style="padding: 1rem 2.2rem; border-radius: 12px; font-weight: 700; font-size: 0.8rem;" onclick="window.location.href='{{ route('admin.tickets.create') }}'">+ CREAR NUEVO TICKET</button>
-        </div>
-
-        <!-- 🏁 TARJETAS DE RESUMEN RÁPIDO (GRID) -->
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-bottom: 4.5rem;">
-            <div style="background: white; padding: 2rem; border-radius: 2rem; border: 1.2px solid #f1f5f9; box-shadow: 0 10px 40px rgba(0,0,0,0.02);">
-                <div style="font-size: 0.65rem; font-weight: 1000; color: #94a3b8; text-transform: uppercase;">Abiertos 🎟️</div>
-                <div style="font-size: 2rem; font-weight: 900; color: #3b82f6; margin-top: 1rem;">{{ $stats['open'] }}</div>
-            </div>
-            <div style="background: white; padding: 2rem; border-radius: 2rem; border: 1.2px solid #f1f5f9;">
-                <div style="font-size: 0.65rem; font-weight: 1000; color: #94a3b8; text-transform: uppercase;">Resueltos ✅</div>
-                <div style="font-size: 2rem; font-weight: 900; color: #111827; margin-top: 1rem;">{{ $stats['closed'] }}</div>
-            </div>
-            <div style="background: white; padding: 2rem; border-radius: 2rem; border: 1.2px solid #f1f5f9;">
-                <div style="font-size: 0.65rem; font-weight: 1000; color: #94a3b8; text-transform: uppercase;">T. Respuesta ⏱️</div>
-                <div style="font-size: 2rem; font-weight: 900; color: #111827; margin-top: 1rem;">{{ $stats['avg_time'] }}</div>
-            </div>
-            <div style="background: #111827; padding: 2rem; border-radius: 2rem; color: white;">
-                <div style="font-size: 0.65rem; font-weight: 1000; color: #9ca3af; text-transform: uppercase;">Total Histórico</div>
-                <div style="font-size: 2rem; font-weight: 900; color: white; margin-top: 1rem;">{{ $stats['total'] }}</div>
-            </div>
-        </div>
-
-        <!-- TABLA DE TICKETS (SAAS PREMIUM) -->
-        <div style="background: white; border-radius: 2.2rem; border: 1.2px solid #f1f5f9; box-shadow: 0 10px 40px rgba(0,0,0,0.02); overflow: hidden;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                <thead>
-                    <tr style="background: #fafafa; border-bottom: 1.5px solid #f1f5f9;">
-                        <th style="padding: 1.5rem 2.8rem; font-size: 0.7rem; font-weight: 1000; color: #94a3b8; text-transform: uppercase;">Ticket / Usuario</th>
-                        <th style="padding: 1.5rem 2.8rem; font-size: 0.7rem; font-weight: 1000; color: #94a3b8; text-transform: uppercase;">Asunto</th>
-                        <th style="padding: 1.5rem 2.8rem; font-size: 0.7rem; font-weight: 1000; color: #94a3b8; text-transform: uppercase;">Estado / Seguimiento</th>
-                        <th style="padding: 1.5rem 2.8rem; font-size: 0.7rem; font-weight: 1000; color: #94a3b8; text-transform: uppercase;">Acción</th>
-                    </tr>
-                </thead>
-                <tbody style="font-size: 0.85rem; color: #1e293b; font-weight: 500;">
-                    @forelse($tickets as $t)
-                    <tr style="border-bottom: 1px solid #f8fafc; transition: 0.2s;" onmouseover="this.style.background='#fcfcfc'">
-                        <td style="padding: 2.2rem 2.8rem;">
-                            <div style="font-weight: 800; color: #3b82f6; font-size: 0.95rem;">#{{ $t->ticket_number ?? 'TCK-'.$t->id }}</div>
-                            <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 5px;">{{ $t->user->name ?? 'Invitado' }}</div>
-                        </td>
-                        <td style="padding: 2.2rem 2.8rem;">
-                            <div style="font-weight: 800; color: #111827; padding-right: 2rem;">{{ $t->title ?? $t->subject }}</div>
-                        </td>
-                        <td style="padding: 2.2rem 2.8rem;">
-                            <span style="background: {{ $t->closed_at ? '#f3f4f6' : '#eff6ff' }}; color: {{ $t->closed_at ? '#64748b' : '#3b82f6' }}; padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.65rem; font-weight: 800;">
-                                ● {{ $t->closed_at ? 'RESUELTO' : 'PENDIENTE' }}
-                            </span>
-                        </td>
-                        <td style="padding: 2.2rem 2.8rem;">
-                            <a href="{{ route('admin.tickets.show', $t->id) }}" style="text-decoration: none; background: #111827; color: white; padding: 0.8rem 1.5rem; border-radius: 14px; font-size: 0.72rem; font-weight: 700; transition: 0.2s;">GESTIONAR →</a>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr><td colspan="4" style="padding: 6rem; text-align: center; color: #94a3b8; font-weight: 600;">No hay tickets pendientes hoy. ✨</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
-</x-app-layout>
-1~<x-app-layout>
-    <div style="background: #fdfdfd; padding: 4rem 3.5rem; min-height: 100vh;">
-        
-        <!-- CABECERA Y BOTÓN -->
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4.5rem;">
-            <div>
-                <h1 style="font-size: 1.8rem; font-weight: 800; color: #111827; letter-spacing: -0.5px;">Gestión de Incidentes</h1>
-                <p style="font-size: 0.85rem; color: #64748b; font-weight: 500; margin-top: 0.4rem;">Monitoriza y da respuesta a todas las solicitudes de soporte técnico.</p>
-            </div>
-            <button class="btn-primary" style="padding: 1rem 2.2rem; border-radius: 12px; font-weight: 700; font-size: 0.8rem;" onclick="window.location.href='{{ route('admin.tickets.create') }}'">+ CREAR NUEVO TICKET</button>
-        </div>
-        <!-- 🏁 TARJETAS DE RESUMEN RÁPIDO (GRID) -->
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-bottom: 4.5rem;">
-            <div style="background: white; padding: 2rem; border-radius: 2rem; border: 1.2px solid #f1f5f9; box-shadow: 0 10px 40px rgba(0,0,0,0.02);">
-                <div style="font-size: 0.65rem; font-weight: 1000; color: #94a3b8; text-transform: uppercase;">Abiertos 🎟️</div>
-                <div style="font-size: 2rem; font-weight: 900; color: #3b82f6; margin-top: 1rem;">{{ $stats['open'] }}</div>
-            </div>
-            <div style="background: white; padding: 2rem; border-radius: 2rem; border: 1.2px solid #f1f5f9;">
-                <div style="font-size: 0.65rem; font-weight: 1000; color: #94a3b8; text-transform: uppercase;">Resueltos ✅</div>
-                <div style="font-size: 2rem; font-weight: 900; color: #111827; margin-top: 1rem;">{{ $stats['closed'] }}</div>
-            </div>
-            <div style="background: white; padding: 2rem; border-radius: 2rem; border: 1.2px solid #f1f5f9;">
-                <div style="font-size: 0.65rem; font-weight: 1000; color: #94a3b8; text-transform: uppercase;">T. Respuesta ⏱️</div>
-                <div style="font-size: 2rem; font-weight: 900; color: #111827; margin-top: 1rem;">{{ $stats['avg_time'] }}</div>
-            </div>
-            <div style="background: #111827; padding: 2rem; border-radius: 2rem; color: white;">
-                <div style="font-size: 0.65rem; font-weight: 1000; color: #9ca3af; text-transform: uppercase;">Total Histórico</div>
-                <div style="font-size: 2rem; font-weight: 900; color: white; margin-top: 1rem;">{{ $stats['total'] }}</div>
-            </div>
-        </div>
-        <!-- TABLA DE TICKETS (SAAS PREMIUM) -->
-        <div style="background: white; border-radius: 2.2rem; border: 1.2px solid #f1f5f9; box-shadow: 0 10px 40px rgba(0,0,0,0.02); overflow: hidden;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                <thead>
-                    <tr style="background: #fafafa; border-bottom: 1.5px solid #f1f5f9;">
-                        <th style="padding: 1.5rem 2.8rem; font-size: 0.7rem; font-weight: 1000; color: #94a3b8; text-transform: uppercase;">Ticket / Usuario</th>
-                        <th style="padding: 1.5rem 2.8rem; font-size: 0.7rem; font-weight: 1000; color: #94a3b8; text-transform: uppercase;">Asunto</th>
-                        <th style="padding: 1.5rem 2.8rem; font-size: 0.7rem; font-weight: 1000; color: #94a3b8; text-transform: uppercase;">Estado / Seguimiento</th>
-                        <th style="padding: 1.5rem 2.8rem; font-size: 0.7rem; font-weight: 1000; color: #94a3b8; text-transform: uppercase;">Acción</th>
-                    </tr>
-                </thead>
-                <tbody style="font-size: 0.85rem; color: #1e293b; font-weight: 500;">
-                    @forelse($tickets as $t)
-                    <tr style="border-bottom: 1px solid #f8fafc; transition: 0.2s;" onmouseover="this.style.background='#fcfcfc'">
-                        <td style="padding: 2.2rem 2.8rem;">
-                            <div style="font-weight: 800; color: #3b82f6; font-size: 0.95rem;">#{{ $t->ticket_number ?? 'TCK-'.$t->id }}</div>
-                            <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 5px;">{{ $t->user->name ?? 'Invitado' }}</div>
-                        </td>
-                        <td style="padding: 2.2rem 2.8rem;">
-                            <div style="font-weight: 800; color: #111827; padding-right: 2rem;">{{ $t->title ?? $t->subject }}</div>
-                        </td>
-                        <td style="padding: 2.2rem 2.8rem;">
-                            <span style="background: {{ $t->closed_at ? '#f3f4f6' : '#eff6ff' }}; color: {{ $t->closed_at ? '#64748b' : '#3b82f6' }}; padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.65rem; font-weight: 800;">
-                                ● {{ $t->closed_at ? 'RESUELTO' : 'PENDIENTE' }}
-                            </span>
-                        </td>
-                        <td style="padding: 2.2rem 2.8rem;">
-                            <a href="{{ route('admin.tickets.show', $t->id) }}" style="text-decoration: none; background: #111827; color: white; padding: 0.8rem 1.5rem; border-radius: 14px; font-size: 0.72rem; font-weight: 700; transition: 0.2s;">GESTIONAR →</a>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr><td colspan="4" style="padding: 6rem; text-align: center; color: #94a3b8; font-weight: 600;">No hay tickets pendientes hoy. ✨</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
-</x-app-layout>
->>>>>>> origin/servidor-maraton-ayer

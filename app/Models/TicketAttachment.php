@@ -11,11 +11,7 @@ class TicketAttachment extends Model
 
     protected $fillable = [
         'ticket_id',
-<<<<<<< HEAD
         'ticket_response_id',
-=======
-        'ticket_reply_id',
->>>>>>> origin/servidor-maraton-ayer
         'file_name',
         'file_path',
         'file_type',
@@ -27,14 +23,8 @@ class TicketAttachment extends Model
         return $this->belongsTo(Ticket::class);
     }
 
-<<<<<<< HEAD
     public function ticketResponse()
     {
         return $this->belongsTo(TicketResponse::class);
-=======
-    public function ticketReply()
-    {
-        return $this->belongsTo(TicketReply::class);
->>>>>>> origin/servidor-maraton-ayer
     }
 }

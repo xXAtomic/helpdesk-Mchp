@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ticket;
-use App\Models\Equipment;
+use App\Models\Asset;
 use App\Models\User;
 
 class DashboardController extends Controller
@@ -15,7 +15,7 @@ class DashboardController extends Controller
         $stats = [
             'total_tickets'   => Ticket::count(),
             'open_tickets'    => Ticket::whereNull('closed_at')->count(), // Corregido ✅
-            'total_equipment' => Equipment::count(),
+            'total_equipment' => Asset::count(),
             'total_users'     => User::count(),
         ];
 

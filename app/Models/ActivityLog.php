@@ -10,13 +10,9 @@ class ActivityLog extends Model
         'user_id', 'action', 'model_type', 'model_id', 'details', 'ip_address'
     ];
 
-<<<<<<< HEAD
     protected $casts = [
         'details' => 'array',
     ];
-
-=======
->>>>>>> origin/servidor-maraton-ayer
     public function user()
     {
         return $this->belongsTo(User::class);

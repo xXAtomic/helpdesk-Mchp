@@ -9,12 +9,6 @@ class Asset extends Model
 {
     use HasFactory;
 
-<<<<<<< HEAD
-=======
-    // AÑADE ESTA LÍNEA PARA SOLUCIONAR EL ERROR:
-    protected $table = 'equipment';
-
->>>>>>> origin/servidor-maraton-ayer
     protected $fillable = [
         'asset_tag',
         'type',
