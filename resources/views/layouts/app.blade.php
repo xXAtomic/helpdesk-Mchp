@@ -57,7 +57,17 @@
         <!-- BARRA LATERAL MINIMALISTA -->
         <div class="sidebar">
             <div class="sidebar-brand">
-                <span style="color: #3b82f6; font-size: 1.5rem; font-weight: 800;">M</span>
+                <a href="{{ route('dashboard') }}" class="transition-transform hover:scale-110 active:scale-95 duration-300">
+                    @if(file_exists(public_path('img/logo.png')))
+                        <img src="{{ asset('img/logo.png') }}" alt="Logo" class="w-10 h-10 object-contain rounded-lg shadow-lg border border-white/10">
+                    @elseif(file_exists(public_path('logo.png')))
+                        <img src="{{ asset('logo.png') }}" alt="Logo" class="w-10 h-10 object-contain rounded-lg shadow-lg border border-white/10">
+                    @else
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-xl border border-white/20">
+                            G
+                        </div>
+                    @endif
+                </a>
             </div>
 
             <nav style="display: flex; flex-direction: column; align-items: center; width: 100%; flex: 1;">
