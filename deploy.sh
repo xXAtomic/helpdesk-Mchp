@@ -14,14 +14,12 @@ then
     rm composer-setup.php
 fi
 
-# 3. Configurar MariaDB (Nueva versión para evitar el error Access Denied)
+# 3. Configurar MariaDB (Crea BD y usuario local)
+# Atención: Esto es un ejemplo, configurar contraseñas seguras en producción
 sudo mysql -e "CREATE DATABASE IF NOT EXISTS ticket_system_db;"
 sudo mysql -e "CREATE USER IF NOT EXISTS 'admin_ticket_system'@'localhost' IDENTIFIED BY 'Password123!';"
-sudo mysql -e "CREATE USER IF NOT EXISTS 'admin_ticket_system'@'%' IDENTIFIED BY 'Password123!';"
 sudo mysql -e "GRANT ALL PRIVILEGES ON ticket_system_db.* TO 'admin_ticket_system'@'localhost';"
-sudo mysql -e "GRANT ALL PRIVILEGES ON ticket_system_db.* TO 'admin_ticket_system'@'%';"
 sudo mysql -e "FLUSH PRIVILEGES;"
-
 
 # 4. Copiar código a la ruta de apache (Asumimos que el código está en /var/www/ticket-system)
 # Asegúrate de haber copiado el proyecto antes de este paso a /var/www/ticket-system
@@ -51,12 +49,14 @@ sudo bash -c 'cat > /etc/apache2/sites-available/ticket-system.conf <<EOF
 <VirtualHost *:80>
     ServerName ticket.crisadones.com
     DocumentRoot /var/www/ticket-system/public
+
     <Directory /var/www/ticket-system/public>
         AllowOverride All
         Require all granted
     </Directory>
-    ErrorLog \${APACHE_LOG_DIR}/ticket-system_error.log
-    CustomLog \${APACHE_LOG_DIR}/ticket-system_access.log combined
+
+    ErrorLog ${APACHE_LOG_DIR}/ticket-system_error.log
+    CustomLog ${APACHE_LOG_DIR}/ticket-system_access.log combined
 </VirtualHost>
 EOF'
 

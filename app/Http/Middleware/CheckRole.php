@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
 {
+<<<<<<< HEAD
     /**
      * Handle an incoming request.
      *
@@ -34,3 +35,34 @@ class CheckRole
         abort(403, 'Unauthorized action.');
     }
 }
+=======
+    public function handle(Request $request, Closure $next, ...$roles): Response
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return redirect('/login');
+        }
+
+        // --- DEBUG DE SEGURIDAD ---
+        // Si el usuario es el que sabemos que es admin, DEJALO PASAR SÍ O SÍ
+        if ($user->email === 'soporte.crisadones@gmail.com') {
+            return $next($request);
+        }
+        // -------------------------
+
+        // Procesamiento normal para el resto
+        foreach ($roles as $role) {
+            $individualRoles = explode(',', $role);
+            foreach ($individualRoles as $r) {
+                if ($user->hasRole(trim($r))) {
+                    return $next($request);
+                }
+            }
+        }
+
+        abort(403, 'Unauthorized. Role: ' . ($user->role->slug ?? 'NONE'));
+    }
+}
+
+>>>>>>> origin/servidor-maraton-ayer

@@ -2,115 +2,82 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\User\TicketController as UserTicketController;
-use App\Http\Controllers\Admin\TicketController as AdminTicketController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AdminTicketController;
+use App\Http\Controllers\Admin\EquipmentController;
+use App\Http\Controllers\Admin\KnowledgeBaseController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Boss\BossDashboardController;
+use App\Http\Controllers\AuthController;
 
-Route::get('/', function () {
+// --- 🔓 1. RUTAS PÚBLICAS (LOGIN) ---
+Route::get('/', function () { return redirect()->route('login'); });
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// --- 🔒 2. RUTAS PROTEGIDAS (REQUIEREN LOGIN) ---
+Route::middleware(['auth'])->group(function () {
+
+    // --- 👨‍💻 PANEL DE ADMINISTRADOR / TÉCNICO ---
+    Route::prefix('admin')->group(function () {
+        
+        // DASHBOARD
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+        // GESTIÓN DE TICKETS (RESOURCE)
+        Route::resource('tickets', AdminTicketController::class)->names('admin.tickets');
+        Route::post('/tickets/{ticket}/reply', [AdminTicketController::class, 'reply'])->name('admin.tickets.reply');
+        Route::post('/tickets/{ticket}/assign', [AdminTicketController::class, 'assign'])->name('admin.tickets.assign');
+        Route::post('/tickets/{ticket}/status', [AdminTicketController::class, 'updateStatus'])->name('admin.tickets.status');
+
+        // INVENTARIO DE EQUIPOS 🖥️ ✅
+        Route::prefix('inventory')->group(function () {
+            Route::get('/', [EquipmentController::class, 'index'])->name('admin.inventory.index');
+            Route::get('/create', [EquipmentController::class, 'create'])->name('admin.inventory.create');
+            Route::post('/', [EquipmentController::class, 'store'])->name('admin.inventory.store');
+            Route::get('/{id}/edit', [EquipmentController::class, 'edit'])->name('admin.inventory.edit');
+            Route::put('/{id}', [EquipmentController::class, 'update'])->name('admin.inventory.update');
+            Route::delete('/{id}', [EquipmentController::class, 'destroy'])->name('admin.inventory.destroy');
+        });
+
+        // GESTIÓN DE USUARIOS
+        Route::resource('users', UserController::class)->names('admin.users');
+
+        // BASE DE CONOCIMIENTO (MANUALES) 📚 ✅
+        Route::prefix('knowledge')->group(function () {
+            Route::get('/', [KnowledgeBaseController::class, 'index'])->name('admin.knowledge.index');
+            Route::get('/create', [KnowledgeBaseController::class, 'create'])->name('admin.knowledge.create');
+            Route::post('/', [KnowledgeBaseController::class, 'store'])->name('admin.knowledge.store');
+            Route::get('/{id}/edit', [KnowledgeBaseController::class, 'edit'])->name('admin.knowledge.edit');
+            Route::put('/{id}', [KnowledgeBaseController::class, 'update'])->name('admin.knowledge.update');
+            Route::delete('/{id}', [KnowledgeBaseController::class, 'destroy'])->name('admin.knowledge.destroy');
+        });
+
+    });
+
+    // --- 👔 PANEL DEL JEFE (BOSS) ---
+    Route::prefix('boss')->group(function () {
+        Route::get('/dashboard', [BossDashboardController::class, 'index'])->name('boss.dashboard');
+    });
+
+    // --- 🌍 RUTAS GLOBALES (COMO LAS PIDE TU NAVEGACIÓN) ---
+    // Vinculamos a los controladores nuevos corregidos
+    Route::get('/inventory', [EquipmentController::class, 'index'])->name('inventory.index');
+    Route::get('/knowledge-base', [KnowledgeBaseController::class, 'index'])->name('knowledge.index');
+
+});
+
+// --- 3. UTILIDADES DE EMERGENCIA ---
+Route::get('/force-logout', function () {
+    Auth::logout();
     return redirect('/login');
 });
 
-// Middleware de Autenticación Principal
-Route::middleware(['auth'])->group(function () {
-
-    // PORTAL DE REDIRECCIÓN -> Redirige al Dashboard correcto según el ROL
-    Route::get('/dashboard', function () {
-        $user = auth()->user();
-
-        if ($user->isAdmin()) {
-            return redirect()->route('admin.dashboard');
-        }
-
-        if ($user->isBoss()) {
-            return redirect()->route('boss.dashboard');
-        }
-
-        if ($user->isTechnician()) {
-            return redirect()->route('admin.dashboard');
-        }
-
-        return redirect()->route('user.tickets.index');
-    })->name('dashboard');
-
-    // Rutas de Usuario Común
-    Route::prefix('user')->name('user.')->group(function () {
-        Route::prefix('tickets')->name('tickets.')->group(function () {
-            Route::get('/', [UserTicketController::class, 'index'])->name('index');
-            Route::get('/create', [UserTicketController::class, 'create'])->name('create');
-            Route::post('/', [UserTicketController::class, 'store'])->name('store');
-            Route::get('/{ticket}', [UserTicketController::class, 'show'])->name('show');
-            Route::post('/{ticket}/reply', [UserTicketController::class, 'reply'])->name('reply');
-        });
-
-        // Base de Conocimientos (Solo Lectura)
-        Route::get('/knowledge', function () {
-            $articles = \App\Models\KnowledgeBaseArticle::where('is_published', true)->get();
-            return view('user.knowledge.index', compact('articles'));
-        })->name('knowledge.index');
-    });
-
-    // PANEL DE JEFE (Reportes)
-    Route::middleware(['role:boss,supervisor,admin'])->prefix('boss')->name('boss.')->group(function () {
-        Route::get('/dashboard', [\App\Http\Controllers\Boss\DashboardController::class, 'index'])->name('dashboard');
-    });
-
-    // PANEL ADMINISTRATIVO / TÉCNICO
-    Route::middleware(['role:admin,technician'])->prefix('admin')->name('admin.')->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-        // Tickets Admin
-        Route::get('/tickets', [AdminTicketController::class, 'index'])->name('tickets.index');
-        Route::get('/tickets/{ticket}', [AdminTicketController::class, 'show'])->name('tickets.show');
-        Route::post('/tickets/{ticket}/reply', [AdminTicketController::class, 'reply'])->name('tickets.reply');
-        Route::post('/tickets/{ticket}/assign', [AdminTicketController::class, 'assign'])->name('tickets.assign');
-        Route::post('/tickets/{ticket}/status', [AdminTicketController::class, 'updateStatus'])->name('tickets.status');
-
-        // Inventario (Equipos) -> Admin Puede Registrar
-        Route::get('/assets', function () {
-            return "Módulo de Inventario en Construcción - Lista de Activos";
-        })->name('assets.index');
-        Route::post('/assets', function () {
-            return "Registrando Equipo...";
-        })->name('assets.store');
-
-        // Base de Conocimientos (Admin CRUD)
-        Route::get('/knowledge', function () {
-            return "Módulo de Conocimientos - Admin CRUD";
-        })->name('knowledge.index');
-    });
-});
-
-require __DIR__ . '/auth.php';
-
-// --- RUTAS TEMPORALES DE EMERGENCIA ---
-
-// 1. Forzar Logout por URL (Entra a tickets.crisadones.com/force-logout)
-Route::get('/force-logout', function () {
-    Auth::logout();
-    
-    // Invalida la sesión y regenera el token CSRF para mayor seguridad
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-
-    return redirect('/login')->with('success', 'Sesión cerrada correctamente');
-});
-
-// 2. Ver por qué no tengo permisos (Entra a tickets.crisadones.com/debug-role)
 Route::get('/debug-role', function () {
     $user = auth()->user();
-    if (!$user)
-        return "No estás logueado en el sistema";
-
-    // Forzamos la carga del rol para ver si existe
-    $rol = \App\Models\Role::find($user->role_id);
-
-    return [
-        'tu_email' => $user->email,
-        'tu_rol_id_en_base_de_datos' => $user->role_id,
-        'nombre_del_rol' => $rol ? $rol->name : 'ROL NO ENCONTRADO',
-        'slug_del_rol' => $rol ? $rol->slug : 'SIN SLUG',
-        '¿El sistema te ve como Admin?' => $user->isAdmin() ? 'SI' : 'NO',
-    ];
+    return $user ? ['email' => $user->email, 'rol' => $user->role_id] : "No logueado";
 })->middleware('auth');
 
-// --- FIN RUTAS DE EMERGENCIA ---
+// --- 4. RUTAS DE AUTENTICACIÓN EXTRA ---
+require __DIR__ . '/auth.php';

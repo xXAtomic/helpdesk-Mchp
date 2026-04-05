@@ -16,8 +16,13 @@
         <nav class="flex-1 px-4 py-6 space-y-2">
             <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 rounded bg-gray-800 hover:bg-gray-700">Dashboard</a>
             <a href="{{ route('admin.tickets.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700">Tickets</a>
+<<<<<<< HEAD
             <a href="{{ route('admin.assets.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700">Inventario (Equipos)</a>
             <a href="{{ route('admin.knowledge.index') }}" class="block px-4 py-2 rounded hover:bg-gray-700">Base de Conocimientos</a>
+=======
+            <a href="#" class="block px-4 py-2 text-gray-400 hover:bg-gray-700 pointer-events-none">Inventario (Proximamente)</a>
+            <a href="#" class="block px-4 py-2 text-gray-400 hover:bg-gray-700 pointer-events-none">Base de Conocimientos</a>
+>>>>>>> origin/servidor-maraton-ayer
         </nav>
         <div class="p-4 border-t border-gray-800">
             <p class="text-sm">Logueado como:</p>

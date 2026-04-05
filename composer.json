@@ -12,6 +12,10 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+<<<<<<< HEAD
+=======
+        "laravel/breeze": "^2.4",
+>>>>>>> origin/servidor-maraton-ayer
         "laravel/pail": "^1.2.5",
         "laravel/pint": "^1.27",
         "mockery/mockery": "^1.6",

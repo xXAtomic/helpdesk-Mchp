@@ -24,6 +24,13 @@ class Ticket extends Model
         'due_date',
         'resolved_at',
         'closed_at',
+<<<<<<< HEAD
+=======
+        'requester_name',
+        'requester_email',
+        'department_name',
+        'attachment_path',
+>>>>>>> origin/servidor-maraton-ayer
     ];
 
     protected $casts = [
@@ -36,12 +43,21 @@ class Ticket extends Model
     public function user() { return $this->belongsTo(User::class, 'user_id'); }
     public function technician() { return $this->belongsTo(User::class, 'technician_id'); }
     public function department() { return $this->belongsTo(Department::class); }
+<<<<<<< HEAD
     public function category() { return $this->belongsTo(TicketCategory::class); }
     public function priority() { return $this->belongsTo(TicketPriority::class); }
     public function status() { return $this->belongsTo(TicketStatus::class); }
     public function asset() { return $this->belongsTo(Asset::class); }
 
     public function replies() { return $this->hasMany(TicketResponse::class); }
+=======
+    public function category() { return $this->belongsTo(Category::class); }
+    public function priority() { return $this->belongsTo(Priority::class); }
+    public function status() { return $this->belongsTo(Status::class); }
+    public function asset() { return $this->belongsTo(Asset::class); }
+
+    public function responses() { return $this->hasMany(TicketResponse::class); }
+>>>>>>> origin/servidor-maraton-ayer
     public function attachments() { return $this->hasMany(TicketAttachment::class); }
 
     // Generar Número Auto
