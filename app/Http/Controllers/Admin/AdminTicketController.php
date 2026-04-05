@@ -64,12 +64,12 @@ public function store(Request $request)
 
     public function reply(Request $request, $id)
     {
-        $request->validate(['content' => 'required']);
+        $request->validate(['body' => 'required']);
 
         TicketResponse::create([
             'ticket_id' => $id,
             'user_id' => auth()->id(),
-            'content' => $request->content
+            'body' => $request->body
         ]);
 
         return back()->with('success', 'Respuesta enviada correctamente.');

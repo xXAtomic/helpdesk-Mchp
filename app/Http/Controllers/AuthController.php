@@ -20,7 +20,16 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+            $user = Auth::user();
+            
+            // REDIRECCIÓN INTELIGENTE ✨💎🚀
+            if ($user->isAdmin() || $user->isTechnician()) {
+                return redirect()->intended('/admin/dashboard');
+            } elseif ($user->isBoss()) {
+                return redirect()->intended('/boss/dashboard');
+            } else {
+                return redirect()->intended('/dashboard');
+            }
         }
 
         return back()->withErrors(['email' => 'Credenciales incorrectas.'])->onlyInput('email');

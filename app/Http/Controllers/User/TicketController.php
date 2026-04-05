@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\Priority;
-use App\Models\Category;
+use App\Models\TicketPriority;
+use App\Models\TicketCategory;
 use App\Models\Department;
 use App\Models\Ticket;
 use App\Services\TicketService;
@@ -27,8 +27,8 @@ class TicketController extends Controller
 
     public function create()
     {
-        $categories = Category::all();
-        $priorities = Priority::all();
+        $categories = TicketCategory::all();
+        $priorities = TicketPriority::all();
         $departments = Department::all();
         
         return view('user.tickets.create', compact('categories', 'priorities', 'departments'));
@@ -39,8 +39,8 @@ class TicketController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-            'priority_id' => 'required|exists:priorities,id',
+            'category_id' => 'required|exists:ticket_categories,id',
+            'priority_id' => 'required|exists:ticket_priorities,id',
             'department_id' => 'nullable|exists:departments,id',
         ]);
 

@@ -67,6 +67,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/inventory', [EquipmentController::class, 'index'])->name('inventory.index');
     Route::get('/knowledge-base', [KnowledgeBaseController::class, 'index'])->name('knowledge.index');
 
+    // TICKETS PARA USUARIOS NORMALES 🎟️✨
+    Route::prefix('my-tickets')->group(function () {
+        Route::get('/', [\App\Http\Controllers\User\TicketController::class, 'index'])->name('user.tickets.index');
+        Route::get('/create', [\App\Http\Controllers\User\TicketController::class, 'create'])->name('user.tickets.create');
+        Route::post('/', [\App\Http\Controllers\User\TicketController::class, 'store'])->name('user.tickets.store');
+        Route::get('/{ticket}', [\App\Http\Controllers\User\TicketController::class, 'show'])->name('user.tickets.show');
+    });
+
 });
 
 // --- 3. UTILIDADES DE EMERGENCIA ---

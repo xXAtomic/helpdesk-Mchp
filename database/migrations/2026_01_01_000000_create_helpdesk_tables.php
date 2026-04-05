@@ -107,6 +107,13 @@ return new class extends Migration {
             $table->foreignId('priority_id')->nullable()->constrained('ticket_priorities')->onDelete('set null');
             $table->foreignId('status_id')->nullable()->constrained('ticket_statuses')->onDelete('set null');
             $table->foreignId('asset_id')->nullable()->constrained('assets')->onDelete('set null');
+            
+            // Campos de invitado / Admin creation ✅
+            $table->string('requester_name')->nullable();
+            $table->string('requester_email')->nullable();
+            $table->string('department_name')->nullable();
+            $table->string('attachment_path')->nullable();
+
             $table->timestamp('due_date')->nullable();
             $table->timestamp('resolved_at')->nullable();
             $table->timestamp('closed_at')->nullable();
