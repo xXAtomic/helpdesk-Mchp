@@ -1,46 +1,44 @@
 <x-app-layout>
-    <div style="display: flex; min-height: 100vh; background-color: white; font-family: sans-serif; text-transform: uppercase; overflow: hidden;">
-        
-        <!-- SIDEBAR FULL-HIGH (CYBER-BLUE) -->
-        <div style="width: 280px; position: fixed; height: 100vh; z-index: 100;
-                    background: #020617; 
-                    background-image: radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.2) 0%, transparent 40%);
-                    color: white; display: flex; flex-direction: column; box-shadow: 15px 0 35px rgba(0,0,0,0.1);">
-            
-            <!-- CAPA DE LÍNEAS TECH -->
-            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.15; pointer-events: none;
-                        background-image: repeating-linear-gradient(45deg, #3b82f6 0px, #3b82f6 1px, transparent 1px, transparent 20px);"></div>
-            <div style="padding: 3rem 2rem; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center;">
-                <h1 style="font-size: 1.5rem; font-weight: 1000; color: #fbbf24; font-style: italic;">MCHP SOPORTE</h1>
-            </div>
-            <nav style="flex: 1; padding: 3rem 1.5rem; display: flex; flex-direction: column; gap: 0.8rem;">
-                <a href="{{ route('dashboard') }}" style="display: flex; align-items: center; padding: 1.2rem 2rem; font-size: 0.75rem; font-weight: 950; color: #0f172a; background-color: #fbbf24; text-decoration: none; border-radius: 1.5rem; box-shadow: 0 10px 20px rgba(251,191,36,0.3);">🏠 INICIO</a>
-                <a href="{{ route('user.tickets.index') }}" style="display: flex; align-items: center; padding: 1.2rem 2rem; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-decoration: none;">🎫 MIS SOLICITUDES</a>
-                <a href="{{ route('knowledge.index') }}" style="display: flex; align-items: center; padding: 1.2rem 2rem; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-decoration: none;">❓ FAQ (PREGUNTAS)</a>
-            </nav>
+    <div class="py-2">
+        <!-- CABECERA DE BIENVENIDA -->
+        <div class="mb-12">
+            <h2 class="text-4xl font-black text-slate-900 tracking-tighter italic uppercase underline decoration-blue-600 decoration-8 underline-offset-4">¡HOLA DE NUEVO, {{ Auth::user()->name }}! 👋</h2>
+            <p class="text-[0.65rem] font-bold text-slate-400 mt-4 uppercase tracking-[0.3em] leading-none opacity-80">¿QUÉ PROCEDIMIENTO TÉCNICO NECESITAS REALIZAR HOY?</p>
         </div>
-        <!-- CONTENIDO PRINCIPAL (FONDO BLANCO) -->
-        <div style="flex: 1; margin-left: 280px; padding: 4rem; overflow-y: auto;">
-            
-            <!-- CABECERA DE BIENVENIDA (TEXTO NEGRO) -->
-            <div style="margin-bottom: 5rem;">
-                <h2 style="font-size: 2.5rem; font-weight: 1000; color: #0f172a;">¡HOLA DE NUEVO, {{ Auth::user()->name }}! 👋</h2>
-                <p style="font-size: 0.75rem; font-weight: 950; color: #64748b; letter-spacing: 2px;">¿QUÉ NECESITAS RESOLVER HOY?</p>
+
+        <!-- GRID DE ACCIONES PREMIUM -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <!-- CARD: INCIDENTE -->
+            <div class="group relative bg-white p-12 rounded-[3.5rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-blue-600/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
+                
+                <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-8 group-hover:rotate-12 transition-transform">
+                    <span class="text-3xl">🚀</span>
+                </div>
+                
+                <h3 class="text-2xl font-black text-slate-900 mb-2 italic tracking-tighter uppercase">NUEVO REQUERIMIENTO</h3>
+                <p class="text-xs font-bold text-slate-400 mb-8 uppercase tracking-widest leading-relaxed">Abre un ticket estructurado para resolución por soporte técnico o finanzas.</p>
+                
+                <a href="{{ route('user.tickets.create') }}" class="inline-flex items-center gap-3 bg-blue-600 text-white px-8 py-4 rounded-2xl font-black text-[0.7rem] uppercase tracking-widest shadow-xl shadow-blue-500/20 hover:bg-blue-700 hover:-translate-y-1 transition-all duration-300">
+                    CENTRO DE SOLICITUDES
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
             </div>
-            <!-- GRID DE ACCIONES -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;">
-                <div style="background: white; padding: 5rem; border-radius: 4rem; text-align: center; border: 1px solid #f1f5f9; box-shadow: 0 40px 100px rgba(0,0,0,0.03);">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3233/3233503.png" style="width: 80px; margin-bottom: 3rem; opacity: 0.5;">
-                    <h3 style="font-weight: 1000; font-size: 1.4rem; color: #0f172a; margin-bottom: 1.5rem;">NUEVO REQUERIMIENTO</h3>
-                    <p style="font-size: 0.65rem; color: #64748b; margin-bottom: 4rem; font-weight: 800;">ABRE UN TICKET PARA SOPORTE TÉCNICO O FINANZAS.</p>
-                    <a href="{{ route('user.tickets.create') }}" style="background: #3b82f6; box-shadow: 0 10px 25px rgba(59,130,246,0.4); color: white; padding: 1.4rem 3rem; border-radius: 1.5rem; font-weight: 1000; font-size: 0.8rem; text-decoration: none; box-shadow: 0 10px 20px rgba(37,99,235,0.2);">SOLICITAR AHORA 🚀</a>
+
+            <!-- CARD: KNOWLEDGE -->
+            <div class="group relative bg-slate-950 p-12 rounded-[3.5rem] shadow-2xl overflow-hidden hover:-translate-y-2 transition-all duration-500">
+                <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-amber-400 to-transparent"></div>
+                
+                <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mb-8">
+                    <span class="text-3xl">📖</span>
                 </div>
-                <div style="background: white; padding: 5rem; border-radius: 4rem; text-align: center; border: 1px solid #f1f5f9; box-shadow: 0 40px 100px rgba(0,0,0,0.03);">
-                    <img src="https://cdn-icons-png.flaticon.com/512/1066/1066371.png" style="width: 80px; margin-bottom: 3rem; opacity: 0.5;">
-                    <h3 style="font-weight: 1000; font-size: 1.4rem; color: #0f172a; margin-bottom: 1.5rem;">BIBLIOTECA TÉCNICA</h3>
-                    <p style="font-size: 0.65rem; color: #64748b; margin-bottom: 4rem; font-weight: 800;">REVISA MANUALES Y SOLUCIONES PASO A PASO.</p>
-                    <a href="{{ route('knowledge.index') }}" style="background: #0f172a; color: white; padding: 1.4rem 3rem; border-radius: 1.5rem; font-weight: 1000; font-size: 0.8rem; text-decoration: none;">IR A MANUALES 📖</a>
-                </div>
+                
+                <h3 class="text-2xl font-black text-white mb-2 italic tracking-tighter uppercase">BIBLIOTECA TÉCNICA</h3>
+                <p class="text-xs font-bold text-slate-500 mb-8 uppercase tracking-widest leading-relaxed text-balance">Revisa los manuales operativos y soluciones de autogestión paso a paso.</p>
+                
+                <a href="{{ route('knowledge.index') }}" class="inline-flex items-center gap-3 bg-white text-slate-950 px-8 py-4 rounded-2xl font-black text-[0.7rem] uppercase tracking-widest hover:bg-amber-400 hover:text-slate-950 transition-all duration-300">
+                    EXPLORAR MANUALES
+                </a>
             </div>
         </div>
     </div>
