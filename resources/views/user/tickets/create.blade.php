@@ -21,9 +21,66 @@
                 <!-- TÍTULO -->
                 <div class="md:col-span-2">
                     <label class="block text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-3 italic">TÍTULO DEL PROBLEMA</label>
-                    <input type="text" name="title" required placeholder="Ej: Error al conectar con la impresora.."
+                    <input type="text" id="ticket-title" name="title" required placeholder="Ej: Error al conectar con la impresora.."
                         class="w-full bg-gray-50/50 border-0 p-5 rounded-2xl text-sm font-bold text-gray-900 focus:ring-4 focus:ring-blue-500/10 placeholder:text-gray-300 transition-all uppercase">
+                    
+                    <!-- SUGERENCIAS DE GRAVITYBRAIN -->
+                    <div id="gravity-brain-container" class="mt-4 hidden">
+                        <div class="bg-blue-50/50 p-6 rounded-3xl border border-blue-100/50 backdrop-blur-sm relative overflow-hidden">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="bg-blue-600 text-white text-[0.6rem] font-black px-2 py-1 rounded uppercase tracking-tighter italic">GRAVITYBRAIN AI</span>
+                                <span class="text-[0.6rem] font-bold text-gray-400 uppercase tracking-widest leading-none">Hemos encontrado soluciones que podrían ayudarte ahora:</span>
+                            </div>
+                            <div id="suggestions-list" class="space-y-2">
+                                <!-- Las sugerencias se cargarán aquí -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const titleInput = document.getElementById('ticket-title');
+                        const brainContainer = document.getElementById('gravity-brain-container');
+                        const suggestionsList = document.getElementById('suggestions-list');
+                        let debounceTimer;
+
+                        titleInput.addEventListener('keyup', function() {
+                            clearTimeout(debounceTimer);
+                            const query = this.value;
+
+                            if (query.length < 3) {
+                                brainContainer.classList.add('hidden');
+                                return;
+                            }
+
+                            debounceTimer = setTimeout(() => {
+                                fetch(`{{ route('gravity.brain.search') }}?query=${encodeURIComponent(query)}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data.length > 0) {
+                                            suggestionsList.innerHTML = '';
+                                            data.forEach(item => {
+                                                const link = `{{ url('/knowledge-base') }}`;
+                                                const div = document.createElement('div');
+                                                div.className = "group active:scale-95 transition-all text-left";
+                                                div.innerHTML = `
+                                                    <a href="${link}" target="_blank" class="flex items-center justify-between p-3 bg-white hover:bg-blue-600 rounded-xl border border-blue-100/30 transition-all shadow-sm">
+                                                        <span class="text-[0.7rem] font-black text-gray-900 group-hover:text-white uppercase truncate">${item.title}</span>
+                                                        <span class="text-[0.65rem] font-black text-blue-600 group-hover:text-white uppercase tracking-tighter">LEER SOLUCIÓN →</span>
+                                                    </a>
+                                                `;
+                                                suggestionsList.appendChild(div);
+                                            });
+                                            brainContainer.classList.remove('hidden');
+                                        } else {
+                                            brainContainer.classList.add('hidden');
+                                        }
+                                    });
+                            }, 500);
+                        });
+                    });
+                </script>
 
                 <!-- CATEGORÍA -->
                 <div>

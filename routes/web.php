@@ -75,6 +75,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{ticket}', [\App\Http\Controllers\User\TicketController::class, 'show'])->name('user.tickets.show');
     });
 
+    // MOTOR DE INTELIGENCIA GRAVITYBRAIN 🧠
+    Route::get('/gravity-brain/search', [App\Http\Controllers\User\GravityBrainController::class, 'search'])->name('gravity.brain.search');
+
 });
 
 // --- 3. UTILIDADES DE EMERGENCIA ---
