@@ -16,28 +16,33 @@
             @csrf
             @method('PUT')
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="space-y-8">
                 <!-- Título -->
-                <div class="md:col-span-2 space-y-2">
+                <div class="space-y-2">
                     <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Título de la Recomendación</label>
                     <input type="text" name="title" required value="{{ old('title', $manual->title) }}"
                         class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-300">
                 </div>
 
-                <!-- Icono -->
-                <div class="space-y-2">
-                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Icono (Emoji)</label>
-                    <input type="text" name="icon"
-                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-300"
-                        value="{{ old('icon', $manual->icon) }}">
-                </div>
-                
-                <!-- Categoría -->
-                <div class="space-y-2">
-                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Categoría</label>
-                    <input type="text" name="category"
-                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-300"
-                        value="{{ old('category', $manual->category) }}">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Categoría -->
+                    <div class="space-y-2">
+                        <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Tipo de Contenido</label>
+                        <select name="category" required
+                            class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all">
+                            <option value="Manual" {{ $manual->category == 'Manual' ? 'selected' : '' }}>📖 Manual Operativo</option>
+                            <option value="Recomendación" {{ $manual->category == 'Recomendación' ? 'selected' : '' }}>💡 Recomendación / Tip</option>
+                            <option value="Guía" {{ $manual->category == 'Guía' ? 'selected' : '' }}>📂 Guía Técnica</option>
+                        </select>
+                    </div>
+
+                    <!-- Icono -->
+                    <div class="space-y-2">
+                        <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Icono (Emoji)</label>
+                        <input type="text" name="icon"
+                            class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-300"
+                            value="{{ old('icon', $manual->icon) }}">
+                    </div>
                 </div>
             </div>
 

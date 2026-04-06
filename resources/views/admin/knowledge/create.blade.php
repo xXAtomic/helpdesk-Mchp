@@ -24,20 +24,23 @@
                         placeholder="Ej: Cómo configurar el correo institucional">
                 </div>
 
-                <!-- Categoría (Opcional por ahora) -->
+                <!-- Categoría -->
+                <div class="space-y-2">
+                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Tipo de Contenido</label>
+                    <select name="category" required
+                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all">
+                        <option value="Manual">📖 Manual Operativo</option>
+                        <option value="Recomendación">💡 Recomendación / Tip</option>
+                        <option value="Guía">📂 Guía Técnica</option>
+                    </select>
+                </div>
+
+                <!-- Icono -->
                 <div class="space-y-2">
                     <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Icono (Emoji)</label>
                     <input type="text" name="icon"
                         class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-300"
-                        placeholder="Ej: 📖, 💡, 🔧" value="📖">
-                </div>
-                
-                 <!-- Categoría de Texto -->
-                 <div class="space-y-2">
-                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Categoría</label>
-                    <input type="text" name="category"
-                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-300"
-                        placeholder="Ej: Correo, Redes, Software">
+                        placeholder="Ej: 🛡️, 🧹, 📡" value="📖">
                 </div>
             </div>
 

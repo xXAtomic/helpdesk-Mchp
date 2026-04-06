@@ -9,8 +9,9 @@ use App\Models\Knowledge;
 class KnowledgeBaseController extends Controller
 {
     public function index() {
-        $manuals = Knowledge::orderBy('created_at', 'desc')->get();
-        return view('admin.knowledge.index', compact('manuals'));
+        $manuals = Knowledge::whereNotIn('category', ['Recomendación', 'Tip'])->orderBy('created_at', 'desc')->get();
+        $tips = Knowledge::whereIn('category', ['Recomendación', 'Tip'])->orderBy('created_at', 'desc')->get();
+        return view('admin.knowledge.index', compact('manuals', 'tips'));
     }
 
     public function create() {
@@ -21,6 +22,7 @@ class KnowledgeBaseController extends Controller
         $data = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
+            'category' => 'required|string',
             'icon' => 'nullable',
             'file' => 'nullable|file|max:10240'
         ]);
@@ -37,13 +39,14 @@ class KnowledgeBaseController extends Controller
         Knowledge::create([
             'title' => $data['title'],
             'content' => $data['content'],
+            'category' => $data['category'],
             'icon' => $request->icon ?? '📖',
             'file_path' => $filePath,
             'file_name' => $fileName,
             'is_published' => true,
         ]);
 
-        return redirect()->route('admin.knowledge.index')->with('success', 'Manual publicado correctamente.');
+        return redirect()->route('admin.knowledge.index')->with('success', 'Publicado correctamente.');
     }
 
     public function edit($id) {
@@ -57,6 +60,7 @@ class KnowledgeBaseController extends Controller
         $data = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
+            'category' => 'required|string',
             'icon' => 'nullable',
             'file' => 'nullable|file|max:10240'
         ]);
