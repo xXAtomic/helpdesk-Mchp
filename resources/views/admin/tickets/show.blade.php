@@ -1,167 +1,171 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="px-6 py-8 max-w-[1600px] mx-auto">
+<div class="max-w-6xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
     
-    <!-- HEADER MINIMALISTA -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6 border-b border-slate-100 pb-8">
+    <!-- CABECERA DE INCIDENTE (ESTILO CLONADO) -->
+    <div class="mb-10 pb-8 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div>
-            <div class="flex items-center gap-3 mb-2">
-                <span class="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[0.6rem] font-black uppercase tracking-widest border border-indigo-100 italic">
-                    Ticket #{{ $ticket->id }}
+            <div class="flex items-center gap-3 mb-3">
+                <span class="inline-flex px-3 py-1 rounded-md text-[0.6rem] font-black uppercase tracking-widest border"
+                      style="background-color: {{ optional($ticket->status)->color }}10; color: {{ optional($ticket->status)->color }}; border-color: {{ optional($ticket->status)->color }}20;">
+                    ● {{ optional($ticket->status)->name ?? 'Abierto' }}
                 </span>
-                <span class="text-[0.6rem] font-bold text-slate-300 uppercase tracking-widest">•</span>
-                <span class="text-[0.6rem] font-bold text-slate-400 uppercase tracking-widest italic">{{ $ticket->created_at->format('d/m/Y H:i') }}</span>
+                <span class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-widest">REGISTRO #{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</span>
             </div>
-            <h1 class="text-4xl font-black text-slate-900 tracking-tighter uppercase italic leading-none">{{ $ticket->title }}</h1>
-            <p class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest mt-2 flex items-center gap-2">
-                <span class="w-2 h-2 bg-slate-300 rounded-full"></span>
-                Solicitante: <span class="text-slate-600 italic">{{ $ticket->user->name ?? 'Invitado' }}</span>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight uppercase italic">{{ $ticket->title }}</h1>
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-3">
+                {{ optional($ticket->category)->name ?? 'GENERAL' }} • INICIADO POR {{ $ticket->user->name ?? 'Invitado' }}
             </p>
         </div>
-        <div class="flex gap-3">
-            <a href="{{ route('admin.tickets.index') }}" class="px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-500 rounded-xl font-black text-[0.65rem] uppercase tracking-widest transition-all italic">
-                ← Volver al Listado
-            </a>
-        </div>
+        <a href="{{ route('admin.tickets.index') }}" class="text-[0.65rem] font-bold text-slate-400 hover:text-slate-900 transition-all uppercase tracking-widest flex items-center gap-2 italic">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Volver al listado
+        </a>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-10">
-
-        <!-- LADO IZQUIERDO: CONVERSACIÓN -->
+    <!-- CUERPO DE LA CONVERSACIÓN -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
+        
+        <!-- COLUMNA IZQUIERDA: MENSAJES -->
         <div class="lg:col-span-3 space-y-10">
             
-            <!-- BLOQUE INICIAL DEL INCIDENTE -->
-            <div class="bg-white p-10 rounded-[2.5rem] border-2 border-slate-200 shadow-sm relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-2 h-full bg-slate-900"></div>
-                <h3 class="text-[0.6rem] font-black text-slate-400 uppercase tracking-widest mb-6 italic">Descripción del Incidente</h3>
-                <div class="text-base font-medium text-slate-700 leading-relaxed">
+            <!-- MENSAJE ORIGINAL -->
+            <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden">
+                <div class="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500"></div>
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 font-bold border italic">
+                        {{ substr($ticket->user->name ?? 'U', 0, 1) }}
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-slate-900 uppercase italic">{{ $ticket->user->name ?? 'Invitado' }}</p>
+                        <p class="text-[0.6rem] font-medium text-slate-400 uppercase tracking-widest italic">Solicitante · {{ $ticket->created_at->format('d/M H:i') }}</p>
+                    </div>
+                </div>
+                <div class="text-[0.95rem] text-slate-600 leading-relaxed font-medium italic">
                     {!! nl2br(e($ticket->description)) !!}
                 </div>
 
+                <!-- ADJUNTOS INCIDENTE -->
                 @if($ticket->attachments->whereNull('ticket_response_id')->count() > 0)
-                <div class="mt-10 pt-8 border-t-2 border-slate-50">
-                    <p class="text-[0.6rem] font-black text-slate-400 uppercase tracking-widest mb-4 italic italic">Archivos Adjuntos</p>
-                    <div class="flex flex-wrap gap-3">
-                        @foreach($ticket->attachments->whereNull('ticket_response_id') as $attachment)
-                        <a href="{{ Storage::url($attachment->file_path) }}" target="_blank" 
-                           class="px-5 py-3 bg-slate-50 border-2 border-slate-100 rounded-xl flex items-center gap-2 hover:border-indigo-200 transition-all group">
-                            <svg class="w-4 h-4 text-slate-400 group-hover:text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                            <span class="text-[0.6rem] font-black text-slate-600 uppercase tracking-widest truncate max-w-[150px]">{{ $attachment->file_name }}</span>
+                <div class="mt-8 pt-6 border-t border-gray-50 grid grid-cols-4 gap-4">
+                    @foreach($ticket->attachments->whereNull('ticket_response_id') as $attachment)
+                        <a href="{{ Storage::url($attachment->file_path) }}" target="_blank" class="group block overflow-hidden rounded-lg border border-gray-200 shadow-sm transition-all hover:border-indigo-400">
+                            @if(Str::contains($attachment->file_type, 'image'))
+                                <img src="{{ Storage::url($attachment->file_path) }}" class="aspect-video w-full object-cover">
+                            @else
+                                <div class="aspect-video w-full bg-slate-50 flex items-center justify-center text-[0.6rem] font-black text-slate-400 uppercase p-2">DOC: {{ $attachment->file_name }}</div>
+                            @endif
                         </a>
-                        @endforeach
-                    </div>
+                    @endforeach
                 </div>
                 @endif
             </div>
 
-            <!-- HISTORIAL DE RESPUESTAS (Thread Estilo Moderno) -->
-            <div class="space-y-6 relative pl-4">
-                <div class="absolute left-6 top-0 bottom-0 w-1 bg-slate-100 rounded-full"></div>
-                
-                @foreach($ticket->replies as $reply)
-                    <div class="relative flex flex-col {{ $reply->user_id == auth()->id() ? 'items-end' : 'items-start' }}">
-                        <div class="absolute -left-2 top-8 w-4 h-4 rounded-full bg-white border-4 {{ $reply->user_id == auth()->id() ? 'border-indigo-600' : 'border-amber-400' }} shadow-sm"></div>
-                        
-                        <div class="max-w-[90%] bg-white p-8 rounded-[2rem] border-2 {{ $reply->user_id == auth()->id() ? 'border-indigo-100 shadow-indigo-50/50' : 'border-slate-200 shadow-sm' }}">
-                            <div class="flex items-center gap-3 mb-4">
-                                <div class="w-8 h-8 rounded-full {{ $reply->user_id == auth()->id() ? 'bg-indigo-600' : 'bg-amber-400' }} flex items-center justify-center text-white font-black text-[0.6rem] border-2 border-white shadow-sm italic italic">
-                                    {{ substr($reply->user->name, 0, 1) }}
-                                </div>
-                                <span class="text-[0.65rem] font-black text-slate-900 uppercase tracking-tight italic italic">{{ $reply->user->name }}</span>
-                                <span class="text-[0.55rem] font-bold text-slate-300 uppercase tracking-widest">{{ $reply->created_at->diffForHumans() }}</span>
-                            </div>
-                            <div class="text-[0.95rem] font-medium text-slate-600 leading-relaxed italic italic">
-                                {!! nl2br(e($reply->body)) !!}
-                            </div>
+            <!-- RESPUESTAS (REPLIES) -->
+            @foreach($ticket->replies as $reply)
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden {{ $reply->user->role->slug == 'admin' ? 'bg-slate-50 border-slate-200 shadow-md' : '' }}">
+                    @if($reply->user->role->slug == 'admin')
+                        <div class="absolute right-0 top-0 px-3 py-1 bg-slate-900 text-white text-[0.55rem] font-black uppercase tracking-widest rounded-bl-xl italic">SOPORTE TI</div>
+                    @endif
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-10 h-10 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold italic">
+                            {{ substr($reply->user->name, 0, 1) }}
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-900 uppercase italic">{{ $reply->user->name }}</p>
+                            <p class="text-[0.6rem] font-medium text-slate-400 uppercase tracking-widest italic">{{ $reply->created_at->format('d/M H:i') }}</p>
                         </div>
                     </div>
-                @endforeach
-            </div>
+                    <div class="text-[0.95rem] text-slate-700 leading-relaxed font-medium italic">
+                        {!! nl2br(e($reply->body)) !!}
+                    </div>
 
-            <!-- PANEL DE RESPUESTA FINAL (Fondo Oscuro Premium) -->
-            <div class="bg-slate-950 p-10 rounded-[3rem] shadow-2xl relative overflow-hidden border border-slate-800">
-                <div class="absolute top-0 right-0 w-80 h-80 bg-indigo-600/10 rounded-full -mr-40 -mt-40 blur-[100px]"></div>
-                <h4 class="text-xl font-black text-white mb-8 italic uppercase tracking-tighter flex items-center gap-3">
-                    <span class="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></span>
-                    Intervención Técnica
-                </h4>
-                <form action="{{ route('admin.tickets.reply', $ticket->id) }}" method="POST" enctype="multipart/form-data" class="relative z-10">
-                    @csrf
-                    <textarea name="body" required rows="5" placeholder="ESCRIBE TU RESPUESTA TÉCNICA AQUÍ..."
-                              class="w-full px-8 py-8 rounded-[2.5rem] bg-white/5 border-2 border-white/10 text-white font-bold text-[0.9rem] focus:border-indigo-500 focus:bg-white/10 transition-all outline-none placeholder:text-slate-600 mb-8 italic italic"></textarea>
-                    
-                    <div class="flex flex-col md:flex-row justify-between items-center gap-8 bg-white/5 p-6 rounded-[2rem] border border-white/5">
-                        <div class="w-full md:w-auto">
-                            <label class="flex items-center gap-3 cursor-pointer group">
-                                <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center border border-white/10 group-hover:bg-indigo-600 transition-colors">
-                                    <svg class="w-5 h-5 text-indigo-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
-                                </div>
-                                <span class="text-[0.65rem] font-black text-slate-400 group-hover:text-white transition-colors uppercase tracking-widest italic italic">Adjuntar Material</span>
-                                <input type="file" name="attachments[]" multiple class="hidden">
-                            </label>
+                    <!-- ADJUNTOS RESPUESTA -->
+                    @if($reply->attachments->count() > 0)
+                        <div class="mt-8 grid grid-cols-4 gap-4">
+                            @foreach($reply->attachments as $attachment)
+                                <a href="{{ Storage::url($attachment->file_path) }}" target="_blank" class="group block overflow-hidden rounded-lg border border-gray-200">
+                                    @if(Str::contains($attachment->file_type, 'image'))
+                                        <img src="{{ Storage::url($attachment->file_path) }}" class="aspect-video w-full object-cover">
+                                    @else
+                                        <div class="aspect-video w-full bg-slate-50 flex items-center justify-center text-[0.6rem] font-black text-slate-400 uppercase p-2">{{ $attachment->file_name }}</div>
+                                    @endif
+                                </a>
+                            @endforeach
                         </div>
-                        <button type="submit" class="w-full md:w-auto bg-indigo-600 hover:bg-white hover:text-slate-900 text-white px-14 py-5 rounded-2xl font-black text-[0.7rem] transition-all shadow-xl shadow-indigo-600/20 uppercase tracking-[0.2em] italic italic">
-                            Enviar Solución 🚀
+                    @endif
+                </div>
+            @endforeach
+            
+            <!-- FORMULARIO DE RESPUESTA (ESTILO CLONADO SLATE-950) -->
+            <div class="bg-slate-950 p-10 rounded-3xl shadow-xl mt-16 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-600/5 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+                <h4 class="text-lg font-bold text-white mb-8 tracking-tight uppercase italic italic">Intervención Técnica</h4>
+                <form action="{{ route('admin.tickets.reply', $ticket->id) }}" method="POST" enctype="multipart/form-data" class="space-y-8 relative z-10">
+                    @csrf
+                    <textarea name="body" required rows="5" placeholder="Escribe tu observación detallada aquí..."
+                              class="w-full px-6 py-5 rounded-xl bg-slate-900 border border-slate-800 text-white font-medium text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all outline-none placeholder:text-slate-600 italic"></textarea>
+                    
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+                        <label class="flex items-center gap-4 bg-slate-900 px-6 py-3 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-600 transition-all">
+                            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                            <span class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest italic">Incluir Evidencia</span>
+                            <input type="file" name="attachments[]" multiple class="hidden">
+                        </label>
+                        
+                        <button type="submit" class="w-full sm:w-auto bg-indigo-600 text-white px-12 py-4 rounded-lg font-bold text-[0.7rem] uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-500/20 italic">
+                            Enviar y Notificar 🚀
                         </button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- LADO DERECHO: CONTROLES -->
-        <div class="lg:col-span-1 space-y-8">
-            
-            <!-- PANEL DE CONTROL -->
-            <div class="bg-white p-8 rounded-[2.5rem] border-2 border-slate-200 shadow-sm">
-                <h4 class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.2em] mb-8 border-b border-slate-50 pb-4 italic">Gestión de Caso</h4>
+        <!-- COLUMNA DERECHA: CONTROLES ADMINISTRATIVOS -->
+        <div class="space-y-8">
+            <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100 shadow-sm">
+                <h5 class="text-[0.6rem] font-black text-gray-400 uppercase tracking-[0.2em] mb-8 italic">Controles de Gestión</h5>
                 
-                <div class="space-y-8">
-                    <!-- Cambio de Estado -->
+                <div class="space-y-10">
+                    <!-- Estado -->
                     <form action="{{ route('admin.tickets.status', $ticket->id) }}" method="POST">
                         @csrf
-                        <label class="text-[0.55rem] font-black text-slate-400 uppercase tracking-widest mb-3 block italic italic">Estado Resolutivo</label>
-                        <select name="status_id" onchange="this.form.submit()" 
-                                class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 font-black text-[0.7rem] text-slate-900 outline-none focus:border-indigo-500 transition-all uppercase tracking-widest italic italic">
+                        <p class="text-[0.6rem] font-bold text-gray-400 uppercase tracking-tight mb-2 italic">Actualizar Estado</p>
+                        <select name="status_id" onchange="this.form.submit()" class="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-sm font-bold text-slate-900 shadow-sm outline-none focus:border-indigo-500 italic">
                             @foreach(App\Models\TicketStatus::all() as $status)
                                 <option value="{{ $status->id }}" {{ $ticket->status_id == $status->id ? 'selected' : '' }}>{{ $status->name }}</option>
                             @endforeach
                         </select>
                     </form>
 
-                    <!-- Asignación Técnico -->
+                    <!-- Técnico -->
                     <form action="{{ route('admin.tickets.assign', $ticket->id) }}" method="POST">
                         @csrf
-                        <label class="text-[0.55rem] font-black text-slate-400 uppercase tracking-widest mb-3 block italic italic">Técnico Responsable</label>
-                        <select name="technician_id" onchange="this.form.submit()" 
-                                class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-2 border-slate-100 font-black text-[0.7rem] text-slate-900 outline-none focus:border-indigo-500 transition-all uppercase tracking-widest italic italic">
+                        <p class="text-[0.6rem] font-bold text-gray-400 uppercase tracking-tight mb-2 italic">Asignar Técnico</p>
+                        <select name="technician_id" onchange="this.form.submit()" class="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-sm font-bold text-slate-900 shadow-sm outline-none focus:border-indigo-500 italic">
                             <option value="">-- SIN ASIGNAR --</option>
                             @foreach(App\Models\User::whereHas('role', function($q){ $q->whereIn('slug', ['admin', 'technician']); })->get() as $tech)
                                 <option value="{{ $tech->id }}" {{ $ticket->technician_id == $tech->id ? 'selected' : '' }}>{{ $tech->name }}</option>
                             @endforeach
                         </select>
                     </form>
-                </div>
-            </div>
 
-            <!-- METADATOS TÉCNICOS -->
-            <div class="bg-indigo-600 p-8 rounded-[2.5rem] shadow-xl border-2 border-indigo-700">
-                <h4 class="text-[0.6rem] font-black text-indigo-200 uppercase tracking-widest mb-6 italic">Información Técnica</h4>
-                <div class="space-y-6">
-                    <div class="bg-indigo-700/50 p-5 rounded-2xl border border-indigo-400/20">
-                        <p class="text-[0.5rem] font-black text-indigo-300 uppercase tracking-widest mb-1 italic">Prioridad de Atencion</p>
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full" style="background-color: {{ optional($ticket->priority)->color }}"></span>
-                            <p class="text-xs font-black text-white uppercase italic tracking-wider">{{ optional($ticket->priority)->name ?? 'BAJA' }}</p>
+                    <!-- Info Contextual -->
+                    <div class="pt-6 border-t border-gray-200 space-y-4">
+                        <div>
+                            <p class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-widest italic">Prioridad</p>
+                            <p class="text-xs font-bold text-slate-900 uppercase italic" style="color: {{ optional($ticket->priority)->color }}">● {{ optional($ticket->priority)->name ?? 'Baja' }}</p>
                         </div>
-                    </div>
-                    <div class="bg-indigo-700/50 p-5 rounded-2xl border border-indigo-400/20">
-                        <p class="text-[0.5rem] font-black text-indigo-300 uppercase tracking-widest mb-1 italic italic">Activo Vinculado</p>
-                        <p class="text-xs font-black text-white uppercase tracking-widest italic">{{ $ticket->asset->asset_tag ?? 'HARDWARE EXTERNO' }}</p>
+                        <div>
+                            <p class="text-[0.55rem] font-bold text-gray-400 uppercase tracking-widest italic">Activo Vinculado</p>
+                            <p class="text-xs font-bold text-slate-900 uppercase italic">{{ $ticket->asset->asset_tag ?? 'NINGUNO' }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 @endsection
