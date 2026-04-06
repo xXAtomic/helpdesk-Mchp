@@ -19,11 +19,11 @@
                 <div class="absolute -right-10 -top-10 w-24 h-24 bg-indigo-50 rounded-full group-hover:scale-[3] transition-transform duration-700 opacity-50"></div>
                 
                 <div class="relative z-10">
-                    <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl shadow-lg mb-8">
+                    <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl shadow-lg mb-8 group-hover:rotate-[360deg] transition-transform duration-700">
                         <i class="fas fa-plus"></i>
                     </div>
                     <h3 class="text-xl font-black text-slate-900 uppercase tracking-tight italic mb-3">Nueva Solicitud</h3>
-                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest leading-relaxed mb-10">Reporta problemas técnicos o solicita asistencia técnica inmediata.</p>
+                    <p class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest leading-relaxed mb-10">Reporta problemas técnicos o solicita asistencia inmediata.</p>
                 </div>
                 
                 <a href="{{ route('user.tickets.create') }}" class="relative z-10 w-full bg-slate-900 text-white py-4 rounded-lg font-black text-[0.65rem] uppercase tracking-widest text-center hover:bg-indigo-600 transition-colors shadow-xl">
@@ -36,11 +36,11 @@
                 <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-indigo-500/10 rounded-full group-hover:scale-[4] transition-transform duration-1000"></div>
                 
                 <div class="relative z-10">
-                    <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center text-white text-xl border border-white/10 mb-8">
+                    <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center text-white text-xl border border-white/10 mb-8 group-hover:scale-110 transition-transform">
                         <i class="fas fa-book-open"></i>
                     </div>
                     <h3 class="text-xl font-black text-white uppercase tracking-tight italic mb-3">Guías Técnicas</h3>
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-widest leading-relaxed mb-10">Documentación oficial para autogestión de equipos y software.</p>
+                    <p class="text-[0.7rem] font-bold text-slate-500 uppercase tracking-widest leading-relaxed mb-10">Documentación oficial para autogestión de equipos y software.</p>
                 </div>
                 
                 <a href="{{ route('knowledge.index') }}" class="relative z-10 w-full bg-white text-slate-950 py-4 rounded-lg font-black text-[0.65rem] uppercase tracking-widest text-center hover:bg-indigo-400 transition-colors">
@@ -53,13 +53,15 @@
         <!-- COLUMNA LATERAL: ESTADO RÁPIDO -->
         <div class="space-y-8">
             <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100">
-                <h5 class="text-[0.6rem] font-black text-gray-400 uppercase tracking-[0.2em] mb-8 border-b border-gray-200 pb-4">Resumen de Actividad</h5>
+                <h5 class="text-[0.6rem] font-black text-gray-400 uppercase tracking-[0.2em] mb-8 border-b border-gray-200 pb-4">Actividad Reciente</h5>
                 
                 <div class="space-y-10">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-[0.6rem] font-bold text-gray-400 uppercase tracking-tight mb-1">Mis Solicitudes</p>
-                            <p class="text-xl font-black text-slate-900 italic uppercase">{{ Auth::user()->tickets->count() }} TICKETS</p>
+                            <p class="text-xl font-black text-slate-900 italic uppercase">
+                                {{ Auth::user()->tickets ? Auth::user()->tickets->count() : 0 }} TICKETS
+                            </p>
                         </div>
                         <div class="bg-indigo-600/10 p-3 rounded-xl text-indigo-600">
                             <i class="fas fa-ticket-alt"></i>
@@ -69,7 +71,9 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-[0.6rem] font-bold text-gray-400 uppercase tracking-tight mb-1">Cerrados con Éxito</p>
-                            <p class="text-xl font-black text-slate-900 italic uppercase">{{ Auth::user()->tickets->where('status_id', 3)->count() }} CERRADOS</p>
+                            <p class="text-xl font-black text-slate-900 italic uppercase">
+                                {{ Auth::user()->tickets ? Auth::user()->tickets->where('status_id', 3)->count() : 0 }} CERRADOS
+                            </p>
                         </div>
                         <div class="bg-emerald-600/10 p-3 rounded-xl text-emerald-600">
                             <i class="fas fa-check-circle"></i>
