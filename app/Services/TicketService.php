@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Ticket;
 use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Log;
 
 class TicketService
 {
@@ -88,13 +90,21 @@ class TicketService
 
     private function logActivity($action, $model, $userId, $details = [])
     {
-        ActivityLog::create([
-            'user_id' => $userId,
-            'action' => $action,
-            'model_type' => get_class($model),
-            'model_id' => $model->id,
-            'details' => $details,
-            'ip_address' => request()->ip()
-        ]);
+        try {
+            // Solo registrar si la tabla existe para evitar errores 500 prematuros
+            if (Schema::hasTable('activity_logs')) {
+                ActivityLog::create([
+                    'user_id' => $userId,
+                    'action' => $action,
+                    'model_type' => get_class($model),
+                    'model_id' => $model->id,
+                    'details' => $details,
+                    'ip_address' => request()->ip()
+                ]);
+            }
+        } catch (\Exception $e) {
+            // Registrar el error en logs internos pero no interrumpir la experiencia del usuario
+            Log::warning('ActivityLog Error: ' . $e->getMessage());
+        }
     }
 }
