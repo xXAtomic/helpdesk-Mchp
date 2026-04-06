@@ -21,8 +21,17 @@ class TicketController extends Controller
 
     public function index()
     {
-        $tickets = request()->user()->requestedTickets()->latest()->paginate(10);
-        return view('user.tickets.index', compact('tickets'));
+        $user = request()->user();
+        $tickets = $user->requestedTickets()->with(['status', 'category'])->latest()->paginate(10);
+        
+        // Estadísticas reales (no solo de la página actual)
+        $stats = [
+            'pending' => $user->requestedTickets()->whereHas('status', fn($q) => $q->where('is_closed', false))->count(),
+            'resolving' => $user->requestedTickets()->where('status_id', 2)->count(),
+            'closed_today' => $user->requestedTickets()->where('status_id', 3)->where('updated_at', '>=', now()->startOfDay())->count(),
+        ];
+
+        return view('user.tickets.index', compact('tickets', 'stats'));
     }
 
     public function create()
@@ -42,11 +51,17 @@ class TicketController extends Controller
             'category_id' => 'required|exists:ticket_categories,id',
             'priority_id' => 'required|exists:ticket_priorities,id',
             'department_id' => 'nullable|exists:departments,id',
+            'attachments.*' => 'nullable|file|max:10240',
         ]);
 
-        $ticket = $this->ticketService->createTicket($validated, $request->user()->id);
+        $attachments = $request->file('attachments') ?? [];
 
-        return redirect()->route('user.tickets.show', $ticket)->with('success', 'Ticket creado exitosamente.');
+        try {
+            $ticket = $this->ticketService->createTicket($validated, $request->user()->id, $attachments);
+            return redirect()->route('user.tickets.show', $ticket)->with('success', 'SOLICITUD REGISTRADA ✅: Su incidente ha sido ingresado al sistema correctamente.');
+        } catch (\Exception $e) {
+            return back()->with('error', '❌ ERROR AL REGISTRAR: ' . $e->getMessage())->withInput();
+        }
     }
 
     public function show(Ticket $ticket)

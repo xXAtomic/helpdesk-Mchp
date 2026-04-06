@@ -10,7 +10,7 @@ class GravityBrainController extends Controller
 {
     public function search(Request $request)
     {
-        $query = $request->get('query');
+        $query = $request->get('q');
         
         if (strlen($query) < 3) {
             return response()->json([]);
@@ -21,7 +21,7 @@ class GravityBrainController extends Controller
                 $q->where('title', 'like', "%{$query}%")
                   ->orWhere('content', 'like', "%{$query}%");
             })
-            ->limit(3)
+            ->limit(4)
             ->get(['title', 'id']);
 
         return response()->json($suggestions);

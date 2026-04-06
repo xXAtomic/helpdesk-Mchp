@@ -87,13 +87,12 @@
                     </div>
 
                     <!-- ADJUNTOS RESPUESTA -->
-                    @php $replyAttachments = $ticket->attachments()->where('ticket_response_id', $reply->id)->get(); @endphp
-                    @if($replyAttachments->count() > 0)
+                    @if($reply->attachments->count() > 0)
                         <div class="mt-8 grid grid-cols-4 gap-4">
-                            @foreach($replyAttachments as $file)
-                                <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank" class="group block overflow-hidden rounded-lg border border-gray-200">
-                                    @if(Str::contains($file->file_type, 'image'))
-                                        <img src="{{ asset('storage/' . $file->file_path) }}" class="aspect-video w-full object-cover">
+                            @foreach($reply->attachments as $attachment)
+                                <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank" class="group block overflow-hidden rounded-lg border border-gray-200">
+                                    @if(Str::contains($attachment->file_type, 'image'))
+                                        <img src="{{ asset('storage/' . $attachment->file_path) }}" class="aspect-video w-full object-cover">
                                     @else
                                         <div class="aspect-video bg-white flex items-center justify-center text-xl">📄</div>
                                     @endif

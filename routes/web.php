@@ -65,7 +65,10 @@ Route::middleware(['auth'])->group(function () {
     // --- 🌍 RUTAS GLOBALES (COMO LAS PIDE TU NAVEGACIÓN) ---
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
     Route::get('/inventory', [EquipmentController::class, 'index'])->name('inventory.index');
-    Route::get('/knowledge-base', [KnowledgeBaseController::class, 'index'])->name('knowledge.index');
+    
+    // BASE DE CONOCIMIENTO PARA USUARIOS 📚
+    Route::get('/knowledge-base', [\App\Http\Controllers\User\KnowledgeController::class, 'index'])->name('knowledge.index');
+    Route::get('/knowledge/{id}', [\App\Http\Controllers\User\KnowledgeController::class, 'show'])->name('knowledge.show');
 
     // TICKETS PARA USUARIOS NORMALES 🎟️✨
     Route::prefix('my-tickets')->group(function () {

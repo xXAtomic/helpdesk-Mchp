@@ -20,17 +20,17 @@
 
     <!-- ESTADOS RÁPIDOS -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm transition-all hover:shadow-md">
             <p class="text-[0.6rem] font-black text-gray-400 uppercase tracking-widest mb-1">Total Pendientes</p>
-            <p class="text-2xl font-bold text-gray-900">{{ $tickets->where('status_id', '!=', 3)->count() }}</p>
+            <p class="text-2xl font-bold text-gray-900 tracking-tighter uppercase italic">{{ $stats['pending'] }}</p>
         </div>
-        <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-100">
+        <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-100 transition-all hover:shadow-md">
             <p class="text-[0.6rem] font-black text-indigo-400 uppercase tracking-widest mb-1">En Resolución</p>
-            <p class="text-2xl font-bold text-indigo-900">{{ $tickets->where('status_id', 2)->count() }}</p>
+            <p class="text-2xl font-bold text-indigo-900 tracking-tighter uppercase italic">{{ $stats['resolving'] }}</p>
         </div>
-        <div class="bg-emerald-50 p-6 rounded-xl border border-emerald-100">
-            <p class="text-[0.6rem] font-black text-emerald-400 uppercase tracking-widest mb-1">Cerrados hoy</p>
-            <p class="text-2xl font-bold text-emerald-900">{{ $tickets->where('status_id', 3)->where('updated_at', '>=', now()->startOfDay())->count() }}</p>
+        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm transition-all hover:shadow-md">
+            <p class="text-[0.6rem] font-black text-emerald-500 uppercase tracking-widest mb-1">Cerrados hoy</p>
+            <p class="text-2xl font-bold text-slate-900 tracking-tighter uppercase italic">{{ $stats['closed_today'] }}</p>
         </div>
     </div>
 
