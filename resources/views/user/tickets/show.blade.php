@@ -54,14 +54,25 @@
             <!-- ADJUNTOS DEL TICKET ORIGINAL -->
             @php $origAttachments = $ticket->attachments()->whereNull('ticket_response_id')->get(); @endphp
             @if($origAttachments->count() > 0)
-                <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6">
                     @foreach($origAttachments as $file)
-                        <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank" class="group/file p-4 bg-gray-50 rounded-2xl border-2 border-transparent hover:border-blue-500/20 hover:bg-white transition-all flex flex-col items-center gap-3">
-                            <div class="text-2xl opacity-40 group-hover/file:opacity-100 transition-opacity">
-                                @if(Str::contains($file->file_type, 'image')) 🖼️ @else 📄 @endif
-                            </div>
-                            <span class="text-[0.55rem] font-black text-gray-400 uppercase tracking-tighter truncate w-full text-center">{{ $file->file_name }}</span>
-                        </a>
+                        <div class="group/file relative">
+                            <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank" class="block overflow-hidden rounded-2xl border-2 border-gray-100 group-hover/file:border-blue-500 transition-all shadow-sm">
+                                @if(Str::contains($file->file_type, 'image'))
+                                    <div class="aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
+                                        <img src="{{ asset('storage/' . $file->file_path) }}" class="w-full h-full object-cover group-hover/file:scale-110 transition-transform duration-500">
+                                    </div>
+                                @else
+                                    <div class="aspect-square bg-gray-50 flex flex-col items-center justify-center gap-2">
+                                        <span class="text-3xl">📄</span>
+                                        <span class="text-[0.5rem] font-black text-gray-400 uppercase tracking-tighter">{{ strtoupper(pathinfo($file->file_name, PATHINFO_EXTENSION)) }}</span>
+                                    </div>
+                                @endif
+                                <div class="bg-white p-3 border-t border-gray-50">
+                                    <p class="text-[0.55rem] font-black text-gray-500 uppercase truncate text-center">{{ $file->file_name }}</p>
+                                </div>
+                            </a>
+                        </div>
                     @endforeach
                 </div>
             @endif
@@ -90,21 +101,34 @@
                             </p>
                         </div>
                     </div>
-                    <div class="text-[0.9rem] leading-relaxed opacity-95">
+                    <div class="text-[0.9rem] leading-relaxed opacity-95 mb-4">
                         {!! nl2br(e($reply->body)) !!}
                     </div>
 
                     <!-- ADJUNTOS DE LA RESPUESTA -->
                     @php $replyAttachments = $ticket->attachments()->where('ticket_response_id', $reply->id)->get(); @endphp
                     @if($replyAttachments->count() > 0)
-                        <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
                             @foreach($replyAttachments as $file)
-                                <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank" 
-                                   class="p-4 rounded-2xl border transition-all flex flex-col items-center gap-3 
-                                   {{ $isStaff ? 'bg-white/5 border-white/10 hover:bg-white/10 text-white' : 'bg-gray-50 border-gray-100 hover:border-blue-500/20 text-gray-500' }}">
-                                    <div class="text-xl">@if(Str::contains($file->file_type, 'image')) 🖼️ @else 📄 @endif</div>
-                                    <span class="text-[0.55rem] font-bold uppercase truncate w-full text-center">{{ $file->file_name }}</span>
-                                </a>
+                                <div class="group/file relative">
+                                    <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank" 
+                                       class="block overflow-hidden rounded-[2rem] border-2 transition-all 
+                                       {{ $isStaff ? 'border-white/10 bg-white/5 hover:border-blue-500' : 'border-gray-50 bg-gray-50 hover:border-blue-500' }}">
+                                        @if(Str::contains($file->file_type, 'image'))
+                                            <div class="aspect-video bg-black flex items-center justify-center overflow-hidden">
+                                                <img src="{{ asset('storage/' . $file->file_path) }}" class="w-full h-full object-cover group-hover/file:scale-125 transition-transform duration-700">
+                                            </div>
+                                        @else
+                                            <div class="aspect-video flex flex-col items-center justify-center gap-2">
+                                                <span class="text-2xl">📄</span>
+                                                <span class="text-[0.5rem] font-black uppercase {{ $isStaff ? 'text-gray-500' : 'text-gray-400' }}">DOCUMENTO</span>
+                                            </div>
+                                        @endif
+                                        <div class="p-3 {{ $isStaff ? 'bg-white/5' : 'bg-white' }} border-t {{ $isStaff ? 'border-white/10' : 'border-gray-50' }}">
+                                            <p class="text-[0.55rem] font-bold uppercase truncate text-center {{ $isStaff ? 'text-gray-400' : 'text-gray-500' }}">{{ $file->file_name }}</p>
+                                        </div>
+                                    </a>
+                                </div>
                             @endforeach
                         </div>
                     @endif
