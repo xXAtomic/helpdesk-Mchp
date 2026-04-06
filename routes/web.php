@@ -73,6 +73,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', [\App\Http\Controllers\User\TicketController::class, 'create'])->name('user.tickets.create');
         Route::post('/', [\App\Http\Controllers\User\TicketController::class, 'store'])->name('user.tickets.store');
         Route::get('/{ticket}', [\App\Http\Controllers\User\TicketController::class, 'show'])->name('user.tickets.show');
+        Route::post('/{ticket}/reply', [\App\Http\Controllers\User\TicketController::class, 'reply'])->name('user.tickets.reply');
     });
 
     // MOTOR DE INTELIGENCIA GRAVITYBRAIN 🧠
