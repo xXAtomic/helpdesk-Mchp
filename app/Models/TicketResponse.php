@@ -15,4 +15,8 @@ class TicketResponse extends Model
     {
         return $this->belongsTo(Ticket::class);
     }
+    public function attachments()
+    {
+        return $this->hasMany(TicketAttachment::class, 'ticket_response_id');
+    }
 }
