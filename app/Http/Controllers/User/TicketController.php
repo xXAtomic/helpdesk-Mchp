@@ -66,10 +66,19 @@ class TicketController extends Controller
             abort(403);
         }
 
-        $request->validate(['body' => 'required|string']);
+        $request->validate([
+            'body' => 'required|string',
+            'attachments.*' => 'nullable|file|max:10240', // 10MB Máx por archivo
+        ]);
         
-        $this->ticketService->replyToTicket($ticket, $request->body, $request->user()->id, false);
+        $this->ticketService->replyToTicket(
+            $ticket, 
+            $request->body, 
+            $request->user()->id, 
+            false, 
+            $request->file('attachments') ?? []
+        );
 
-        return redirect()->route('user.tickets.show', $ticket)->with('success', 'Respuesta agregada.');
+        return redirect()->route('user.tickets.show', $ticket)->with('success', 'Respuesta agregada con éxito.');
     }
 }
