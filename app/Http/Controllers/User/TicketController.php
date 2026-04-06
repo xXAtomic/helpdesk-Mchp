@@ -71,14 +71,18 @@ class TicketController extends Controller
             'attachments.*' => 'nullable|file|max:10240', // 10MB Máx por archivo
         ]);
         
-        $this->ticketService->replyToTicket(
-            $ticket, 
-            $request->body, 
-            $request->user()->id, 
-            false, 
-            $request->file('attachments') ?? []
-        );
+        try {
+            $this->ticketService->replyToTicket(
+                $ticket, 
+                $request->body, 
+                $request->user()->id, 
+                false, 
+                $request->file('attachments') ?? []
+            );
 
-        return redirect()->route('user.tickets.show', $ticket)->with('success', 'Respuesta agregada con éxito.');
+            return redirect()->route('user.tickets.show', $ticket)->with('success', '✅ TU MENSAJE SE HA ENVIADO Y REGISTRADO.');
+        } catch (\Exception $e) {
+            return redirect()->route('user.tickets.show', $ticket)->with('error', '❌ ERROR AL ENVIAR: ' . $e->getMessage());
+        }
     }
 }
