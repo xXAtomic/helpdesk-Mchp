@@ -102,7 +102,11 @@
                 @endif
 
                 <!-- 📚 MANUALES -->
-                <a href="{{ route('knowledge.index') }}" class="nav-icon {{ request()->routeIs('*knowledge*') ? 'active' : '' }}" title="Manuales">📚</a>
+                @if($roleId == 1)
+                    <a href="{{ route('admin.knowledge.index') }}" class="nav-icon {{ request()->routeIs('admin.knowledge.*') ? 'active' : '' }}" title="Gestión Manuales">📚</a>
+                @else
+                    <a href="{{ route('knowledge.index') }}" class="nav-icon {{ request()->routeIs('knowledge.*') ? 'active' : '' }}" title="Manuales">📚</a>
+                @endif
 
                 <!-- 👥 USUARIOS -->
                 @if($roleId == 1)
