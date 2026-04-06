@@ -19,16 +19,21 @@ class EquipmentController extends Controller
 
     public function store(Request $request) {
         $request->validate([
-            'name' => 'required',
-            'brand' => 'required',
+            'asset_tag'     => 'required|unique:assets',
+            'type'          => 'required',
+            'brand'         => 'required',
+            'model'         => 'required',
             'serial_number' => 'required|unique:assets',
-            'code' => 'required|unique:assets',
-            'type' => 'required',
-            'status' => 'required',
+            'location'      => 'required',
         ]);
 
-        Asset::create($request->all());
-        return redirect()->route('admin.inventory.index')->with('success', 'Equipo registrado.');
+        $data = $request->all();
+        if (!isset($data['status'])) {
+            $data['status'] = 'Operativo';
+        }
+
+        Asset::create($data);
+        return redirect()->route('admin.inventory.index')->with('success', 'Activo registrado correctamente en el sistema.');
     }
 
     public function edit($id) {
