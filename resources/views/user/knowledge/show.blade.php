@@ -27,9 +27,28 @@
         <div class="absolute right-0 top-0 w-32 h-32 bg-gray-50 rounded-full translate-x-12 -translate-y-12"></div>
         
         <div class="relative z-10 prose prose-indigo max-w-none">
-            <div class="text-slate-600 font-medium text-lg leading-relaxed whitespace-pre-wrap">
+            <div class="text-slate-600 font-medium text-lg leading-relaxed whitespace-pre-wrap mb-12">
                 {!! $article->content !!}
             </div>
+
+            @if($article->file_path)
+                <div class="mt-8 pt-8 border-t border-slate-100">
+                    <div class="flex flex-col sm:flex-row items-center justify-between p-6 bg-slate-50 rounded-2xl border border-slate-100 gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-[0.65rem] font-black text-indigo-400 uppercase tracking-widest mb-1 italic">Documentación Adjunta:</p>
+                                <p class="text-sm font-bold text-slate-900 truncate">{{ $article->file_name }}</p>
+                            </div>
+                        </div>
+                        <a href="{{ asset('storage/' . $article->file_path) }}" target="_blank" class="w-full sm:w-auto bg-indigo-600 hover:bg-slate-900 text-white font-black px-8 py-3 rounded-xl transition-all shadow-lg hover:shadow-indigo-200 uppercase tracking-widest italic text-[0.65rem]">
+                            Descargar Ahora
+                        </a>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 

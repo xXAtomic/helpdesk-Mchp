@@ -21,13 +21,26 @@ class KnowledgeBaseController extends Controller
         $data = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
-            'icon' => 'nullable'
+            'icon' => 'nullable',
+            'file' => 'nullable|file|max:10240'
         ]);
+
+        $filePath = null;
+        $fileName = null;
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = $file->getClientOriginalName();
+            $filePath = $file->store('knowledge_files', 'public');
+        }
 
         Knowledge::create([
             'title' => $data['title'],
             'content' => $data['content'],
-            'icon' => $request->icon ?? '📖'
+            'icon' => $request->icon ?? '📖',
+            'file_path' => $filePath,
+            'file_name' => $fileName,
+            'is_published' => true,
         ]);
 
         return redirect()->route('admin.knowledge.index')->with('success', 'Manual publicado correctamente.');
@@ -44,8 +57,19 @@ class KnowledgeBaseController extends Controller
         $data = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
-            'icon' => 'nullable'
+            'icon' => 'nullable',
+            'file' => 'nullable|file|max:10240'
         ]);
+
+        if ($request->hasFile('file')) {
+            // Eliminar archivo anterior si existe
+            if ($manual->file_path && \Storage::disk('public')->exists($manual->file_path)) {
+                \Storage::disk('public')->delete($manual->file_path);
+            }
+            $file = $request->file('file');
+            $data['file_name'] = $file->getClientOriginalName();
+            $data['file_path'] = $file->store('knowledge_files', 'public');
+        }
 
         $manual->update($data);
 

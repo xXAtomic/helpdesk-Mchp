@@ -16,6 +16,8 @@ class Knowledge extends Model
         'slug',
         'content',
         'category',
-        'is_published'
+        'is_published',
+        'file_path',
+        'file_name'
     ];
 }
