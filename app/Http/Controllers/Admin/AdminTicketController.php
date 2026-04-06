@@ -44,6 +44,7 @@ class AdminTicketController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'user_id' => 'required|exists:users,id',
             'category_id' => 'nullable|exists:ticket_categories,id',
             'priority_id' => 'nullable|exists:ticket_priorities,id',
             'department_id' => 'nullable|exists:departments,id',
@@ -52,9 +53,10 @@ class AdminTicketController extends Controller
 
         $attachments = $request->file('attachments') ?? [];
         
-        $ticket = $this->ticketService->createTicket($validated, auth()->id(), $attachments);
+        $ticketOwnerId = $request->user_id ?? auth()->id();
+        $ticket = $this->ticketService->createTicket($validated, $ticketOwnerId, $attachments);
 
-        return redirect()->route('admin.tickets.index')->with('success', 'Ticket creado correctamente mediante el centro de administración.');
+        return redirect()->route('admin.tickets.index')->with('success', 'Incidente registrado exitosamente en nombre del usuario.');
     }
 
 
@@ -102,6 +104,11 @@ class AdminTicketController extends Controller
 
     public function create()
     {
-        return view('admin.tickets.create');
+        $categories = \App\Models\TicketCategory::all();
+        $priorities = \App\Models\TicketPriority::all();
+        $departments = \App\Models\Department::all();
+        $users = \App\Models\User::orderBy('name')->get();
+        
+        return view('admin.tickets.create', compact('categories', 'priorities', 'departments', 'users'));
     }
 }
