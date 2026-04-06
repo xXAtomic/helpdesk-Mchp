@@ -27,7 +27,7 @@ class AdminTicketController extends Controller
 
     public function show($id)
     {
-        $ticket = Ticket::with(['user', 'responses.user'])->findOrFail($id);
+        $ticket = Ticket::with(['user', 'replies.user'])->findOrFail($id);
         return view('admin.tickets.show', compact('ticket'));
     }
 public function store(Request $request)
