@@ -1,211 +1,156 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-2 space-y-10">
-    <!-- CABECERA PREMIUM DEL TICKET -->
-    <div class="bg-white p-10 rounded-[3.5rem] shadow-2xl border-2 border-gray-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 relative overflow-hidden">
-        <div class="absolute -right-10 -top-10 w-32 h-32 bg-blue-50/50 rounded-full blur-3xl"></div>
-        
-        <div class="relative z-10">
-            <div class="flex items-center gap-4 mb-4">
-                <span class="px-6 py-2 rounded-full text-[0.65rem] font-black uppercase tracking-[0.2em] border-2 shadow-sm"
-                      style="background-color: {{ optional($ticket->status)->color }}15; color: {{ optional($ticket->status)->color }}; border-color: {{ optional($ticket->status)->color }}30;">
-                    📍 {{ optional($ticket->status)->name ?? 'EN PROCESO' }}
+<div class="max-w-5xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+    
+    <!-- CABECERA DE INCIDENTE -->
+    <div class="mb-10 pb-8 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <div>
+            <div class="flex items-center gap-3 mb-3">
+                <span class="inline-flex px-3 py-1 rounded-md text-[0.6rem] font-black uppercase tracking-widest border"
+                      style="background-color: {{ optional($ticket->status)->color }}10; color: {{ optional($ticket->status)->color }}; border-color: {{ optional($ticket->status)->color }}20;">
+                    ● {{ optional($ticket->status)->name ?? 'EN PROCESO' }}
                 </span>
-                <span class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest bg-gray-50 px-4 py-2 rounded-xl">
-                    TICKET #{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}
-                </span>
+                <span class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-widest">REGISTRO #{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</span>
             </div>
-            <h2 class="text-4xl font-black text-[#020617] italic uppercase tracking-tighter leading-none">{{ $ticket->title }}</h2>
-            <p class="text-[0.65rem] font-black text-blue-500 uppercase tracking-[0.3em] mt-4 opacity-80 italic">
-                {{ optional($ticket->category)->name ?? 'GENERAL' }} • SOLICITADO EL {{ $ticket->created_at->format('d/m/Y') }}
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">{{ $ticket->title }}</h1>
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest mt-3">
+                {{ optional($ticket->category)->name ?? 'GENERAL' }} • INICIADO POR {{ auth()->user()->name }}
             </p>
         </div>
-
-        <div class="flex items-center gap-4 relative z-10">
-            <a href="{{ route('user.tickets.index') }}" class="bg-gray-950 hover:bg-blue-600 text-white px-10 py-5 rounded-[2rem] font-black text-[0.7rem] shadow-xl shadow-gray-200 transition-all transform hover:-translate-y-1 active:scale-95 uppercase tracking-widest flex items-center gap-3">
-                <i class="fas fa-chevron-left text-xs"></i> VOLVER AL LISTADO
-            </a>
-        </div>
+        <a href="{{ route('user.tickets.index') }}" class="text-[0.65rem] font-bold text-slate-400 hover:text-slate-900 transition-all uppercase tracking-widest flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Volver
+        </a>
     </div>
 
-    <!-- LÍNEA DE TIEMPO DE RESPUESTAS -->
-    <div class="space-y-8">
-        <!-- MENSAJE ORIGINAL -->
-        <div class="bg-white p-10 rounded-[3.5rem] shadow-sm border border-gray-100 relative group hover:shadow-2xl transition-all duration-500">
-            <div class="flex justify-between items-start mb-8">
-                <div class="flex items-center gap-5">
-                    <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 text-xl shadow-inner border border-white">
-                        <i class="fas fa-user-circle"></i>
+    <!-- CUERPO DE LA CONVERSACIÓN -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
+        
+        <!-- COLUMNA IZQUIERDA: MENSAJES -->
+        <div class="lg:col-span-3 space-y-10">
+            
+            <!-- MENSAJE ORIGINAL -->
+            <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden">
+                <div class="absolute left-0 top-0 bottom-0 w-1 bg-indigo-500"></div>
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 font-bold border">
+                        {{ substr(auth()->user()->name, 0, 1) }}
                     </div>
                     <div>
-                        <p class="font-black text-gray-950 text-base uppercase tracking-tight italic">{{ auth()->user()->name }}</p>
-                        <p class="text-[0.65rem] text-gray-400 font-bold uppercase tracking-widest">{{ $ticket->created_at->diffForHumans() }}</p>
+                        <p class="text-sm font-bold text-slate-900">{{ auth()->user()->name }}</p>
+                        <p class="text-[0.6rem] font-medium text-slate-400 uppercase tracking-widest">Solicitante · {{ $ticket->created_at->format('d/M H:i') }}</p>
                     </div>
                 </div>
-                <div class="bg-blue-600 text-white text-[0.6rem] font-black px-4 py-2 rounded-full uppercase tracking-tighter shadow-lg shadow-blue-200">
-                    REQUERIMIENTO INICIAL
+                <div class="text-[0.95rem] text-slate-600 leading-relaxed font-medium">
+                    {!! nl2br(e($ticket->description)) !!}
                 </div>
-            </div>
-            <div class="text-gray-600 font-medium leading-loose text-[0.95rem] bg-gray-50/50 p-8 rounded-[2rem] border border-white">
-                {!! nl2br(e($ticket->description)) !!}
-            </div>
 
-            <!-- ADJUNTOS DEL TICKET ORIGINAL -->
-            @php $origAttachments = $ticket->attachments()->whereNull('ticket_response_id')->get(); @endphp
-            @if($origAttachments->count() > 0)
-                <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6">
-                    @foreach($origAttachments as $file)
-                        <div class="group/file relative">
-                            <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank" class="block overflow-hidden rounded-2xl border-2 border-gray-100 group-hover/file:border-blue-500 transition-all shadow-sm">
+                <!-- ADJUNTOS INCIDENTE -->
+                @php $origAttachments = $ticket->attachments()->whereNull('ticket_response_id')->get(); @endphp
+                @if($origAttachments->count() > 0)
+                    <div class="mt-10 grid grid-cols-3 sm:grid-cols-4 gap-4 pt-8 border-t border-gray-50">
+                        @foreach($origAttachments as $file)
+                            <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank" class="group block overflow-hidden rounded-xl border border-gray-100 hover:border-indigo-200 transition-all">
                                 @if(Str::contains($file->file_type, 'image'))
-                                    <div class="aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
-                                        <img src="{{ asset('storage/' . $file->file_path) }}" class="w-full h-full object-cover group-hover/file:scale-110 transition-transform duration-500">
-                                    </div>
+                                    <img src="{{ asset('storage/' . $file->file_path) }}" class="aspect-square w-full object-cover group-hover:scale-105 transition-transform">
                                 @else
-                                    <div class="aspect-square bg-gray-50 flex flex-col items-center justify-center gap-2">
-                                        <span class="text-3xl">📄</span>
-                                        <span class="text-[0.5rem] font-black text-gray-400 uppercase tracking-tighter">{{ strtoupper(pathinfo($file->file_name, PATHINFO_EXTENSION)) }}</span>
-                                    </div>
+                                    <div class="aspect-square bg-slate-50 flex items-center justify-center text-2xl">📄</div>
                                 @endif
-                                <div class="bg-white p-3 border-t border-gray-50 text-center">
-                                    <p class="text-[0.55rem] font-black text-gray-500 uppercase truncate">{{ $file->file_name }}</p>
+                                <div class="p-2 bg-white text-center">
+                                    <p class="text-[0.6rem] font-bold text-slate-400 uppercase truncate px-2">{{ $file->file_name }}</p>
                                 </div>
                             </a>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-        </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
 
-        <!-- RESPUESTAS -->
-        @foreach($ticket->replies as $reply)
-            @php $isStaff = ($reply->user->role_id ?? 3) != 3; @endphp
-            <div class="relative {{ $isStaff ? 'md:ml-20' : '' }}">
-                <div class="p-10 rounded-[3.5rem] border-2 transition-all duration-500 
-                    {{ $isStaff ? 'bg-[#020617] border-blue-500/20 text-white shadow-2xl' : 'bg-white border-gray-100 text-gray-900 shadow-sm hover:shadow-xl' }}">
-                    <div class="flex items-center gap-5 mb-8">
-                        <div class="w-12 h-12 rounded-xl flex items-center justify-center font-black text-lg
-                            {{ $isStaff ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600' }}">
+            <!-- RESPUESTAS -->
+            @foreach($ticket->replies as $reply)
+                @php $isStaff = ($reply->user->role_id ?? 3) != 3; @endphp
+                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden {{ $isStaff ? 'bg-slate-50 border-slate-200' : '' }}">
+                    @if($isStaff)
+                        <div class="absolute right-0 top-0 px-3 py-1 bg-slate-900 text-white text-[0.55rem] font-black uppercase tracking-widest rounded-bl-xl">SOPORTE TI</div>
+                    @endif
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-10 h-10 rounded-lg {{ $isStaff ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-400' }} flex items-center justify-center font-bold">
                             {{ substr($reply->user->name, 0, 1) }}
                         </div>
                         <div>
-                            <p class="font-black {{ $isStaff ? 'text-white' : 'text-gray-950' }} text-base uppercase tracking-tight italic">
-                                {{ $reply->user->name }}
-                                @if($isStaff)
-                                    <span class="ml-3 text-[0.55rem] bg-blue-500/30 text-blue-300 px-3 py-1 rounded-lg tracking-[0.2em] font-black uppercase text-xs">SOPORTE TI</span>
-                                @endif
-                            </p>
-                            <p class="text-[0.65rem] {{ $isStaff ? 'text-gray-500' : 'text-gray-400' }} font-bold uppercase tracking-widest mt-1">
-                                {{ $reply->created_at->diffForHumans() }}
-                            </p>
+                            <p class="text-sm font-bold {{ $isStaff ? 'text-slate-900' : 'text-slate-900' }}">{{ $reply->user->name }}</p>
+                            <p class="text-[0.6rem] font-medium text-slate-400 uppercase tracking-widest">{{ $reply->created_at->format('d/M H:i') }}</p>
                         </div>
                     </div>
-                    <div class="text-[0.9rem] leading-relaxed opacity-95 mb-4">
+                    <div class="text-[0.95rem] text-slate-700 leading-relaxed font-medium">
                         {!! nl2br(e($reply->body)) !!}
                     </div>
 
-                    <!-- ADJUNTOS DE LA RESPUESTA -->
+                    <!-- ADJUNTOS RESPUESTA -->
                     @php $replyAttachments = $ticket->attachments()->where('ticket_response_id', $reply->id)->get(); @endphp
                     @if($replyAttachments->count() > 0)
-                        <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="mt-8 grid grid-cols-4 gap-4">
                             @foreach($replyAttachments as $file)
-                                <div class="group/file relative">
-                                    <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank" 
-                                       class="block overflow-hidden rounded-[2rem] border-2 transition-all 
-                                       {{ $isStaff ? 'border-white/10 bg-white/5 hover:border-blue-500' : 'border-gray-50 bg-gray-50 hover:border-blue-500' }}">
-                                        @if(Str::contains($file->file_type, 'image'))
-                                            <div class="aspect-video bg-black flex items-center justify-center overflow-hidden">
-                                                <img src="{{ asset('storage/' . $file->file_path) }}" class="w-full h-full object-cover group-hover/file:scale-125 transition-transform duration-700">
-                                            </div>
-                                        @else
-                                            <div class="aspect-video flex flex-col items-center justify-center gap-2">
-                                                <span class="text-2xl">📄</span>
-                                                <span class="text-[0.5rem] font-black uppercase {{ $isStaff ? 'text-gray-500' : 'text-gray-400' }}">DOCUMENTO</span>
-                                            </div>
-                                        @endif
-                                        <div class="p-3 {{ $isStaff ? 'bg-white/5' : 'bg-white' }} border-t {{ $isStaff ? 'border-white/10' : 'border-gray-50' }} text-center">
-                                            <p class="text-[0.55rem] font-bold uppercase truncate {{ $isStaff ? 'text-gray-400' : 'text-gray-500' }}">{{ $file->file_name }}</p>
-                                        </div>
-                                    </a>
-                                </div>
+                                <a href="{{ asset('storage/' . $file->file_path) }}" target="_blank" class="group block overflow-hidden rounded-lg border border-gray-200">
+                                    @if(Str::contains($file->file_type, 'image'))
+                                        <img src="{{ asset('storage/' . $file->file_path) }}" class="aspect-video w-full object-cover">
+                                    @else
+                                        <div class="aspect-video bg-white flex items-center justify-center text-xl">📄</div>
+                                    @endif
+                                </a>
                             @endforeach
                         </div>
                     @endif
                 </div>
-            </div>
-        @endforeach
-    </div>
+            @endforeach
 
-    <!-- PANEL DE ACCIÓN (FORMULARIO DE RESPUESTA) -->
-    @if(!optional($ticket->status)->is_closed)
-        <div class="bg-white p-12 rounded-[4rem] shadow-2xl border-2 border-gray-50 relative overflow-hidden">
-            <h4 class="text-2xl font-black text-[#020617] mb-10 italic uppercase tracking-tighter flex items-center gap-4">
-                RESPONDER A SOPORTE <span class="h-1 flex-1 bg-gray-50 rounded-full"></span> 📥
-            </h4>
-            
-            <form action="{{ route('user.tickets.reply', $ticket) }}" method="POST" enctype="multipart/form-data" class="space-y-10">
-                @csrf
-                <textarea name="body" required rows="5" placeholder="ESCRIBE TU MENSAJE AQUÍ..."
-                          class="w-full px-10 py-8 rounded-[3rem] bg-gray-50 border-2 border-transparent font-bold text-gray-900 shadow-inner focus:bg-white focus:border-blue-500/20 transition-all outline-none placeholder:text-gray-300 uppercase"></textarea>
-                
-                <div class="flex flex-col md:flex-row items-center justify-between gap-8">
-                    <label id="file-drop-area" class="flex items-center gap-5 bg-gray-50 px-10 py-5 rounded-full border-2 border-dashed border-gray-200 cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all group/file-btn">
-                        <div id="file-icon" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-blue-500 group-hover/file-btn:rotate-12 transition-transform">
-                            <i class="fas fa-paperclip text-sm"></i>
+            <!-- FORMULARIO DE RESPUESTA -->
+            @if(!optional($ticket->status)->is_closed)
+                <div class="bg-slate-950 p-10 rounded-3xl shadow-xl mt-16">
+                    <h4 class="text-lg font-bold text-white mb-8 tracking-tight uppercase">Responder Mensaje</h4>
+                    <form action="{{ route('user.tickets.reply', $ticket) }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+                        @csrf
+                        <textarea name="body" required rows="4" placeholder="Escribe tu observación detallada aquí..."
+                                  class="w-full px-6 py-5 rounded-xl bg-slate-900 border border-slate-800 text-white font-medium text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all outline-none placeholder:text-slate-600"></textarea>
+                        
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+                            <label class="flex items-center gap-4 bg-slate-900 px-6 py-3 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-600 transition-all">
+                                <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
+                                <span class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest">Incluir Evidenceia</span>
+                                <input type="file" name="attachments[]" multiple class="hidden">
+                            </label>
+                            
+                            <button type="submit" class="w-full sm:w-auto bg-indigo-600 text-white px-10 py-4 rounded-lg font-bold text-[0.7rem] uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-500/20">
+                                Enviar Respuesta
+                            </button>
                         </div>
-                        <div class="flex flex-col">
-                            <span id="file-label" class="text-[0.7rem] font-black text-gray-500 uppercase tracking-widest leading-none">AñADIR EVIDENCIA</span>
-                            <span id="file-sub-label" class="text-[0.55rem] font-bold text-gray-300 uppercase mt-1 tracking-tighter">FOTOS O DOCUMENTOS</span>
-                        </div>
-                        <input type="file" name="attachments[]" id="file-input" multiple class="hidden">
-                    </label>
-                    
-                    <button type="submit" class="bg-[#020617] text-white px-16 py-7 rounded-[2.5rem] font-black text-[0.8rem] uppercase tracking-[0.2em] shadow-2xl hover:bg-blue-600 transition-all transform hover:-translate-y-2 active:scale-95 border-b-4 border-black/20 flex items-center gap-4 group/btn">
-                        ENVIAR RESPUESTA <i class="fas fa-paper-plane text-xs group-hover/btn:translate-x-2 transition-transform"></i>
-                    </button>
+                    </form>
                 </div>
-            </form>
+            @endif
         </div>
-    @endif
+
+        <!-- COLUMNA DERECHA: INFORMACIÓN LATERAL -->
+        <div class="space-y-8">
+            <div class="bg-gray-50 p-8 rounded-2xl border border-gray-100">
+                <h5 class="text-[0.6rem] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">Detalles del Soporte</h5>
+                
+                <div class="space-y-6">
+                    <div>
+                        <p class="text-[0.6rem] font-bold text-gray-400 uppercase tracking-tight mb-1">Técnico Asignado</p>
+                        <p class="text-sm font-bold text-slate-900 uppercase tracking-tight">{{ $ticket->technician->name ?? 'SIN ASIGNAR' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[0.6rem] font-bold text-gray-400 uppercase tracking-tight mb-1">Prioridad</p>
+                        <p class="text-sm font-bold text-slate-900 uppercase tracking-tight">{{ optional($ticket->priority)->name ?? 'ESTÁNDAR' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-[0.6rem] font-bold text-gray-400 uppercase tracking-tight mb-1">Departamento</p>
+                        <p class="text-sm font-bold text-slate-900 uppercase tracking-tight">{{ optional($ticket->department)->name ?? 'MChP' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
-
-<script>
-    document.getElementById('file-input').addEventListener('change', function(e) {
-        const input = e.target;
-        const label = document.getElementById('file-label');
-        const subLabel = document.getElementById('file-sub-label');
-        const iconContainer = document.getElementById('file-icon');
-        const dropArea = document.getElementById('file-drop-area');
-
-        if (input.files && input.files.length > 0) {
-            const count = input.files.length;
-            const firstName = input.files[0].name;
-            
-            // Efecto visual de carga
-            dropArea.classList.remove('bg-gray-50', 'border-gray-200');
-            dropArea.classList.add('bg-blue-600', 'border-blue-600');
-            
-            iconContainer.innerHTML = '<i class="fas fa-check text-sm text-blue-600"></i>';
-            iconContainer.classList.remove('text-blue-500');
-            iconContainer.classList.add('bg-white');
-            
-            label.innerHTML = '✅ ARCHIVOS LISTOS';
-            label.classList.remove('text-gray-500');
-            label.classList.add('text-white');
-            
-            subLabel.innerHTML = count === 1 ? firstName : `${count} ARCHIVOS CARGADOS`;
-            subLabel.classList.remove('text-gray-300');
-            subLabel.classList.add('text-blue-100');
-        } else {
-            // Resetear si quita los archivos
-            dropArea.classList.add('bg-gray-50', 'border-gray-200');
-            dropArea.classList.remove('bg-blue-600', 'border-blue-600');
-            iconContainer.innerHTML = '<i class="fas fa-paperclip text-sm"></i>';
-            label.innerHTML = 'AñADIR EVIDENCIA';
-            label.classList.add('text-gray-500');
-            subLabel.innerHTML = 'FOTOS O DOCUMENTOS';
-        }
-    });
-</script>
 @endsection

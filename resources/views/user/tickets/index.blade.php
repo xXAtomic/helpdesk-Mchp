@@ -1,67 +1,92 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="p-6">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
-        <div class="flex flex-col">
-            <h2 class="text-4xl font-black text-[#020617] italic tracking-tighter uppercase leading-tight">MIS REQUERIMIENTOS 📋</h2>
-            <p class="text-[0.65rem] font-black text-gray-400 uppercase tracking-[0.25em] mt-3">Estado actual de tus solicitudes técnicas y soporte TI</p>
+<div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    
+    <!-- CABECERA MINIMALISTA -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 border-b border-gray-100 pb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Mis Solicitudes</h1>
+            <p class="text-xs font-medium text-gray-500 uppercase tracking-widest mt-1">Gestión y seguimiento de incidentes técnicos</p>
         </div>
-        
-        <a href="{{ route('user.tickets.create') }}" 
-           class="w-full md:w-auto bg-[#020617] hover:bg-blue-600 text-white px-10 py-5 rounded-[2rem] font-black text-[0.7rem] shadow-2xl transition-all transform hover:-translate-y-1 active:scale-95 uppercase tracking-widest text-center border-t border-white/10">
-            + NUEVA SOLICITUD TI 🚀
-        </a>
+        <div class="mt-6 md:mt-0">
+            <a href="{{ route('user.tickets.create') }}" 
+               class="inline-flex items-center px-6 py-3 bg-indigo-600 border border-transparent rounded-lg font-bold text-[0.7rem] text-white uppercase tracking-widest hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all shadow-sm">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                Nuevo Ticket
+            </a>
+        </div>
     </div>
 
-    <!-- LISTADO DE TICKETS -->
-    <div class="space-y-6">
-        @forelse($tickets as $ticket)
-            <a href="{{ route('user.tickets.show', $ticket) }}" 
-               class="group flex flex-col md:flex-row items-center justify-between p-8 bg-white border-2 border-gray-100 rounded-[3rem] hover:border-blue-400/50 transition-all duration-300 shadow-sm hover:shadow-2xl relative overflow-hidden">
-                
-                <div class="flex items-center gap-8">
-                    <!-- ID PRO -->
-                    <div class="hidden md:flex w-24 h-12 bg-gray-50 border border-gray-100 rounded-2xl items-center justify-center font-black text-blue-600 text-[0.65rem] tracking-tighter uppercase shadow-inner">
-                        #ID-{{ $ticket->id }}
-                    </div>
-                    
-                    <div class="text-center md:text-left">
-                        <h3 class="font-black text-xl text-gray-900 group-hover:text-blue-600 transition tracking-tight uppercase leading-tight">{{ $ticket->title }}</h3>
-                        <p class="text-[0.65rem] text-gray-400 font-bold mt-2 uppercase tracking-[0.15em]">
-                            Solicitado el {{ $ticket->created_at->format('d/m/Y') }} • 
-                            <span class="text-blue-400">{{ $ticket->created_at->diffForHumans() }}</span>
-                        </p>
-                    </div>
-                </div>
+    <!-- ESTADOS RÁPIDOS -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+            <p class="text-[0.6rem] font-black text-gray-400 uppercase tracking-widest mb-1">Total Pendientes</p>
+            <p class="text-2xl font-bold text-gray-900">{{ $tickets->where('status_id', '!=', 3)->count() }}</p>
+        </div>
+        <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-100">
+            <p class="text-[0.6rem] font-black text-indigo-400 uppercase tracking-widest mb-1">En Resolución</p>
+            <p class="text-2xl font-bold text-indigo-900">{{ $tickets->where('status_id', 2)->count() }}</p>
+        </div>
+        <div class="bg-emerald-50 p-6 rounded-xl border border-emerald-100">
+            <p class="text-[0.6rem] font-black text-emerald-400 uppercase tracking-widest mb-1">Cerrados hoy</p>
+            <p class="text-2xl font-bold text-emerald-900">{{ $tickets->where('status_id', 3)->where('updated_at', '>=', now()->startOfDay())->count() }}</p>
+        </div>
+    </div>
 
-                <div class="flex items-center gap-6 mt-6 md:mt-0">
-                    <span class="px-8 py-3 rounded-full text-[0.6rem] font-black uppercase tracking-[0.2em] border-2 shadow-sm"
-                          style="background-color: {{ optional($ticket->status)->color }}15; color: {{ optional($ticket->status)->color }}; border-color: {{ optional($ticket->status)->color }}30;">
-                        {{ optional($ticket->status)->name ?? 'PENDIENTE' }}
-                    </span>
-                    <i class="fas fa-chevron-right text-gray-200 group-hover:text-blue-500 group-hover:translate-x-2 transition-all"></i>
-                </div>
-            </a>
-        @empty
-            <!-- ÁREA DE EMPATE ZERO STATE PRO -->
-            <div class="py-32 flex flex-col items-center justify-center bg-white rounded-[4rem] border-4 border-dashed border-gray-100 shadow-inner relative overflow-hidden">
-                <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-blue-50/50 rounded-full blur-3xl"></div>
-                <div class="absolute -left-20 -top-20 w-64 h-64 bg-gray-50/50 rounded-full blur-3xl"></div>
-                
-                <div class="w-24 h-24 bg-gray-50 rounded-[2.5rem] flex items-center justify-center mb-8 text-gray-300 text-3xl shadow-sm border border-white">
-                    <i class="fas fa-paper-plane"></i>
-                </div>
-                
-                <h4 class="text-3xl font-black text-gray-900 italic tracking-tighter uppercase mb-3">BANDEJA DE ASISTENCIA LIMPIA 🚀</h4>
-                <p class="text-[0.65rem] text-gray-400 font-bold uppercase tracking-[0.3em] mb-12">Estamos listos para ayudarte con lo que necesites.</p>
-                
-                <a href="{{ route('user.tickets.create') }}" 
-                   class="bg-[#020617] hover:bg-blue-600 text-white px-12 py-6 rounded-[2.5rem] font-black text-[0.75rem] uppercase tracking-[0.2em] shadow-2xl transition-all transform hover:scale-105 active:scale-95 border-b-4 border-black/20">
-                    REPORTAR UN NUEVO PROBLEMA →
-                </a>
+    <!-- LISTADO INDUSTRIAL -->
+    <div class="bg-white shadow-sm border border-gray-100 rounded-xl overflow-hidden">
+        @if($tickets->count() > 0)
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-100">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-[0.65rem] font-black text-gray-400 uppercase tracking-widest">Referencia</th>
+                            <th class="px-6 py-4 text-left text-[0.65rem] font-black text-gray-400 uppercase tracking-widest">Asunto / Categoría</th>
+                            <th class="px-6 py-4 text-center text-[0.65rem] font-black text-gray-400 uppercase tracking-widest">Estado</th>
+                            <th class="px-6 py-4 text-right text-[0.65rem] font-black text-gray-400 uppercase tracking-widest">Actualizado</th>
+                            <th class="px-6 py-4"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @foreach($tickets as $ticket)
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="text-[0.7rem] font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded">#{{ str_pad($ticket->id, 5, '0', STR_PAD_LEFT) }}</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm font-bold text-gray-900 mb-0.5">{{ $ticket->title }}</div>
+                                    <div class="text-[0.65rem] font-medium text-gray-400 uppercase tracking-tight">{{ optional($ticket->category)->name ?? 'GENERAL' }}</div>
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-[0.6rem] font-black uppercase tracking-tight"
+                                          style="background-color: {{ optional($ticket->status)->color }}15; color: {{ optional($ticket->status)->color }}; border: 1px solid {{ optional($ticket->status)->color }}30;">
+                                        {{ optional($ticket->status)->name ?? 'ABIERTO' }}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right whitespace-nowrap">
+                                    <span class="text-[0.7rem] font-medium text-gray-500 uppercase">{{ $ticket->updated_at->format('d/m/Y') }}</span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <a href="{{ route('user.tickets.show', $ticket) }}" class="text-indigo-600 hover:text-indigo-900 font-bold text-[0.65rem] uppercase tracking-widest">Ver Detalles</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-        @endforelse
+            <div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
+                {{ $tickets->links() }}
+            </div>
+        @else
+            <div class="py-20 text-center">
+                <div class="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-50 text-gray-300">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                </div>
+                <h3 class="text-base font-bold text-gray-900">No hay tickets activos</h3>
+                <p class="text-sm text-gray-500 max-w-xs mx-auto mt-2">Todo está funcionando correctamente. Si necesitas ayuda, pulsa el botón de Nuevo Ticket.</p>
+            </div>
+        @endif
     </div>
 </div>
 @endsection
