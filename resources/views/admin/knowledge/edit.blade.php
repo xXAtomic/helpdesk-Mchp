@@ -53,7 +53,6 @@
                     class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-medium focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-300">{{ old('content', $manual->content) }}</textarea>
             </div>
 
-            <!-- Carga de Archivo -->
             <div class="space-y-4">
                 <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Reemplazar Manual (PDF/Imagen)</label>
                 
@@ -69,15 +68,14 @@
                     </div>
                 @endif
 
-                <div class="relative group border-2 border-dashed border-slate-200 rounded-2xl p-8 hover:border-indigo-400 transition-all bg-slate-50">
-                    <input type="file" name="file" id="knowledge-file-edit" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                    <div class="flex flex-col items-center">
-                        <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform text-indigo-600">
-                           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                        </div>
-                        <span id="file-label-edit" class="text-[0.65rem] font-bold text-slate-500 uppercase tracking-widest transition-all italic">Seleccionar Nuevo Archivo</span>
+                <label for="knowledge-file-edit" class="relative group border-2 border-dashed border-slate-200 rounded-2xl p-10 hover:border-indigo-400 transition-all bg-slate-50 flex flex-col items-center cursor-pointer">
+                    <input type="file" name="file" id="knowledge-file-edit" class="hidden">
+                    <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform text-indigo-600">
+                       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                     </div>
-                </div>
+                    <span id="file-label-edit" class="text-[0.65rem] font-bold text-slate-500 uppercase tracking-widest transition-all italic text-center">Seleccionar Nuevo Archivo</span>
+                    <p class="text-[0.55rem] text-slate-400 mt-2 uppercase tracking-tighter italic">Click para buscar en tu equipo</p>
+                </label>
             </div>
 
             <!-- Botones de Acción -->
