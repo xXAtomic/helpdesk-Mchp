@@ -17,12 +17,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
-        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: #f3f4f6; overflow: hidden; }
+        :root {
+            --bg-main: #f3f4f6;
+            --bg-sidebar: #0f172a;
+            --bg-content: #f8fafc;
+            --text-main: #0f172a;
+            --sidebar-active: #2563eb;
+        }
+
+        .dark {
+            --bg-main: #020617;
+            --bg-content: #0f172a;
+            --text-main: #f1f5f9;
+        }
+
+        body { 
+            margin: 0; padding: 0; font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-main); color: var(--text-main);
+            overflow: hidden; 
+            transition: background-color 0.3s ease;
+        }
+        
         .main-wrapper { display: flex; height: 100vh; width: 100vw; }
 
         /* SIDEBAR MINIMALISTA PRO (64px) */
         .sidebar { 
-            width: 64px; background: #0f172a; display: flex; flex-direction: column; 
+            width: 64px; background: var(--bg-sidebar); display: flex; flex-direction: column; 
             align-items: center; padding: 0; border-right: 1px solid rgba(255,255,255,0.05); 
             transition: 0.3s; z-index: 50; 
         }
@@ -36,6 +56,7 @@
             width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; 
             color: #94a3b8; margin-bottom: 1rem; cursor: pointer; text-decoration: none; font-size: 1.2rem;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            border: none; background: transparent;
         }
         
         .nav-icon:hover { 
@@ -43,19 +64,28 @@
         }
         
         .nav-icon.active { 
-            background: #2563eb; color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4); 
+            background: var(--sidebar-active); color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4); 
         }
 
         /* ÁREA DE CONTENIDO */
-        .content-area { flex: 1; display: flex; flex-direction: column; background: #f8fafc; overflow-y: auto; position: relative; }
+        .content-area { flex: 1; display: flex; flex-direction: column; background: var(--bg-content); overflow-y: auto; position: relative; transition: background-color 0.3s ease; }
 
         /* SCROLLBAR PERSONALIZADA */
         .content-area::-webkit-scrollbar { width: 6px; }
         .content-area::-webkit-scrollbar-track { background: transparent; }
         .content-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* DARK MODE GLOBAL OVERRIDES ✨ */
+        .dark .bg-white { background-color: #1e293b !important; border-color: rgba(255,255,255,0.05) !important; }
+        .dark .text-slate-900, .dark .text-gray-900, .dark .text-gray-800 { color: #f1f5f9 !important; }
+        .dark .text-slate-400, .dark .text-gray-400 { color: #94a3b8 !important; }
+        .dark .bg-gray-50, .dark .bg-slate-50 { background-color: #0f172a !important; }
+        .dark .border-gray-100, .dark .border-gray-200 { border-color: rgba(255,255,255,0.05) !important; }
+        .dark .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5) !important; }
+        .dark header { background-color: #1e293b !important; border-bottom: 1px solid rgba(255,255,255,0.05) !important; }
     </style>
 </head>
-<body>
+<body class="transition-colors duration-300">
 
     <div class="main-wrapper">
         <!-- BARRA LATERAL MINIMALISTA -->
@@ -113,6 +143,11 @@
                     <a href="{{ route('admin.users.index') }}" class="nav-icon {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" title="Usuarios">👥</a>
                 @endif
 
+                <!-- 🌙 THEME TOGGLE -->
+                <button onclick="toggleTheme()" id="theme-toggle" class="nav-icon mt-4 group" title="Cambiar Tema">
+                    <span id="theme-icon" class="transition-transform group-hover:rotate-12 group-active:scale-90">🌙</span>
+                </button>
+
             </nav>
 
             <!-- SALIR -->
@@ -149,6 +184,33 @@
             </div>
         </main>
     </div>
+
+    <script>
+        function applyTheme() {
+            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-icon').innerText = '☀️';
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('theme-icon').innerText = '🌙';
+            }
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                document.getElementById('theme-icon').innerText = '🌙';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                document.getElementById('theme-icon').innerText = '☀️';
+            }
+        }
+
+        // Ejecutar inmediatamente para evitar parpadeo
+        applyTheme();
+    </script>
 
 </body>
 </html>
