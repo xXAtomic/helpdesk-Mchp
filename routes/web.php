@@ -79,8 +79,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/{ticket}/reply', [\App\Http\Controllers\User\TicketController::class, 'reply'])->name('user.tickets.reply');
     });
 
-    // MOTOR DE INTELIGENCIA GRAVITYBRAIN 🧠
+    // MOTOR DE INTELIGENCIA GRAVITYBOT 🧠🤖
     Route::get('/gravity-brain/search', [App\Http\Controllers\User\GravityBrainController::class, 'search'])->name('gravity.brain.search');
+    Route::post('/gravity-bot/chat', [App\Http\Controllers\User\GravityBotController::class, 'chat'])->name('gravity.bot.chat');
 
 });
 
