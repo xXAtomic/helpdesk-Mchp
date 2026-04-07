@@ -186,7 +186,7 @@
                         </div>
                     </div>
                 </div>
-                <button onclick="toggleBot()" class="w-10 h-10 bg-white/5 hover:bg-white/10 rounded-xl flex items-center justify-center text-slate-400 border border-white/5">
+                <button type="button" onclick="toggleBot()" class="cursor-pointer w-10 h-10 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center text-slate-400 border border-white/5 transition-all">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
