@@ -66,6 +66,11 @@ class EquipmentController extends Controller
         return redirect()->route('admin.inventory.index')->with('success', 'Activo registrado correctamente en el sistema.');
     }
 
+    public function show($id) {
+        $item = Asset::with(['user', 'logs.user'])->findOrFail($id);
+        return view('admin.inventory.show', compact('item'));
+    }
+
     public function edit($id) {
         $item = Asset::with('logs.user')->findOrFail($id);
         return view('admin.inventory.edit', compact('item'));

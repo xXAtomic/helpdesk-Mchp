@@ -37,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [EquipmentController::class, 'index'])->name('admin.inventory.index');
             Route::get('/create', [EquipmentController::class, 'create'])->name('admin.inventory.create');
             Route::post('/', [EquipmentController::class, 'store'])->name('admin.inventory.store');
+            Route::get('/{id}', [EquipmentController::class, 'show'])->name('admin.inventory.show');
             Route::get('/{id}/edit', [EquipmentController::class, 'edit'])->name('admin.inventory.edit');
             Route::put('/{id}', [EquipmentController::class, 'update'])->name('admin.inventory.update');
             Route::delete('/{id}', [EquipmentController::class, 'destroy'])->name('admin.inventory.destroy');

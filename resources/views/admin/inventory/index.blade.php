@@ -173,11 +173,13 @@
                         </td>
 
                         <td class="px-6 py-4 text-right">
-                            <div class="opacity-0 group-hover:opacity-100 transition-opacity flex justify-end gap-2 text-xs">
-                                <a href="{{ route('admin.inventory.edit', $item->id) }}" class="text-indigo-600 hover:text-indigo-900 font-black uppercase tracking-widest italic border-b border-transparent hover:border-indigo-600 transition-all">
+                            <div class="opacity-0 group-hover:opacity-100 transition-opacity flex justify-end items-center gap-4 text-xs">
+                                <a href="{{ route('admin.inventory.show', $item->id) }}" class="text-indigo-600 hover:text-indigo-900 font-black uppercase tracking-widest italic border-b border-transparent hover:border-indigo-600 transition-all">
+                                    Ficha
+                                </a>
+                                <a href="{{ route('admin.inventory.edit', $item->id) }}" class="text-slate-600 hover:text-slate-900 font-black uppercase tracking-widest italic border-b border-transparent hover:border-slate-800 transition-all">
                                     Editar
                                 </a>
-                                <span class="text-slate-200">|</span>
                                 <form action="{{ route('admin.inventory.destroy', $item->id) }}" method="POST" class="inline" onsubmit="return confirm('¿Eliminar Activo?')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="text-rose-400 hover:text-rose-600 font-black uppercase tracking-widest italic border-b border-transparent hover:border-rose-600 transition-all">
