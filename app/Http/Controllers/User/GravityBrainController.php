@@ -22,7 +22,7 @@ class GravityBrainController extends Controller
                   ->orWhere('content', 'like', "%{$query}%");
             })
             ->limit(4)
-            ->get(['title', 'id']);
+            ->get(['id', 'title', 'content', 'category', 'icon', 'file_path', 'file_name']);
 
         return response()->json($suggestions);
     }

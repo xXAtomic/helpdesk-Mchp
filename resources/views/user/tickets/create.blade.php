@@ -16,29 +16,44 @@
     </div>
 
     <!-- FORMULARIO SaaS -->
-    <div class="bg-white p-10 rounded-2xl border border-gray-100 shadow-sm relative">
+    <div class="bg-white p-10 rounded-[2.5rem] border border-gray-100 shadow-sm relative overflow-hidden">
         <form action="{{ route('user.tickets.store') }}" method="POST" enctype="multipart/form-data" class="space-y-10">
             @csrf
             
             <!-- SECCIÓN 1: ASUNTO -->
             <div class="space-y-4">
-                <label class="block text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.25em]">Título de la Solicitud</label>
-                <input type="text" name="title" id="ticket-title" required 
-                       class="w-full px-6 py-5 rounded-xl bg-gray-50 border-2 border-transparent text-slate-900 font-bold text-[0.9rem] focus:bg-white focus:border-indigo-500 transition-all outline-none placeholder:text-gray-300"
-                       placeholder="Ej: Falla en conexión a servidor..">
+                <label class="block text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.25em] ml-2">Título de la Solicitud</label>
+                <div class="relative">
+                    <input type="text" name="title" id="ticket-title" required autocomplete="off"
+                           class="w-full px-6 py-6 rounded-2xl bg-gray-50 border-2 border-transparent text-slate-900 font-bold text-[1rem] focus:bg-white focus:border-indigo-500 transition-all outline-none placeholder:text-gray-300"
+                           placeholder="Ej: Falla en conexión a servidor..">
+                    
+                    <div class="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none opacity-20">
+                         <span class="text-[0.5rem] font-black uppercase tracking-widest text-slate-400">Powered by GravityBrain</span>
+                         <span class="text-xs">🧠</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- GRAVITYBRAIN SUGGESTIONS PANEL -->
-            <div id="gravity-brain-panel" class="hidden">
-                <div class="bg-indigo-950 p-8 rounded-2xl border-l-8 border-indigo-500 shadow-xl">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                            <span class="text-lg">🧠</span>
+            <!-- GRAVITYBRAIN SUGGESTIONS PANEL (INTEGRADO) -->
+            <div id="gravity-brain-panel" class="hidden transition-all duration-500">
+                <div class="bg-slate-900 p-8 rounded-[2rem] border-l-[10px] border-indigo-500 shadow-2xl relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-10 h-10 rounded-2xl bg-indigo-500/20 flex items-center justify-center border border-white/10">
+                                <span class="text-xl">🧠</span>
+                            </div>
+                            <div>
+                                <p class="text-[0.65rem] font-black text-indigo-400 uppercase tracking-[0.2em] italic">Recomendaciones de GravityBrain</p>
+                                <p class="text-[0.55rem] text-slate-500 font-bold uppercase tracking-widest mt-1">Hemos encontrado soluciones que podrían ahorrarte tiempo:</p>
+                            </div>
                         </div>
-                        <p class="text-[0.6rem] font-black text-indigo-300 uppercase tracking-widest">GravityBrain: Sugerencias Automáticas</p>
-                    </div>
-                    <div id="suggestions-container" class="space-y-4">
-                        <!-- Sugerencias aquí -->
+                        <div id="suggestions-container" class="space-y-3">
+                            <!-- Sugerencias inyectadas por JS -->
+                        </div>
+                        <p class="text-[0.5rem] text-slate-600 font-bold mt-6 text-center uppercase tracking-[0.3em] border-t border-white/5 pt-4">Si ninguna solución te ayuda, continúa con tu reporte</p>
                     </div>
                 </div>
             </div>
@@ -46,18 +61,18 @@
             <!-- SECCIÓN 2: DATOS TÉCNICOS -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                 <div class="space-y-4">
-                    <label class="block text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.25em]">Categoría del Problema</label>
+                    <label class="block text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.25em] ml-2">Categoría del Problema</label>
                     <select name="category_id" required 
-                            class="w-full px-6 py-5 rounded-xl bg-gray-50 border-2 border-transparent text-slate-700 font-bold text-sm focus:border-indigo-500 transition-all outline-none">
+                            class="w-full px-6 py-5 rounded-2xl bg-gray-50 border-2 border-transparent text-slate-700 font-bold text-sm focus:border-indigo-500 transition-all outline-none">
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="space-y-4">
-                    <label class="block text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.25em]">Urgencia Requerida</label>
+                    <label class="block text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.25em] ml-2">Urgencia Requerida</label>
                     <select name="priority_id" required 
-                            class="w-full px-6 py-5 rounded-xl bg-gray-50 border-2 border-transparent text-slate-700 font-bold text-sm focus:border-indigo-500 transition-all outline-none">
+                            class="w-full px-6 py-5 rounded-2xl bg-gray-50 border-2 border-transparent text-slate-700 font-bold text-sm focus:border-indigo-500 transition-all outline-none">
                         @foreach($priorities as $priority)
                             <option value="{{ $priority->id }}">{{ $priority->name }}</option>
                         @endforeach
@@ -67,41 +82,89 @@
 
             <!-- SECCIÓN 3: DESCRIPCIÓN -->
             <div class="space-y-4">
-                <label class="block text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.25em]">Descripción Detallada</label>
+                <label class="block text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.25em] ml-2">Descripción Detallada</label>
                 <textarea name="description" rows="6" required 
-                          class="w-full px-8 py-6 rounded-2xl bg-gray-50 border-2 border-transparent text-slate-900 font-medium text-[0.95rem] focus:bg-white focus:border-indigo-500 transition-all outline-none placeholder:text-gray-300"
+                          class="w-full px-8 py-6 rounded-[2rem] bg-gray-50 border-2 border-transparent text-slate-900 font-medium text-[0.95rem] focus:bg-white focus:border-indigo-500 transition-all outline-none placeholder:text-gray-300"
                           placeholder="Describe paso a paso lo que está ocurriendo.."></textarea>
             </div>
 
             <!-- SECCIÓN 4: ADJUNTOS -->
-            <div class="bg-slate-50 p-8 rounded-2xl border border-dashed border-slate-200 text-center">
+            <div class="bg-gray-50 p-10 rounded-[2.5rem] border-2 border-dashed border-gray-100 text-center transition-all hover:bg-white hover:border-indigo-200 group">
                 <input type="file" name="attachments[]" id="file-upload" multiple class="hidden">
-                <label for="file-upload" class="cursor-pointer group flex flex-col items-center">
-                    <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                        <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                <label for="file-upload" class="cursor-pointer flex flex-col items-center">
+                    <div class="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-5 group-hover:scale-110 transition-transform group-hover:bg-indigo-600 group-hover:text-white border">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                     </div>
-                    <span id="file-text" class="text-[0.65rem] font-black text-slate-500 uppercase tracking-widest bg-white px-6 py-2 rounded-lg border shadow-sm group-hover:bg-indigo-600 group-hover:text-white transition-all">Subir Documentos / Pantallazos</span>
-                    <p class="text-[0.6rem] text-slate-300 font-bold mt-4 uppercase tracking-tighter">Formatos permitidos: JPG, PNG, PDF (Máx 10MB)</p>
+                    <span id="file-text" class="text-[0.65rem] font-black text-slate-600 uppercase tracking-widest bg-white px-8 py-3 rounded-xl border-2 shadow-sm transition-all group-hover:border-indigo-600 italic">Adjuntar archivos de respaldo</span>
+                    <p class="text-[0.55rem] text-slate-300 font-bold mt-4 uppercase tracking-widest italic">Capturas de pantalla o logs técnicos (Máx 10MB)</p>
                 </label>
             </div>
 
-            <div class="pt-8 text-right">
+            <div class="pt-8">
                 <button type="submit" 
-                        class="w-full md:w-auto px-16 py-6 rounded-xl bg-indigo-600 text-white font-black text-[0.75rem] uppercase tracking-widest shadow-2xl shadow-indigo-500/20 hover:bg-slate-950 transition-all transform hover:-translate-y-1 active:scale-95 border-b-4 border-indigo-800">
-                    Registrar Solicitud
+                        class="w-full bg-indigo-600 text-white font-black py-8 rounded-2xl text-[0.8rem] uppercase tracking-[0.25em] shadow-2xl shadow-indigo-500/30 hover:bg-slate-950 transition-all transform hover:-translate-y-1 active:scale-[0.98] border-b-4 border-indigo-900 italic">
+                    Publicar solicitud en plataforma
                 </button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- SCRIPTS PARA GRAVITYBRAIN Y UI -->
+<!-- Modal de Información Moderno (Gravity Style) -->
+<div id="knowledgeModal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
+    <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity"></div>
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-center justify-center p-4 sm:p-6">
+            <div class="relative bg-white rounded-[2.5rem] shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all border border-slate-100 flex flex-col max-h-[90vh]">
+                <button onclick="closeKnowledgeModal()" class="absolute right-8 top-8 text-slate-300 hover:text-slate-900 transition-all p-2 bg-slate-50 rounded-2xl hover:rotate-90 z-20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+
+                <div class="overflow-y-auto p-10 sm:p-12">
+                    <div class="flex items-center gap-5 mb-10">
+                        <div id="modalIcon" class="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center text-4xl shadow-inner border border-slate-100 shrink-0">📖</div>
+                        <div>
+                            <span id="modalCategory" class="px-3 py-1 bg-indigo-50 text-[0.6rem] font-black text-indigo-600 uppercase tracking-[0.2em] italic mb-2 inline-block rounded-lg uppercase">SOLUCIÓN SUGERIDA</span>
+                            <h2 id="modalTitle" class="text-3xl font-black text-slate-900 tracking-tighter italic uppercase leading-none">Título</h2>
+                        </div>
+                    </div>
+
+                    <div class="border-l-4 border-indigo-500 pl-6 py-2 mb-10">
+                        <p id="modalDescription" class="text-slate-600 font-medium leading-relaxed italic whitespace-pre-line text-base"></p>
+                    </div>
+
+                    <div id="modalFileSection" class="mt-10 p-8 bg-slate-50 rounded-3xl border border-slate-100 hidden">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-[0.6rem] font-black text-slate-400 uppercase tracking-widest mb-1 italic">Manual Completo (PDF/Imagen)</p>
+                                <p id="modalFileName" class="text-sm font-bold text-slate-950 truncate max-w-[200px]">documento.pdf</p>
+                            </div>
+                            <a id="modalFileLink" href="#" target="_blank" class="bg-indigo-600 hover:bg-slate-900 text-white font-black px-6 py-3 rounded-xl transition-all shadow-lg text-[0.65rem] uppercase tracking-widest italic flex items-center gap-2 shrink-0">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Descargar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 bg-indigo-900 text-center flex flex-col items-center">
+                    <p class="text-[0.65rem] font-black text-indigo-200 uppercase tracking-widest italic mb-4">¿Esta solución resolvió tu duda?</p>
+                    <div class="flex gap-4">
+                         <button onclick="closeKnowledgeModal()" class="px-8 py-3 bg-white/10 hover:bg-white text-indigo-100 hover:text-indigo-950 rounded-xl font-black text-[0.6rem] uppercase tracking-widest transition-all">No, enviaré el ticket</button>
+                         <button onclick="alert('¡Genial! Nos alegra haberte ayudado.'); window.location.href='{{ route('dashboard') }}'" class="px-8 py-3 bg-indigo-500 hover:bg-white text-white hover:text-indigo-950 rounded-xl font-black text-[0.6rem] uppercase tracking-widest transition-all shadow-lg">Sí, cancelar ticket ✨</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // INDICADOR DE ARCHIVOS
     document.getElementById('file-upload').addEventListener('change', function(e) {
         const fileText = document.getElementById('file-text');
         const count = e.target.files.length;
-        fileText.innerHTML = count > 0 ? `✅ ${count} ARCHIVOS CARGADOS` : 'SUBIR DOCUMENTOS / PANTALLAZOS';
+        fileText.innerHTML = count > 0 ? `✅ ${count} ARCHIVOS CARGADOS` : 'ADJUNTAR ARCHIVOS DE RESPALDO';
     });
 
     // GRAVITYBRAIN SEARCH
@@ -109,6 +172,15 @@
     const titleInput = document.getElementById('ticket-title');
     const brainPanel = document.getElementById('gravity-brain-panel');
     const container = document.getElementById('suggestions-container');
+
+    function escapeJS(str) {
+        return str
+            .replace(/\\/g, '\\\\')
+            .replace(/'/g, "\\'")
+            .replace(/"/g, '\\"')
+            .replace(/\n/g, '\\n')
+            .replace(/\r/g, '\\r');
+    }
 
     titleInput.addEventListener('input', function() {
         clearTimeout(searchTimer);
@@ -126,12 +198,19 @@
                     if (data.length > 0) {
                         brainPanel.classList.remove('hidden');
                         container.innerHTML = data.map(article => `
-                            <a href="/knowledge/${article.id}" target="_blank" class="block p-5 bg-white/5 hover:bg-white/10 rounded-xl border border-white/5 transition-all group">
+                            <button type="button" onclick="openKnowledgeModal('${escapeJS(article.title)}', '${escapeJS(article.content)}', '${escapeJS(article.category)}', '${escapeJS(article.icon || '')}', '${article.file_path ? '/storage/'+article.file_path : ''}', '${escapeJS(article.file_name || '')}')"
+                                    class="w-full p-6 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/5 transition-all group text-left">
                                 <div class="flex items-center justify-between">
-                                    <h4 class="text-white font-bold text-sm uppercase italic tracking-tight">${article.title}</h4>
-                                    <span class="text-[0.55rem] font-bold text-indigo-400 bg-indigo-400/10 px-2 py-1 rounded">LEER SOLUCIÓN</span>
+                                    <div class="flex items-center gap-4">
+                                        <span class="text-2xl">${article.icon || '📖'}</span>
+                                        <div>
+                                            <h4 class="text-white font-black text-sm uppercase italic tracking-tight">${article.title}</h4>
+                                            <p class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest mt-1">Manual de Autogestión</p>
+                                        </div>
+                                    </div>
+                                    <span class="text-[0.55rem] font-black text-indigo-400 bg-indigo-400/10 px-4 py-2 rounded-xl group-hover:bg-indigo-500 group-hover:text-white transition-all uppercase tracking-widest border border-indigo-400/20">Ver Solución</span>
                                 </div>
-                            </a>
+                            </button>
                         `).join('');
                     } else {
                         brainPanel.classList.add('hidden');
@@ -139,5 +218,39 @@
                 });
         }, 500);
     });
+
+    // FUNCIONES DEL MODAL
+    function openKnowledgeModal(title, content, category, icon, fileUrl, fileName) {
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalDescription').textContent = content;
+        document.getElementById('modalCategory').textContent = category || 'RECOMENDACIÓN';
+        document.getElementById('modalIcon').textContent = icon || '📖';
+        
+        const fileSection = document.getElementById('modalFileSection');
+        if (fileUrl && fileUrl !== '') {
+            fileSection.classList.remove('hidden');
+            document.getElementById('modalFileLink').href = fileUrl;
+            document.getElementById('modalFileName').textContent = fileName;
+        } else {
+            fileSection.classList.add('hidden');
+        }
+
+        const modal = document.getElementById('knowledgeModal');
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeKnowledgeModal() {
+        const modal = document.getElementById('knowledgeModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('knowledgeModal');
+        if (event.target.classList.contains('fixed') && event.target.id === 'knowledgeModal') {
+            closeKnowledgeModal();
+        }
+    }
 </script>
 @endsection
