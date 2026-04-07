@@ -8,8 +8,28 @@ use App\Models\Asset;
 
 class EquipmentController extends Controller
 {
-    public function index() {
-        $items = Asset::orderBy('created_at', 'desc')->get();
+    public function index(Request $request) {
+        $query = Asset::query();
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('asset_tag', 'like', "%{$search}%")
+                  ->orWhere('brand', 'like', "%{$search}%")
+                  ->orWhere('model', 'like', "%{$search}%")
+                  ->orWhere('serial_number', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->has('type') && !empty($request->type)) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->has('status') && !empty($request->status)) {
+            $query->where('status', $request->status);
+        }
+
+        $items = $query->with('user')->orderBy('created_at', 'desc')->get();
         return view('admin.inventory.index', compact('items'));
     }
 

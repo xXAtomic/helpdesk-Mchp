@@ -1,111 +1,174 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto py-12 px-6">
-    <!-- Header Minimalista -->
-    <div class="mb-12">
-        <h1 class="text-4xl font-black text-slate-900 tracking-tighter italic uppercase mb-2">
-            Editar <span class="text-indigo-600">Activo</span>
-        </h1>
-        <p class="text-slate-500 font-medium tracking-wide">Modificando registro: {{ $item->asset_tag }}</p>
+<div class="max-w-5xl mx-auto py-12 px-6">
+    <!-- Header Estratégico -->
+    <div class="mb-12 flex justify-between items-end">
+        <div>
+            <span class="px-3 py-1 bg-indigo-100 text-indigo-600 text-[0.6rem] font-black uppercase tracking-[0.2em] rounded-md italic mb-4 inline-block">Update Record</span>
+            <h1 class="text-5xl font-black text-slate-900 tracking-tighter italic uppercase leading-none">
+                Editar <span class="text-indigo-600">Activo</span>
+            </h1>
+            <p class="text-slate-500 font-medium tracking-tight mt-3 text-sm italic border-l-4 border-indigo-500 pl-4">Modificando: {{ $item->asset_tag }} ({{ $item->brand }} {{ $item->model }})</p>
+        </div>
+        <div class="hidden md:block text-right">
+             <span class="text-[0.6rem] font-black text-slate-300 uppercase tracking-widest block mb-1">Last Update</span>
+             <span class="text-xs font-bold text-slate-400 uppercase italic">{{ $item->updated_at->format('d M, Y H:i') }}</span>
+        </div>
     </div>
 
-    <!-- Formulario de Edición Pro-SaaS -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:shadow-md">
-        <form action="{{ route('admin.inventory.update', $item->id) }}" method="POST" class="p-8 space-y-8">
-            @csrf
-            @method('PUT')
+    <!-- Formulario de Alto Impacto -->
+    <form action="{{ route('admin.inventory.update', $item->id) }}" method="POST">
+        @csrf
+        @method('PUT')
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            
+            <!-- Columna de Datos Técnicos (2/3) -->
+            <div class="lg:col-span-2 space-y-8">
+                <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50 transition-all hover:shadow-indigo-100/30">
+                    <div class="flex items-center gap-3 mb-8">
+                        <div class="w-2 h-6 bg-indigo-600 rounded-full"></div>
+                        <h2 class="text-sm font-black text-slate-900 uppercase italic tracking-widest">Información del Dispositivo</h2>
+                    </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Tag de Activo -->
-                <div class="space-y-2">
-                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Asset Tag / ID</label>
-                    <input type="text" name="asset_tag" value="{{ $item->asset_tag }}" required
-                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Tag de Activo -->
+                        <div class="space-y-2">
+                            <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">Asset Tag (ID Único)</label>
+                            <input type="text" name="asset_tag" value="{{ $item->asset_tag }}" required
+                                class="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-2xl text-slate-900 font-bold focus:border-indigo-500 focus:bg-white transition-all">
+                        </div>
+
+                        <!-- Tipo -->
+                        <div class="space-y-2">
+                            <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">Categoría</label>
+                            <select name="type" required
+                                class="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-2xl text-slate-900 font-bold focus:border-indigo-500 focus:bg-white transition-all">
+                                <option value="Laptop" {{ $item->type == 'Laptop' ? 'selected' : '' }}>💻 Laptop</option>
+                                <option value="Desktop" {{ $item->type == 'Desktop' ? 'selected' : '' }}>🖥️ Desktop</option>
+                                <option value="Monitor" {{ $item->type == 'Monitor' ? 'selected' : '' }}>📺 Monitor</option>
+                                <option value="Impresora" {{ $item->type == 'Impresora' ? 'selected' : '' }}>🖨️ Impresora</option>
+                                <option value="Smartphone" {{ $item->type == 'Smartphone' ? 'selected' : '' }}>📱 Smartphone</option>
+                                <option value="Servidor" {{ $item->type == 'Servidor' ? 'selected' : '' }}>🗄️ Servidor</option>
+                                <option value="Otro" {{ $item->type == 'Otro' ? 'selected' : '' }}>📦 Otro</option>
+                            </select>
+                        </div>
+
+                        <!-- Marca -->
+                        <div class="space-y-2">
+                            <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">Marca / Fabricante</label>
+                            <input type="text" name="brand" value="{{ $item->brand }}" required
+                                class="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-2xl text-slate-900 font-bold focus:border-indigo-500 focus:bg-white transition-all">
+                        </div>
+
+                        <!-- Modelo -->
+                        <div class="space-y-2">
+                            <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">Modelo Específidco</label>
+                            <input type="text" name="model" value="{{ $item->model }}" required
+                                class="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-2xl text-slate-900 font-bold focus:border-indigo-500 focus:bg-white transition-all">
+                        </div>
+
+                        <!-- Serial -->
+                        <div class="md:col-span-2 space-y-2">
+                            <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">Número de Serie (S/N)</label>
+                            <input type="text" name="serial_number" value="{{ $item->serial_number }}" required
+                                class="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-2xl text-slate-900 font-mono font-bold focus:border-indigo-500 focus:bg-white transition-all">
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Tipo -->
-                <div class="space-y-2">
-                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Tipo de Dispositivo</label>
-                    <select name="type" required
-                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all">
-                        <option value="Laptop" {{ $item->type == 'Laptop' ? 'selected' : '' }}>Laptop</option>
-                        <option value="Desktop" {{ $item->type == 'Desktop' ? 'selected' : '' }}>Desktop</option>
-                        <option value="Monitor" {{ $item->type == 'Monitor' ? 'selected' : '' }}>Monitor</option>
-                        <option value="Impresora" {{ $item->type == 'Impresora' ? 'selected' : '' }}>Impresora</option>
-                        <option value="Smartphone" {{ $item->type == 'Smartphone' ? 'selected' : '' }}>Smartphone</option>
-                        <option value="Servidor" {{ $item->type == 'Servidor' ? 'selected' : '' }}>Servidor</option>
-                        <option value="Otro" {{ $item->type == 'Otro' ? 'selected' : '' }}>Otro</option>
-                    </select>
-                </div>
-
-                <!-- Marca -->
-                <div class="space-y-2">
-                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Marca</label>
-                    <input type="text" name="brand" value="{{ $item->brand }}" required
-                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all">
-                </div>
-
-                <!-- Modelo -->
-                <div class="space-y-2">
-                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Modelo</label>
-                    <input type="text" name="model" value="{{ $item->model }}" required
-                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all">
-                </div>
-
-                <!-- Serial -->
-                <div class="space-y-2">
-                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Número de Serie</label>
-                    <input type="text" name="serial_number" value="{{ $item->serial_number }}" required
-                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all">
-                </div>
-
-                <!-- Estado -->
-                <div class="space-y-2">
-                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Estado</label>
-                    <select name="status" required
-                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all">
-                        <option value="Operativo" {{ $item->status == 'Operativo' ? 'selected' : '' }}>Operativo</option>
-                        <option value="En Reparación" {{ $item->status == 'En Reparación' ? 'selected' : '' }}>En Reparación</option>
-                        <option value="De Baja" {{ $item->status == 'De Baja' ? 'selected' : '' }}>De Baja</option>
-                        <option value="Perdido" {{ $item->status == 'Perdido' ? 'selected' : '' }}>Perdido</option>
-                    </select>
-                </div>
-
-                <!-- Ubicación -->
-                <div class="space-y-2">
-                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Ubicación Actual</label>
-                    <input type="text" name="location" value="{{ $item->location }}" required
-                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all">
-                </div>
-
-                <!-- Asignación de Usuario -->
-                <div class="space-y-2">
-                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Asignar a Usuario</label>
-                    <select name="user_id"
-                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-xl text-slate-900 font-semibold focus:ring-2 focus:ring-indigo-500 transition-all">
-                        <option value="">Sin asignar</option>
-                        @foreach(\App\Models\User::all() as $user)
-                            <option value="{{ $user->id }}" {{ $item->user_id == $user->id ? 'selected' : '' }}>
-                                {{ $user->name }}
-                            </option>
-                        @endforeach
-                    </select>
+                <div class="bg-indigo-950 p-10 rounded-[2.5rem] shadow-2xl shadow-indigo-200 text-white relative overflow-hidden group">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/5 rounded-full group-hover:scale-125 transition-transform duration-700"></div>
+                    <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+                        <div class="w-24 h-24 bg-white/10 rounded-3xl flex items-center justify-center text-4xl shadow-inner border border-white/10 shrink-0">
+                            {{ match($item->type) { 'Laptop' => '💻', 'Desktop' => '🖥️', 'Monitor' => '📺', 'Impresora' => '🖨️', 'Smartphone' => '📱', 'Servidor' => '🗄️', default => '📦' } }}
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-black italic uppercase tracking-tighter mb-1">Modo Edición Activo</h3>
+                            <p class="text-indigo-200/60 text-xs font-bold uppercase tracking-widest leading-relaxed italic">
+                                Cualquier cambio realizado afectará los reportes de inventario y la asignación del usuario inmediatamente.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Botones de Acción -->
-            <div class="pt-6 flex gap-4">
-                <button type="submit"
-                    class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-black py-5 rounded-xl transition-all shadow-lg hover:shadow-slate-200 uppercase tracking-widest italic">
-                    Actualizar Activo
-                </button>
-                <a href="{{ route('admin.inventory.index') }}"
-                    class="px-8 bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold py-5 rounded-xl transition-all uppercase tracking-widest flex items-center">
-                    Cancelar
-                </a>
+            <!-- Columna Lateral: Estado y Asignación (1/3) -->
+            <div class="space-y-8">
+                <!-- Estado Operativo -->
+                <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-2 h-6 bg-emerald-500 rounded-full"></div>
+                        <h2 class="text-sm font-black text-slate-900 uppercase italic tracking-widest">Estatus Actual</h2>
+                    </div>
+
+                    <div class="space-y-4">
+                        <label class="flex items-center gap-4 p-4 rounded-2xl border-2 {{ $item->status == 'Operativo' ? 'border-emerald-200 bg-emerald-50' : 'border-slate-50 bg-slate-50' }} cursor-pointer hover:bg-emerald-50 hover:border-emerald-200 transition-all group">
+                            <input type="radio" name="status" value="Operativo" {{ $item->status == 'Operativo' ? 'checked' : '' }} class="w-5 h-5 text-emerald-600 border-slate-300 focus:ring-emerald-500">
+                            <div class="flex flex-col">
+                                <span class="text-[0.7rem] font-black text-slate-900 uppercase italic">Operativo</span>
+                                <span class="text-[0.55rem] font-bold text-slate-400 uppercase tracking-widest">Listo para usar</span>
+                            </div>
+                        </label>
+
+                        <label class="flex items-center gap-4 p-4 rounded-2xl border-2 {{ $item->status == 'En Reparación' ? 'border-amber-200 bg-amber-50' : 'border-slate-50 bg-slate-50' }} cursor-pointer hover:bg-amber-50 hover:border-amber-200 transition-all group">
+                            <input type="radio" name="status" value="En Reparación" {{ $item->status == 'En Reparación' ? 'checked' : '' }} class="w-5 h-5 text-amber-600 border-slate-300 focus:ring-amber-500">
+                            <div class="flex flex-col">
+                                <span class="text-[0.7rem] font-black text-slate-900 uppercase italic">Reparación</span>
+                                <span class="text-[0.55rem] font-bold text-slate-400 uppercase tracking-widest">Mantenimiento</span>
+                            </div>
+                        </label>
+
+                        <label class="flex items-center gap-4 p-4 rounded-2xl border-2 {{ $item->status == 'De Baja' ? 'border-rose-200 bg-rose-50' : 'border-slate-50 bg-slate-50' }} cursor-pointer hover:bg-rose-50 hover:border-rose-200 transition-all group">
+                            <input type="radio" name="status" value="De Baja" {{ $item->status == 'De Baja' ? 'checked' : '' }} class="w-5 h-5 text-rose-600 border-slate-300 focus:ring-rose-500">
+                            <div class="flex flex-col">
+                                <span class="text-[0.7rem] font-black text-slate-900 uppercase italic">De Baja</span>
+                                <span class="text-[0.55rem] font-bold text-slate-400 uppercase tracking-widest">Fuera de servicio</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="mt-8 space-y-2">
+                        <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">Ubicación Física</label>
+                        <input type="text" name="location" value="{{ $item->location }}" required
+                            class="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-2xl text-slate-900 font-bold focus:border-indigo-500 focus:bg-white transition-all italic">
+                    </div>
+                </div>
+
+                <!-- Asignación -->
+                <div class="bg-indigo-600 p-8 rounded-[2.5rem] shadow-2xl shadow-indigo-200 text-white relative overflow-hidden">
+                    <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full scale-150"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-2 h-6 bg-white rounded-full"></div>
+                            <h2 class="text-sm font-black uppercase italic tracking-widest">Asignación</h2>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <p class="text-[0.7rem] font-bold text-white/60 uppercase tracking-[0.1em]">Persona Responsable</p>
+                            <select name="user_id"
+                                class="w-full px-5 py-4 bg-white/10 border-none rounded-xl text-white font-bold focus:ring-2 focus:ring-white transition-all appearance-none cursor-pointer">
+                                <option value="" class="text-slate-900">SIN ASIGNAR (DISPONIBLE)</option>
+                                @foreach(\App\Models\User::all() as $user)
+                                    <option value="{{ $user->id }}" {{ $item->user_id == $user->id ? 'selected' : '' }} class="text-slate-900">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="mt-10 flex gap-4">
+                            <button type="submit"
+                                class="flex-1 bg-white text-indigo-600 font-black py-5 rounded-2xl hover:bg-slate-50 transition-all shadow-xl uppercase tracking-widest italic text-xs">
+                                Guardar Cambios
+                            </button>
+                        </div>
+                        <a href="{{ route('admin.inventory.index') }}" 
+                           class="block text-center mt-6 text-white/50 hover:text-white font-bold uppercase tracking-widest text-[0.6rem] transition-colors italic">
+                            ← Cancelar y Volver
+                        </a>
+                    </div>
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 @endsection

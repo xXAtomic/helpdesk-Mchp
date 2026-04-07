@@ -16,3 +16,6 @@ yarn-error.log
 /.idea
 /.vscode
 /.gemini
+/.antigravity
+.php_cs.cache
+.phpunit.result.cache
