@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Knowledge;
+use Illuminate\Support\Str;
 
 class KnowledgeBaseController extends Controller
 {
@@ -38,6 +39,7 @@ class KnowledgeBaseController extends Controller
 
         Knowledge::create([
             'title' => $data['title'],
+            'slug' => Str::slug($data['title']),
             'content' => $data['content'],
             'category' => $data['category'],
             'icon' => $request->icon ?? '📖',
@@ -64,6 +66,8 @@ class KnowledgeBaseController extends Controller
             'icon' => 'nullable',
             'file' => 'nullable|file|max:10240'
         ]);
+
+        $data['slug'] = Str::slug($data['title']);
 
         if ($request->hasFile('file')) {
             // Eliminar archivo anterior si existe
