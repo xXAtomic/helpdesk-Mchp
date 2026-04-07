@@ -52,18 +52,41 @@ class EquipmentController extends Controller
             $data['status'] = 'Operativo';
         }
 
-        Asset::create($data);
+        $asset = Asset::create($data);
+
+        // Registro de Auditoría ✨
+        \App\Models\AssetLog::create([
+            'asset_id' => $asset->id,
+            'user_id'  => auth()->id(),
+            'action'   => 'CREATE',
+            'new_data' => $asset->toArray(),
+            'details'  => 'Activo registrado por primera vez.'
+        ]);
+
         return redirect()->route('admin.inventory.index')->with('success', 'Activo registrado correctamente en el sistema.');
     }
 
     public function edit($id) {
-        $item = Asset::findOrFail($id);
+        $item = Asset::with('logs.user')->findOrFail($id);
         return view('admin.inventory.edit', compact('item'));
     }
 
     public function update(Request $request, $id) {
         $item = Asset::findOrFail($id);
+        $oldData = $item->toArray();
+        
         $item->update($request->all());
+        
+        // Registro de Auditoría ✨
+        \App\Models\AssetLog::create([
+            'asset_id' => $item->id,
+            'user_id'  => auth()->id(),
+            'action'   => 'UPDATE',
+            'old_data' => $oldData,
+            'new_data' => $item->toArray(),
+            'details'  => 'Actualización de datos del equipo.'
+        ]);
+
         return redirect()->route('admin.inventory.index')->with('success', 'Equipo actualizado.');
     }
 

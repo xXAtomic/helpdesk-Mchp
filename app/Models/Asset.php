@@ -29,4 +29,9 @@ class Asset extends Model
     {
         return $this->hasMany(Ticket::class);
     }
+
+    public function logs()
+    {
+        return $this->hasMany(AssetLog::class)->orderBy('created_at', 'desc');
+    }
 }
