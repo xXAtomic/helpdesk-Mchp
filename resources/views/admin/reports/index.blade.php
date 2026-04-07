@@ -30,7 +30,7 @@
     </div>
 
     <!-- KPI'S DE ALTA VISIBILIDAD -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
         <div class="bg-indigo-600 p-10 rounded-[3rem] shadow-2xl shadow-indigo-100 relative overflow-hidden group">
             <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
             <div class="relative z-10">
@@ -48,18 +48,29 @@
                 <p class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 italic">Tickets Totales</p>
                 <h3 class="text-6xl font-black text-slate-950 tracking-tighter italic mb-4">{{ $totalTickets }}</h3>
                 <div class="flex items-center gap-3">
-                   <p class="text-[0.65rem] font-bold text-emerald-500 uppercase italic">↑ 12% Mensual</p>
+                   <p class="text-[0.65rem] font-bold text-emerald-500 uppercase italic">↑ Eficiencia Operativa</p>
                 </div>
             </div>
         </div>
 
+        <div class="bg-rose-500 p-10 rounded-[3rem] shadow-2xl shadow-rose-100 relative overflow-hidden group">
+             <div class="relative z-10">
+                <p class="text-[0.65rem] font-black text-white/60 uppercase tracking-[0.3em] mb-4 italic">Mantenimiento Vencido</p>
+                <h3 class="text-6xl font-black text-white tracking-tighter italic mb-4">{{ $maintenanceOverdue }}</h3>
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-exclamation-triangle text-white/50 text-[0.6rem]"></i>
+                    <p class="text-[0.6rem] font-black text-white/50 uppercase italic tracking-widest leading-none">Requieren Atención</p>
+                </div>
+             </div>
+        </div>
+
         <div class="bg-slate-950 p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group">
              <div class="relative z-10 text-center">
-                <p class="text-[0.65rem] font-black text-indigo-400 uppercase tracking-[0.3em] mb-4 italic">Efectividad 30D</p>
+                <p class="text-[0.65rem] font-black text-indigo-400 uppercase tracking-[0.3em] mb-4 italic">Próximos 30 Días</p>
                 <div class="text-5xl font-black text-white tracking-tighter italic mb-4">
-                    {{ $totalTickets > 0 ? round(($resolvedLast30Days / $totalTickets) * 100) : 0 }}%
+                    {{ $maintenanceComingSoon }}
                 </div>
-                <p class="text-[0.6rem] text-slate-500 font-black uppercase italic tracking-widest">{{ $resolvedLast30Days }} Resueltos</p>
+                <p class="text-[0.6rem] text-slate-500 font-black uppercase italic tracking-widest">En Agenda Preventiva</p>
              </div>
         </div>
     </div>

@@ -116,25 +116,94 @@
             </div>
 
             <!-- STATUS CARD -->
-            <div class="bg-white p-8 rounded-[3rem] border border-gray-100 shadow-sm">
-                <p class="text-[0.55rem] font-black text-slate-400 uppercase tracking-[0.4em] mb-4 italic ml-2">Metadatos de Seguimiento</p>
+            <div class="bg-white p-8 rounded-[3rem] border border-gray-100 shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-16 h-16 bg-slate-50 rounded-bl-[2rem] flex items-center justify-center text-slate-300">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <p class="text-[0.55rem] font-black text-slate-400 uppercase tracking-[0.4em] mb-4 italic ml-2">Monitor de Vida Útil</p>
                 <div class="space-y-4">
-                    <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl">
+                    <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-transparent hover:border-indigo-100 transition-all">
                         <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-indigo-600 shadow-sm border border-slate-100"><i class="far fa-calendar-alt"></i></div>
                         <div>
-                             <p class="text-[0.5rem] font-black text-slate-400 uppercase italic">Ingreso Sistema</p>
+                             <p class="text-[0.5rem] font-black text-slate-400 uppercase italic">Registro Inicial</p>
                              <p class="text-[0.65rem] font-black text-slate-900 uppercase italic tracking-tighter">{{ $item->created_at->format('d/m/Y') }}</p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl">
-                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-emerald-600 shadow-sm border border-slate-100"><i class="fas fa-check-circle"></i></div>
+                    <div class="flex items-center gap-4 p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100">
+                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-indigo-600 shadow-sm border border-slate-100"><i class="fas fa-tools"></i></div>
                         <div>
-                             <p class="text-[0.5rem] font-black text-slate-400 uppercase italic">Última Revisión</p>
-                             <p class="text-[0.65rem] font-black text-slate-900 uppercase italic tracking-tighter">{{ $item->updated_at->diffForHumans() }}</p>
+                             <p class="text-[0.5rem] font-black text-indigo-400 uppercase italic">Último Mantenimiento</p>
+                             <p class="text-[0.65rem] font-black text-slate-900 uppercase italic tracking-tighter">{{ $item->last_maintenance_at ? $item->last_maintenance_at->format('d/m/Y') : 'SIN REGISTROS' }}</p>
                         </div>
+                    </div>
+                    <div class="flex items-center gap-4 p-4 {{ ($item->next_maintenance_at && $item->next_maintenance_at->isPast()) ? 'bg-rose-50 border-rose-100' : 'bg-emerald-50 border-emerald-100' }} rounded-2xl border">
+                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center {{ ($item->next_maintenance_at && $item->next_maintenance_at->isPast()) ? 'text-rose-600' : 'text-emerald-600' }} shadow-sm border border-slate-100"><i class="fas fa-clock"></i></div>
+                        <div>
+                             <p class="text-[0.5rem] font-black {{ ($item->next_maintenance_at && $item->next_maintenance_at->isPast()) ? 'text-rose-400' : 'text-emerald-400' }} uppercase italic">Próxima Revisión</p>
+                             <p class="text-[0.65rem] font-black text-slate-900 uppercase italic tracking-tighter">{{ $item->next_maintenance_at ? $item->next_maintenance_at->format('d/m/Y') : 'NO PROGRAMADA' }}</p>
+                        </div>
+                    </div>
+                    
+                    <button onclick="document.getElementById('maintenanceModal').classList.remove('hidden')" class="w-full mt-4 flex items-center justify-center gap-2 py-4 bg-slate-950 text-white rounded-2xl text-[0.6rem] font-black uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-xl italic">
+                         <i class="fas fa-plus-circle"></i> Registrar Acción
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DE MANTENIMIENTO ✨ -->
+<div id="maintenanceModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-slate-950 bg-opacity-90 transition-opacity" aria-hidden="true" onclick="this.parentElement.parentElement.classList.add('hidden')"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-[3rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border border-white/20">
+            <div class="bg-slate-950 px-8 py-10 relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500/20 rounded-full blur-3xl"></div>
+                <div class="relative z-10 flex items-center gap-6">
+                    <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-white text-3xl border border-white/10">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-black text-white italic uppercase tracking-tighter leading-none">Intervención Técnica</h3>
+                        <p class="text-indigo-400 text-[0.6rem] font-bold uppercase tracking-[0.3em] mt-2 italic">Registro de Mantenimiento Preventivo</p>
                     </div>
                 </div>
             </div>
+            
+            <form action="{{ route('admin.inventory.maintenance.store', $item->id) }}" method="POST" class="px-8 py-10 space-y-6">
+                @csrf
+                <div>
+                    <label class="block text-[0.6rem] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Detalles de la Operación</label>
+                    <textarea name="details" rows="3" required class="w-full bg-slate-50 border-transparent rounded-2xl p-4 text-sm font-medium focus:ring-2 focus:ring-indigo-500 transition-all italic" placeholder="Describe el trabajo realizado..."></textarea>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-[0.6rem] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Próximo Ciclo</label>
+                        <input type="date" name="next_maintenance_at" required class="w-full bg-slate-50 border-transparent rounded-2xl p-4 text-sm font-black focus:ring-2 focus:ring-indigo-500 transition-all uppercase italic">
+                    </div>
+                    <div>
+                        <label class="block text-[0.6rem] font-black text-slate-400 uppercase tracking-widest mb-3 italic">Estado Final</label>
+                        <select name="status" class="w-full bg-slate-50 border-transparent rounded-2xl p-4 text-sm font-black focus:ring-2 focus:ring-indigo-500 transition-all uppercase italic">
+                            <option value="Operativo" {{ $item->status == 'Operativo' ? 'selected' : '' }}>Operativo</option>
+                            <option value="Mantenimiento" {{ $item->status == 'Mantenimiento' ? 'selected' : '' }}>En Proceso</option>
+                            <option value="Dañado" {{ $item->status == 'Dañado' ? 'selected' : '' }}>Dañado</option>
+                            <option value="Baja" {{ $item->status == 'Baja' ? 'selected' : '' }}>Baja</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="pt-6 flex gap-4">
+                    <button type="button" onclick="document.getElementById('maintenanceModal').classList.add('hidden')" class="flex-1 px-8 py-5 border-2 border-slate-100 rounded-2xl text-[0.7rem] font-black uppercase tracking-widest text-slate-400 hover:bg-slate-50 transition-all italic">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="flex-[2] bg-indigo-600 text-white px-8 py-5 rounded-2xl text-[0.7rem] font-black uppercase tracking-widest hover:bg-slate-950 transition-all shadow-xl shadow-indigo-200 italic">
+                        Confirmar Registro
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

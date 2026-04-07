@@ -28,9 +28,17 @@ class ReportController extends Controller
             $q->where('name', 'Resolved')->orWhere('name', 'Resuelto')->orWhere('name', 'Cerrado')->orWhere('name', 'Closed');
         })->where('updated_at', '>=', now()->subDays(30))->count();
 
+        // Métricas de Mantenimiento ✨
+        $maintenanceOverdue = Asset::where('next_maintenance_at', '<', now())->count();
+        $maintenanceComingSoon = Asset::whereBetween('next_maintenance_at', [now(), now()->addDays(30)])->count();
+        $totalMaintenanceThisMonth = \App\Models\AssetLog::where('action', 'MAINTENANCE')
+            ->whereMonth('created_at', now()->month)
+            ->count();
+
         return view('admin.reports.index', compact(
             'totalAssets', 'assetsByType', 'assetsByStatus',
-            'totalTickets', 'ticketsByStatus', 'resolvedLast30Days'
+            'totalTickets', 'ticketsByStatus', 'resolvedLast30Days',
+            'maintenanceOverdue', 'maintenanceComingSoon', 'totalMaintenanceThisMonth'
         ));
     }
 

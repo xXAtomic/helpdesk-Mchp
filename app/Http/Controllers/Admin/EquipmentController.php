@@ -100,4 +100,36 @@ class EquipmentController extends Controller
         $item->delete();
         return redirect()->route('admin.inventory.index')->with('success', 'Equipo eliminado.');
     }
+
+    /**
+     * Registra un mantenimiento preventivo para el equipo. ✨
+     */
+    public function storeMaintenance(Request $request, $id) {
+        $request->validate([
+            'details'             => 'required|string|min:10',
+            'next_maintenance_at' => 'required|date|after:today',
+        ]);
+
+        $asset = Asset::findOrFail($id);
+        $oldData = $asset->toArray();
+
+        // Actualizamos las fechas del activo
+        $asset->update([
+            'last_maintenance_at' => now(),
+            'next_maintenance_at' => $request->next_maintenance_at,
+            'status'              => $request->status ?? $asset->status,
+        ]);
+
+        // Generamos el registro en el historial (AssetLog)
+        \App\Models\AssetLog::create([
+            'asset_id' => $asset->id,
+            'user_id'  => auth()->id(),
+            'action'   => 'MAINTENANCE',
+            'old_data' => $oldData,
+            'new_data' => $asset->toArray(),
+            'details'  => "MANTENIMIENTO REALIZADO: " . $request->details
+        ]);
+
+        return redirect()->back()->with('success', 'Mantenimiento registrado con éxito. El ciclo de vida del equipo ha sido actualizado.');
+    }
 }
