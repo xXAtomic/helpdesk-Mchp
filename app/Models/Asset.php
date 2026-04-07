@@ -17,7 +17,14 @@ class Asset extends Model
         'serial_number',
         'status',
         'location',
-        'user_id'
+        'user_id',
+        'last_maintenance_at',
+        'next_maintenance_at'
+    ];
+
+    protected $casts = [
+        'last_maintenance_at' => 'date',
+        'next_maintenance_at' => 'date',
     ];
 
     public function user()
