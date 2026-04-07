@@ -25,12 +25,6 @@
             --sidebar-active: #2563eb;
         }
 
-        .dark {
-            --bg-main: #020617;
-            --bg-content: #0f172a;
-            --text-main: #f1f5f9;
-        }
-
         body { 
             margin: 0; padding: 0; font-family: 'Inter', sans-serif; 
             background-color: var(--bg-main); color: var(--text-main);
@@ -74,15 +68,6 @@
         .content-area::-webkit-scrollbar { width: 6px; }
         .content-area::-webkit-scrollbar-track { background: transparent; }
         .content-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-
-        /* DARK MODE GLOBAL OVERRIDES ✨ */
-        .dark .bg-white { background-color: #1e293b !important; border-color: rgba(255,255,255,0.05) !important; }
-        .dark .text-slate-900, .dark .text-gray-900, .dark .text-gray-800 { color: #f1f5f9 !important; }
-        .dark .text-slate-400, .dark .text-gray-400 { color: #94a3b8 !important; }
-        .dark .bg-gray-50, .dark .bg-slate-50 { background-color: #0f172a !important; }
-        .dark .border-gray-100, .dark .border-gray-200 { border-color: rgba(255,255,255,0.05) !important; }
-        .dark .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5) !important; }
-        .dark header { background-color: #1e293b !important; border-bottom: 1px solid rgba(255,255,255,0.05) !important; }
     </style>
 </head>
 <body class="transition-colors duration-300">
@@ -143,11 +128,6 @@
                     <a href="{{ route('admin.users.index') }}" class="nav-icon {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" title="Usuarios">👥</a>
                 @endif
 
-                <!-- 🌙 THEME TOGGLE -->
-                <button onclick="toggleTheme()" id="theme-toggle" class="nav-icon mt-4 group" title="Cambiar Tema">
-                    <span id="theme-icon" class="transition-transform group-hover:rotate-12 group-active:scale-90">🌙</span>
-                </button>
-
             </nav>
 
             <!-- SALIR -->
@@ -189,7 +169,7 @@
     <div id="gravity-bot" class="fixed bottom-10 right-10 z-[1000] flex flex-col items-end">
         
         <!-- Ventana de Chat (Oculta por defecto) -->
-        <div id="bot-window" class="hidden w-[380px] md:w-[420px] bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-white/5 flex-col mb-6 overflow-hidden transition-all transform origin-bottom-right scale-95 opacity-0 duration-300">
+        <div id="bot-window" class="hidden w-[380px] md:w-[420px] bg-white rounded-[2.5rem] shadow-[0_30px_100px_-20px_rgba(0,0,0,0.5)] border border-slate-100 flex-col mb-6 overflow-hidden transition-all transform origin-bottom-right scale-95 opacity-0 duration-300">
             <!-- Header Negro Gravity -->
             <div class="bg-slate-950 p-8 flex items-center justify-between relative overflow-hidden">
                 <div class="absolute -right-10 -top-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl"></div>
@@ -212,21 +192,21 @@
             </div>
 
             <!-- Área de Mensajes -->
-            <div id="bot-messages" class="flex-1 p-8 space-y-6 overflow-y-auto max-h-[400px] bg-slate-50/50 dark:bg-slate-950/50 scroll-smooth">
+            <div id="bot-messages" class="flex-1 p-8 space-y-6 overflow-y-auto max-h-[400px] bg-slate-50/50 scroll-smooth">
                 <div class="flex gap-4">
                     <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white text-[0.7rem] font-bold shadow-lg shrink-0">GB</div>
-                    <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl rounded-tl-none border border-slate-100 dark:border-white/5 text-sm font-medium text-slate-700 dark:text-slate-300 shadow-sm leading-relaxed italic">
+                    <div class="bg-white p-6 rounded-3xl rounded-tl-none border border-slate-100 text-sm font-medium text-slate-700 shadow-sm leading-relaxed italic">
                         ¡Hola! Soy **GravityBot**, tu asistente inteligente. <br><br>Puedo ayudarte a resolver dudas técnicas corporativas, encontrar manuales en **GravityKnowledge** o guiarte en el uso de la plataforma. <br><br>¿En qué puedo ayudarte hoy?
                     </div>
                 </div>
             </div>
 
             <!-- Input de Texto -->
-            <div class="p-8 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-white/5">
+            <div class="p-8 bg-white border-t border-slate-100">
                 <form id="bot-form" onsubmit="askBot(event)" class="relative group">
                     <input type="text" id="bot-input" placeholder="¿Cómo te ayudo?..." autocomplete="off"
-                           class="w-full px-8 py-6 pr-16 bg-slate-50 dark:bg-slate-950 border-2 border-transparent rounded-[1.5rem] text-slate-900 dark:text-white font-bold focus:bg-white dark:focus:bg-slate-950 focus:border-indigo-500 transition-all outline-none italic text-sm placeholder:text-slate-300 dark:placeholder:text-slate-700">
-                    <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 bg-slate-950 dark:bg-indigo-600 rounded-xl flex items-center justify-center text-indigo-400 dark:text-white hover:scale-110 active:scale-95 transition-all shadow-xl group-hover:bg-indigo-600">
+                           class="w-full px-8 py-6 pr-16 bg-slate-50 border-2 border-transparent rounded-[1.5rem] text-slate-900 font-bold focus:bg-white focus:border-indigo-500 transition-all outline-none italic text-sm placeholder:text-slate-300">
+                    <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 bg-slate-950 rounded-xl flex items-center justify-center text-indigo-400 hover:scale-110 active:scale-95 transition-all shadow-xl group-hover:bg-indigo-600">
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </form>
@@ -325,8 +305,8 @@
             if (id) div.id = id;
 
             const icon = type === 'user' ? '👤' : 'GB';
-            const iconBg = type === 'user' ? 'bg-slate-200 dark:bg-slate-800 text-slate-500' : 'bg-indigo-600 text-white';
-            const bubbleBg = type === 'user' ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 rounded-tl-none border border-slate-100 dark:border-white/5 shadow-sm';
+            const iconBg = type === 'user' ? 'bg-slate-200 text-slate-500' : 'bg-indigo-600 text-white';
+            const bubbleBg = type === 'user' ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-white text-slate-700 rounded-tl-none border border-slate-100 shadow-sm';
 
             div.innerHTML = `
                 <div class="w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center text-[0.7rem] font-black shadow-md shrink-0">${icon}</div>
@@ -338,34 +318,6 @@
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
         }
-
-        // ... resto del script de temas ...
-
-    <script>
-        function applyTheme() {
-            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-                document.getElementById('theme-icon').innerText = '☀️';
-            } else {
-                document.documentElement.classList.remove('dark');
-                document.getElementById('theme-icon').innerText = '🌙';
-            }
-        }
-
-        function toggleTheme() {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                document.getElementById('theme-icon').innerText = '🌙';
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                document.getElementById('theme-icon').innerText = '☀️';
-            }
-        }
-
-        // Ejecutar inmediatamente para evitar parpadeo
-        applyTheme();
     </script>
 
 </body>
