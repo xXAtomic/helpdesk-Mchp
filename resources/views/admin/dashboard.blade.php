@@ -201,6 +201,8 @@
     // DASHBOARD ANALYTICS ENGINE ✨💎🚀
     
     document.addEventListener('DOMContentLoaded', function() {
+        const isDark = () => document.body.classList.contains('dark');
+        
         const chartDefaults = {
             responsive: true,
             maintainAspectRatio: false,
@@ -210,12 +212,21 @@
             scales: {
                 y: { 
                     beginAtZero: true, 
-                    grid: { color: 'rgba(0,0,0,0.03)', borderDash: [5, 5] },
-                    ticks: { font: { size: 9, weight: 'bold', family: 'Inter' }, color: '#94a3b8' }
+                    grid: { 
+                        color: isDark() ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)', 
+                        borderDash: [5, 5] 
+                    },
+                    ticks: { 
+                        font: { size: 9, weight: 'bold', family: 'Inter' }, 
+                        color: isDark() ? '#64748b' : '#94a3b8' 
+                    }
                 },
                 x: { 
                     grid: { display: false },
-                    ticks: { font: { size: 9, weight: 'bold', family: 'Inter' }, color: '#94a3b8' }
+                    ticks: { 
+                        font: { size: 9, weight: 'bold', family: 'Inter' }, 
+                        color: isDark() ? '#64748b' : '#94a3b8' 
+                    }
                 }
             }
         };
