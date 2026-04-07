@@ -135,6 +135,28 @@
                     </div>
                 </div>
 
+                <!-- Mantenimiento Preventivo ✨ -->
+                <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-2 h-6 bg-indigo-500 rounded-full"></div>
+                        <h2 class="text-sm font-black text-slate-900 uppercase italic tracking-widest">Mantenimiento</h2>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="space-y-2">
+                            <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">Último Mantenimiento</label>
+                            <input type="date" name="last_maintenance_at" value="{{ $item->last_maintenance_at ? $item->last_maintenance_at->format('Y-m-d') : '' }}"
+                                class="w-full px-6 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-slate-900 font-bold focus:border-indigo-500 focus:bg-white transition-all italic">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">Próximo Mantenimiento</label>
+                            <input type="date" name="next_maintenance_at" value="{{ $item->next_maintenance_at ? $item->next_maintenance_at->format('Y-m-d') : '' }}"
+                                class="w-full px-6 py-4 bg-slate-50 border-2 border-transparent rounded-2xl text-slate-900 font-bold focus:border-indigo-500 focus:bg-white transition-all italic">
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Asignación -->
                 <div class="bg-indigo-600 p-8 rounded-[2.5rem] shadow-2xl shadow-indigo-200 text-white relative overflow-hidden">
                     <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full scale-150"></div>

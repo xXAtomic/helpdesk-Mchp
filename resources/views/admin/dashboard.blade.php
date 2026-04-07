@@ -45,11 +45,24 @@
                 <p class="text-3xl font-black text-white tracking-tighter italic uppercase leading-none">{{ $stats['total_tickets'] }} <span class="text-indigo-400">Generados</span></p>
             </div>
         </div>
+        @if($stats['maintenance_pending'] > 0)
+        <!-- ALERTA DE MANTENIMIENTO (DINÁMICA) ✨ -->
+        <div class="bg-rose-600 p-8 rounded-[2rem] shadow-2xl shadow-rose-100 relative overflow-hidden group">
+            <div class="absolute inset-0 bg-gradient-to-br from-rose-500 to-rose-700 opacity-100"></div>
+            <div class="absolute -right-4 -top-4 w-20 h-20 bg-white/10 rounded-full animate-ping"></div>
+            <div class="relative z-10">
+                <p class="text-[0.6rem] font-black text-white/50 uppercase tracking-widest mb-2 italic">Alerta de Mantenimiento</p>
+                <p class="text-3xl font-black text-white tracking-tighter italic uppercase leading-none">{{ $stats['maintenance_pending'] }} <span class="text-rose-200">En Riesgo</span></p>
+            </div>
+            <a href="{{ route('admin.inventory.index') }}" class="absolute inset-0 z-20"></a>
+        </div>
+        @else
         <div class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:-translate-y-1 relative overflow-hidden group">
             <div class="absolute -right-4 -top-4 w-12 h-12 bg-slate-50 rounded-full group-hover:scale-150 transition-transform"></div>
             <p class="text-[0.6rem] font-black text-gray-400 uppercase tracking-widest mb-2 italic">Fuerza Laboral</p>
             <p class="text-3xl font-black text-slate-900 tracking-tighter italic uppercase leading-none">{{ $stats['total_users'] }} <span class="text-slate-400">Registros</span></p>
         </div>
+        @endif
     </div>
 
     <!-- SECCIÓN DE ANALÍTICAS VISUALES (NEW) ✨ -->

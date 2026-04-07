@@ -68,9 +68,25 @@
         .content-area::-webkit-scrollbar { width: 6px; }
         .content-area::-webkit-scrollbar-track { background: transparent; }
         .content-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        /* TOAST NOTIFICATIONS (CYBER-BLUE) */
+        .toast-container { 
+            position: fixed; top: 2rem; left: 50%; transform: translateX(-50%); 
+            z-index: 9999; display: flex; flex-direction: column; gap: 0.75rem; pointer-events: none;
+        }
+        .toast {
+            background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(20px); border: 2px solid rgba(79, 70, 229, 0.4);
+            color: white; padding: 1rem 2rem; border-radius: 1.5rem; font-weight: 800; font-style: italic;
+            text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.75rem; pointer-events: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 20px rgba(79, 70, 229, 0.2);
+            animation: toast-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, toast-out 0.5s 4.5s forwards;
+            display: flex; align-items: center; gap: 0.75rem; min-width: 300px;
+        }
+        @keyframes toast-in { from { transform: translateY(-100px) scale(0.8); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+        @keyframes toast-out { from { transform: translateY(0) scale(1); opacity: 1; } to { transform: translateY(-50px) scale(0.9); opacity: 0; } }
     </style>
 </head>
 <body class="transition-colors duration-300">
+    <div id="toast-container" class="toast-container"></div>
 
     <div class="main-wrapper">
         <!-- BARRA LATERAL MINIMALISTA -->
@@ -159,12 +175,6 @@
             @endif
 
             <div class="p-8">
-                @if (session('success'))
-                    <div class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl shadow-sm flex items-center gap-3">
-                        <span>✅</span> {{ session('success') }}
-                    </div>
-                @endif
-
                 @yield('content')
             </div>
         </main>
@@ -304,6 +314,24 @@
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
         }
+
+        // --- SISTEMA DE TOASTS ---
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            const icon = type === 'success' ? '✅' : '⚠️';
+            toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 5000);
+        }
+
+        @if(session('success'))
+            showToast("{{ session('success') }}");
+        @endif
+        @if(session('error'))
+            showToast("{{ session('error') }}", 'error');
+        @endif
     </script>
 
 </body>

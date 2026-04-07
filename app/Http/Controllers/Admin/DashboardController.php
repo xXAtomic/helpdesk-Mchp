@@ -17,6 +17,7 @@ class DashboardController extends Controller
             'open_tickets'    => Ticket::whereNull('closed_at')->count(),
             'total_equipment' => Asset::count(),
             'total_users'     => User::count(),
+            'maintenance_pending' => Asset::where('next_maintenance_at', '<=', now()->addDays(7))->count(),
         ];
 
         // Distribución por Estatus ✨
