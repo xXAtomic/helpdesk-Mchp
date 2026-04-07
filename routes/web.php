@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminTicketController;
 use App\Http\Controllers\Admin\EquipmentController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\KnowledgeBaseController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Boss\BossDashboardController;
@@ -54,6 +55,12 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/edit', [KnowledgeBaseController::class, 'edit'])->name('admin.knowledge.edit');
             Route::put('/{id}', [KnowledgeBaseController::class, 'update'])->name('admin.knowledge.update');
             Route::delete('/{id}', [KnowledgeBaseController::class, 'destroy'])->name('admin.knowledge.destroy');
+            // 📊 REPORTES EJECUTIVOS
+            Route::prefix('reports')->group(function () {
+                Route::get('/', [ReportController::class, 'index'])->name('admin.reports.index');
+                Route::get('/export/csv', [ReportController::class, 'exportCsv'])->name('admin.reports.csv');
+                Route::get('/export/inventory-pdf', [ReportController::class, 'exportInventoryPdf'])->name('admin.reports.inventory.pdf');
+            });
         });
 
     });

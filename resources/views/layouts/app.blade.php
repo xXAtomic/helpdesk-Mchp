@@ -128,6 +128,11 @@
                     <a href="{{ route('admin.users.index') }}" class="nav-icon {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" title="Usuarios">👥</a>
                 @endif
 
+                <!-- 📊 REPORTES -->
+                @if($roleId == 1)
+                    <a href="{{ route('admin.reports.index') }}" class="nav-icon {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" title="Reportes Estratégicos">📊</a>
+                @endif
+
             </nav>
 
             <!-- SALIR -->
