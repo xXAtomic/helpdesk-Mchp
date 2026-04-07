@@ -19,8 +19,14 @@ class ReportController extends Controller
 
         // Métricas de Tickets
         $totalTickets = Ticket::count();
-        $ticketsByStatus = Ticket::select('status', \DB::raw('count(*) as count'))->groupBy('status')->get();
-        $resolvedLast30Days = Ticket::where('status', 'Resolved')->where('updated_at', '>=', now()->subDays(30))->count();
+        $ticketsByStatus = Ticket::join('ticket_statuses', 'tickets.status_id', '=', 'ticket_statuses.id')
+            ->select('ticket_statuses.name as status', \DB::raw('count(*) as count'))
+            ->groupBy('ticket_statuses.name')
+            ->get();
+
+        $resolvedLast30Days = Ticket::whereHas('status', function($q) {
+            $q->where('name', 'Resolved')->orWhere('name', 'Resuelto')->orWhere('name', 'Cerrado')->orWhere('name', 'Closed');
+        })->where('updated_at', '>=', now()->subDays(30))->count();
 
         return view('admin.reports.index', compact(
             'totalAssets', 'assetsByType', 'assetsByStatus',
