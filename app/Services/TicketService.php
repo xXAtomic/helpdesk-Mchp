@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Models\Ticket;
 use App\Models\ActivityLog;
+use App\Mail\TicketCreatedMail;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class TicketService
 {
@@ -21,6 +23,15 @@ class TicketService
         }
 
         $this->logActivity('created', $ticket, $userId, ['title' => $ticket->title]);
+        
+        // --- 📧 NOTIFICACIÓN AUTOMÁTICA POR CORREO ---
+        if($ticket->user && $ticket->user->email){
+            try {
+                Mail::to($ticket->user->email)->send(new TicketCreatedMail($ticket));
+            } catch (\Exception $e) {
+                Log::error('FE fallo envio correo: ' . $e->getMessage());
+            }
+        }
 
         return $ticket;
     }
