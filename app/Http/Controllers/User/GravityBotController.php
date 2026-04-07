@@ -49,11 +49,13 @@ class GravityBotController extends Controller
         }
 
         try {
-            // Consumo de Gemini 1.5 Flash (V1BETA con Header para máxima compatibilidad)
+            $model = 'gemini-1.5-flash';
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent";
+            
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
                 'x-goog-api-key' => $apiKey
-            ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent", [
+            ])->post($url, [
                 'contents' => [
                     [
                         'parts' => [
@@ -64,7 +66,6 @@ class GravityBotController extends Controller
                             2. Si la respuesta está en los manuales, dásela al usuario detalladamente.
                             3. Si NO está en los manuales, usa tu conocimiento general para ayudar, pero advierte que es una sugerencia general.
                             4. Responde siempre en Español.
-                            5. Usa formato Markdown para que sea legible (negritas, listas, etc).
                             
                             CONTEXTO DE NUESTROS MANUALES:
                             " . ($contextText ?: "No hay manuales específicos para esta duda.") . "
@@ -76,17 +77,42 @@ class GravityBotController extends Controller
                 ]
             ]);
 
+            // Si falla el modelo 1.5 Flash (404), intentamos auto-detectar qué modelos tiene el usuario
+            if ($response->status() === 404) {
+                $listResponse = Http::withHeaders(['x-goog-api-key' => $apiKey])
+                    ->get("https://generativelanguage.googleapis.com/v1beta/models");
+                
+                if ($listResponse->successful()) {
+                    $modelsAvailable = $listResponse->json()['models'] ?? [];
+                    // Buscamos el primero que soporte generar contenido
+                    foreach($modelsAvailable as $m) {
+                        if (in_array('generateContent', $m['supportedGenerationMethods'] ?? [])) {
+                            $model = str_replace('models/', '', $m['name']);
+                            break;
+                        }
+                    }
+                    
+                    // Re-intentamos con el nuevo modelo detectado
+                    $response = Http::withHeaders([
+                        'Content-Type' => 'application/json',
+                        'x-goog-api-key' => $apiKey
+                    ])->post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent", [
+                        'contents' => [['parts' => [['text' => "Responde brevemente a: {$prompt}"]]]]
+                    ]);
+                }
+            }
+
             if ($response->successful()) {
                 $data = $response->json();
                 $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Lo siento, no pude procesar una respuesta coherente en este momento.';
                 return response()->json(['response' => $text]);
             }
 
-            // Error detallado para depuración
             $errorBody = $response->body();
             return response()->json([
                 'response' => "Error en la conexión con la red neuronal de Gravity. Código: " . $response->status(),
-                'debug' => $errorBody
+                'debug' => $errorBody,
+                'tried_model' => $model
             ]);
 
         } catch (\Exception $e) {
