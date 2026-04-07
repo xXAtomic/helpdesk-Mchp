@@ -265,7 +265,13 @@
                 });
                 const data = await response.json();
                 document.getElementById(loadingId).remove();
-                appendMessage('bot', data.response);
+                
+                if (data.debug) {
+                    console.error('GravityBot Debug:', data.debug);
+                    appendMessage('bot', data.response + '<br><small class="opacity-50">Debug: ' + data.debug + '</small>');
+                } else {
+                    appendMessage('bot', data.response);
+                }
             } catch (error) {
                 document.getElementById(loadingId).remove();
                 appendMessage('bot', 'Error al conectar con la IA.');

@@ -49,10 +49,10 @@ class GravityBotController extends Controller
         }
 
         try {
-            // Consumo de Gemini 1.5 Flash (Estable V1)
+            // Consumo de Gemini 1.5 Flash (Fuerza versión más reciente)
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
-            ])->post("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
+            ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
                 'contents' => [
                     [
                         'parts' => [
