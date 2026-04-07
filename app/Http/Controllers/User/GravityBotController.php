@@ -49,10 +49,10 @@ class GravityBotController extends Controller
         }
 
         try {
-            // Consumo de Gemini 1.5 Flash (Rápido y eficiente)
+            // Consumo de Gemini 1.5 Flash (Estable V1)
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
-            ])->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
+            ])->post("https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={$apiKey}", [
                 'contents' => [
                     [
                         'parts' => [
@@ -81,7 +81,12 @@ class GravityBotController extends Controller
                 return response()->json(['response' => $text]);
             }
 
-            return response()->json(['response' => 'Error en la conexión con la red neuronal de Gravity. Código: ' . $response->status()]);
+            // Error detallado para depuración
+            $errorBody = $response->body();
+            return response()->json([
+                'response' => "Error en la conexión con la red neuronal de Gravity. Código: " . $response->status(),
+                'debug' => $errorBody
+            ]);
 
         } catch (\Exception $e) {
             return response()->json(['response' => 'Error crítico en el núcleo: ' . $e->getMessage()]);
