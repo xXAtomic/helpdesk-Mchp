@@ -149,6 +149,11 @@
                     <a href="{{ route('admin.reports.index') }}" class="nav-icon {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" title="Reportes Estratégicos">📊</a>
                 @endif
 
+                <div class="my-4 border-b border-white/5 mx-2"></div>
+
+                <!-- 👤 MI PERFIL -->
+                <a href="{{ route('profile.edit') }}" class="nav-icon {{ request()->routeIs('profile.*') ? 'active' : '' }}" title="Mi Perfil">👤</a>
+
             </nav>
 
             <!-- SALIR -->

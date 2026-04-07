@@ -91,6 +91,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/gravity-brain/search', [App\Http\Controllers\User\GravityBrainController::class, 'search'])->name('gravity.brain.search');
     Route::post('/gravity-bot/chat', [App\Http\Controllers\User\GravityBotController::class, 'chat'])->name('gravity.bot.chat');
 
+    // PERFIL DE USUARIO 👤✨
+    Route::get('/profile', [\App\Http\Controllers\User\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [\App\Http\Controllers\User\ProfileController::class, 'update'])->name('profile.update');
+
 });
 
 // --- 3. UTILIDADES DE EMERGENCIA ---
