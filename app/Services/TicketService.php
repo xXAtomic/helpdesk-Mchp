@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Ticket;
 use App\Models\ActivityLog;
 use App\Mail\TicketCreatedMail;
+use App\Mail\TicketRepliedMail;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -49,6 +50,28 @@ class TicketService
         }
 
         $this->logActivity('replied', $ticket, $userId);
+
+        // --- 📧 NOTIFICACIONES POR CORREO ---
+        if (!$isInternal) {
+            // Si el que responde NO es el dueño (es un técnico), notificar al dueño
+            if ($userId != $ticket->user_id) {
+                if ($ticket->user && $ticket->user->email) {
+                    try {
+                        Mail::to($ticket->user->email)->send(new TicketRepliedMail($ticket, $reply));
+                    } catch (\Exception $e) {
+                         Log::error('Error mail reply user: ' . $e->getMessage());
+                    }
+                }
+            } 
+            // Si el que responde ES el dueño, notificar al técnico asignado (si existe)
+            else if ($ticket->technician && $ticket->technician->email) {
+                try {
+                    Mail::to($ticket->technician->email)->send(new TicketRepliedMail($ticket, $reply));
+                } catch (\Exception $e) {
+                    Log::error('Error mail reply tech: ' . $e->getMessage());
+                }
+            }
+        }
 
         return $reply;
     }
