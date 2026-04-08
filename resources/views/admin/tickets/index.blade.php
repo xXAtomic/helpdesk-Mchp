@@ -48,6 +48,7 @@
                             <th class="px-6 py-4 text-left text-[0.65rem] font-black text-gray-400 uppercase tracking-widest italic">Referencia</th>
                             <th class="px-6 py-4 text-left text-[0.65rem] font-black text-gray-400 uppercase tracking-widest italic">Asunto / Solicitante</th>
                             <th class="px-6 py-4 text-center text-[0.65rem] font-black text-gray-400 uppercase tracking-widest italic">Estado</th>
+                            <th class="px-6 py-4 text-left text-[0.65rem] font-black text-gray-400 uppercase tracking-widest italic">Vencimiento (SLA)</th>
                             <th class="px-6 py-4 text-right text-[0.65rem] font-black text-gray-400 uppercase tracking-widest italic">Actualizado</th>
                             <th class="px-6 py-4 text-right"></th>
                         </tr>
@@ -73,6 +74,21 @@
                                           style="background-color: {{ optional($ticket->status)->color }}15; color: {{ optional($ticket->status)->color }}; border-color: {{ optional($ticket->status)->color }}30;">
                                         ● {{ $ticket->status->name ?? 'ABIERTO' }}
                                     </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if($ticket->due_at)
+                                        @php $remaining = $ticket->sla_remaining; @endphp
+                                        <div class="flex flex-col">
+                                            <span class="text-[0.65rem] font-black {{ $remaining == 'VENCIDO' ? 'text-rose-600 animate-pulse' : (Str::contains($remaining, 'horas') && !Str::contains($remaining, 'día') ? 'text-amber-600' : 'text-slate-900') }} uppercase italic">
+                                                {{ $remaining }}
+                                            </span>
+                                            <span class="text-[0.5rem] font-bold text-slate-400 uppercase tracking-tighter">
+                                                {{ $ticket->due_at->format('d/m H:i') }}
+                                            </span>
+                                        </div>
+                                    @else
+                                        <span class="text-[0.6rem] font-bold text-slate-300">N/A</span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 text-right whitespace-nowrap">
                                     <span class="text-[0.7rem] font-medium text-slate-400 uppercase tracking-wide">{{ $ticket->updated_at->format('d/m/Y') }}</span>
