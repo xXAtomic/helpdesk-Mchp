@@ -219,13 +219,15 @@
                                 <button class="w-10 h-10 bg-slate-50 hover:bg-indigo-50 rounded-xl flex items-center justify-center text-slate-400 group-hover:text-indigo-600 transition-all border border-slate-100 relative">
                                     <i class="fas fa-bell"></i>
                                     @php
-                                        $criticalCount = \App\Models\Asset::whereNotNull('next_maintenance_at')
+                                        $criticalAssets = \App\Models\Asset::whereNotNull('next_maintenance_at')
                                             ->where('next_maintenance_at', '<', now())
                                             ->count();
+                                        $lowStockSupplies = \App\Models\Supply::whereColumn('stock', '<=', 'min_stock')->count();
+                                        $totalAlerts = $criticalAssets + $lowStockSupplies;
                                     @endphp
-                                    @if($criticalCount > 0)
+                                    @if($totalAlerts > 0)
                                         <span class="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 text-white text-[0.6rem] font-black rounded-lg flex items-center justify-center border-2 border-white animate-bounce">
-                                            {{ $criticalCount }}
+                                            {{ $totalAlerts }}
                                         </span>
                                     @endif
                                 </button>
@@ -233,19 +235,33 @@
                                 <!-- Dropdown de Alertas Mini -->
                                 <div class="absolute right-0 mt-4 w-80 bg-white rounded-3xl shadow-2xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-[100] p-6">
                                     <h4 class="text-[0.6rem] font-black text-slate-400 uppercase tracking-widest mb-4 italic">Alertas de Gravity</h4>
-                                    @if($criticalCount > 0)
+                                    
+                                    @if($criticalAssets > 0)
                                         <div class="flex items-start gap-4 p-4 bg-rose-50 rounded-2xl border border-rose-100 mb-2">
                                             <div class="text-xl">⚠️</div>
                                             <div>
-                                                <p class="text-xs font-black text-rose-900 uppercase italic">Mantenimientos Vencidos</p>
-                                                <p class="text-[0.6rem] font-bold text-rose-600 uppercase mt-1">Hay {{ $criticalCount }} equipos que requieren atención inmediata.</p>
+                                                <p class="text-xs font-black text-rose-900 uppercase italic">Mantenimientos</p>
+                                                <p class="text-[0.6rem] font-bold text-rose-600 uppercase mt-1">{{ $criticalAssets }} equipos vencidos.</p>
                                             </div>
                                         </div>
-                                    @else
+                                    @endif
+
+                                    @if($lowStockSupplies > 0)
+                                        <div class="flex items-start gap-4 p-4 bg-amber-50 rounded-2xl border border-amber-100 mb-2">
+                                            <div class="text-xl">📦</div>
+                                            <div>
+                                                <p class="text-xs font-black text-amber-900 uppercase italic">Stock Crítico</p>
+                                                <p class="text-[0.6rem] font-bold text-amber-600 uppercase mt-1">{{ $lowStockSupplies }} insumos por agotarse.</p>
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    @if($totalAlerts == 0)
                                         <p class="text-xs font-bold text-slate-400 text-center py-4 italic">Todos los sistemas están óptimos ✨</p>
                                     @endif
-                                    <a href="{{ route('admin.inventory.index') }}" class="block text-center mt-4 text-[0.6rem] font-black text-indigo-600 uppercase tracking-widest hover:underline italic">Ver Inventario Completo →</a>
+                                    <a href="{{ route('admin.dashboard') }}" class="block text-center mt-4 text-[0.6rem] font-black text-indigo-600 uppercase tracking-widest hover:underline italic">Ver Centro de Control →</a>
                                 </div>
+
                             </div>
                         @endif
 
