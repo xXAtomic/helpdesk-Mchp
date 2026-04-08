@@ -42,14 +42,17 @@ class EquipmentController extends Controller
 
     public function store(Request $request) {
         $request->validate([
-            'asset_tag'     => 'required|unique:assets',
-            'type'          => 'required',
-            'brand'         => 'required',
-            'model'         => 'required',
-            'serial_number' => 'required|unique:assets',
-            'location'      => 'required',
-            'purchase_cost' => 'nullable|numeric|min:0',
-            'entity'        => 'required|in:IASD,FESDG',
+            'asset_tag'           => 'required|unique:assets',
+            'type'                => 'required',
+            'brand'               => 'required',
+            'model'               => 'required',
+            'serial_number'       => 'required|unique:assets',
+            'location'            => 'required',
+            'purchase_cost'       => 'nullable|numeric|min:0',
+            'purchased_at'        => 'nullable|date',
+            'last_maintenance_at' => 'nullable|date',
+            'next_maintenance_at' => 'nullable|date|after_or_equal:last_maintenance_at',
+            'entity'              => 'required|in:IASD,FESDG',
         ]);
 
         $data = $request->all();
@@ -83,7 +86,10 @@ class EquipmentController extends Controller
 
     public function update(Request $request, $id) {
         $request->validate([
-            'purchase_cost' => 'nullable|numeric|min:0',
+            'purchase_cost'       => 'nullable|numeric|min:0',
+            'purchased_at'        => 'nullable|date',
+            'last_maintenance_at' => 'nullable|date',
+            'next_maintenance_at' => 'nullable|date',
         ]);
 
         $item = Asset::findOrFail($id);
@@ -102,6 +108,7 @@ class EquipmentController extends Controller
         ]);
 
         return redirect()->route('admin.inventory.index')->with('success', 'Equipo actualizado.');
+
     }
 
     public function destroy($id) {

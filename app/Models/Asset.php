@@ -45,4 +45,43 @@ class Asset extends Model
     {
         return $this->hasMany(AssetLog::class)->orderBy('created_at', 'desc');
     }
+
+    /** --- INTELIGENCIA DE MANTENIMIENTO PREVENTIVO --- **/
+
+    /**
+     * Determina el estado de salud basado en la fecha del próximo mantenimiento.
+     */
+    public function getHealthStatusAttribute()
+    {
+        if (!$this->next_maintenance_at) return 'S/Mantenimiento';
+
+        $now = now();
+        $next = $this->next_maintenance_at;
+
+        if ($next->isPast()) {
+            return 'Mantenimiento Vencido';
+        }
+
+        if ($next->diffInDays($now) <= 30) {
+            return 'Próximo a Vencer';
+        }
+
+        return 'Salud Óptima';
+    }
+
+    /**
+     * Devuelve la clase de color de Tailwind según la salud.
+     */
+    public function getHealthColorAttribute()
+    {
+        $status = $this->getHealthStatusAttribute();
+
+        return match ($status) {
+            'Mantenimiento Vencido' => 'rose',
+            'Próximo a Vencer'      => 'amber',
+            'Salud Óptima'          => 'emerald',
+            default                 => 'slate',
+        };
+    }
 }
+

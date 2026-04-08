@@ -149,6 +149,12 @@
                             <input type="number" step="0.01" name="purchase_cost" value="{{ $item->purchase_cost }}" required
                                 class="w-full px-6 py-5 bg-indigo-50 border-2 border-transparent rounded-2xl text-slate-900 font-black focus:border-indigo-500 focus:bg-white transition-all text-xl italic shadow-inner">
                         </div>
+                        <div class="space-y-2">
+                            <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">Fecha de Compra</label>
+                            <input type="date" name="purchased_at" value="{{ $item->purchased_at ? $item->purchased_at->format('Y-m-d') : '' }}"
+                                class="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-2xl text-slate-900 font-bold focus:border-indigo-500 focus:bg-white transition-all uppercase italic">
+                        </div>
+
                     </div>
                 </div>
 

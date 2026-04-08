@@ -69,6 +69,24 @@
                 </div>
             </div>
         </div>
+
+        <!-- 🧪 ALERTA DE MANTENIMIENTO (NUEVO) -->
+        @php
+            $vencidos = $items->filter(fn($i) => $i->health_status == 'Mantenimiento Vencido')->count();
+        @endphp
+        <div class="bg-amber-50 p-5 rounded-2xl border border-amber-100 relative overflow-hidden group col-span-1 sm:col-span-2 lg:col-span-4">
+            <div class="relative z-10 flex items-center justify-between">
+                <div>
+                    <h4 class="text-[0.6rem] font-black text-amber-500 uppercase tracking-widest mb-1 italic">Alerta de Salud TI</h4>
+                    <p class="text-xl font-black text-amber-700 tracking-tighter italic uppercase">
+                        {{ $vencidos }} Equipos con mantenimiento <span class="text-rose-600">vencido</span>
+                    </p>
+                </div>
+                <div class="hidden md:block">
+                    <span class="text-[0.55rem] font-black bg-white/50 text-amber-600 px-3 py-1 rounded-lg uppercase italic border border-amber-200">Revisión Preventiva Requerida</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- BARRA DE ACCIÓN (MÁS ESTÉTICA) -->
@@ -116,11 +134,13 @@
                         <th class="px-6 py-4 text-[0.6rem] font-black text-slate-400 uppercase tracking-widest italic">Dispositivo</th>
                         <th class="px-6 py-4 text-[0.6rem] font-black text-slate-400 uppercase tracking-widest italic">N° Serie</th>
                         <th class="px-6 py-4 text-[0.6rem] font-black text-slate-400 uppercase tracking-widest italic">Ubicación</th>
+                        <th class="px-6 py-4 text-[0.6rem] font-black text-slate-400 uppercase tracking-widest italic text-center">Salud</th>
                         <th class="px-6 py-4 text-[0.6rem] font-black text-slate-400 uppercase tracking-widest italic text-center">Estado</th>
                         <th class="px-6 py-4 text-[0.6rem] font-black text-slate-400 uppercase tracking-widest italic">Usuario</th>
                         <th class="px-6 py-4 text-[0.6rem] font-black text-slate-400 uppercase tracking-widest italic text-right"></th>
                     </tr>
                 </thead>
+
                 <tbody class="divide-y divide-slate-50">
                     @forelse($items as $item)
                     <tr class="hover:bg-slate-50/50 transition-all group duration-200">
@@ -144,6 +164,11 @@
                             <div class="flex flex-col">
                                 <span class="text-xs font-black text-slate-900 uppercase italic tracking-tight">{{ $item->brand }}</span>
                                 <span class="text-[0.6rem] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{{ $item->model }}</span>
+                                @if($item->purchase_cost)
+                                    <span class="text-[0.55rem] font-black text-indigo-500 mt-1 uppercase tracking-tighter">
+                                        ${{ number_format($item->purchase_cost, 0, ',', '.') }}
+                                    </span>
+                                @endif
                             </div>
                         </td>
 
@@ -155,6 +180,19 @@
                             <div class="flex items-center gap-2">
                                 <svg class="w-3 h-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
                                 <span class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest italic">{{ $item->location }}</span>
+                            </div>
+                        </td>
+
+                        <td class="px-6 py-4 text-center">
+                            <div class="flex flex-col items-center gap-1">
+                                <span class="px-2.5 py-1 rounded-lg text-[0.55rem] font-black uppercase tracking-widest border italic bg-{{ $item->health_color }}-50 text-{{ $item->health_color }}-600 border-{{ $item->health_color }}-100">
+                                    {{ $item->health_status }}
+                                </span>
+                                @if($item->next_maintenance_at)
+                                    <span class="text-[0.5rem] font-bold text-slate-400 uppercase tracking-tighter">
+                                        {{ $item->next_maintenance_at->format('d M Y') }}
+                                    </span>
+                                @endif
                             </div>
                         </td>
 
@@ -171,6 +209,7 @@
                                 ● {{ $item->status }}
                             </span>
                         </td>
+
 
                         <td class="px-6 py-4">
                             @if($item->user)
