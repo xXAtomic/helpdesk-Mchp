@@ -42,6 +42,13 @@ class DashboardController extends Controller
 
         $pendingComplianceCount = \App\Models\LegalDocument::where('is_active', true)
             ->whereNotIn('id', $signedIds)
+            ->where(function($q) use ($user) {
+                if ($user->entity === 'BOTH') {
+                    $q->whereIn('entity', ['IASD', 'FESDG', 'BOTH', null]);
+                } else {
+                    $q->whereIn('entity', [$user->entity, 'BOTH', null]);
+                }
+            })
             ->count();
 
         return view('user.dashboard', compact(

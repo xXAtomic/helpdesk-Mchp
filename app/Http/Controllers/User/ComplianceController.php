@@ -25,9 +25,16 @@ class ComplianceController extends Controller
 
         $signedIds = $signed->pluck('legal_document_id')->toArray();
 
-        // Documentos activos que no ha firmado
+        // Documentos activos que no ha firmado y que corresponden a su entidad
         $pending = LegalDocument::where('is_active', true)
             ->whereNotIn('id', $signedIds)
+            ->where(function($q) use ($user) {
+                if ($user->entity === 'BOTH') {
+                    $q->whereIn('entity', ['IASD', 'FESDG', 'BOTH', null]);
+                } else {
+                    $q->whereIn('entity', [$user->entity, 'BOTH', null]);
+                }
+            })
             ->get();
 
         return view('user.compliance.index', compact('pending', 'signed'));

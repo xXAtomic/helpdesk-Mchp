@@ -27,19 +27,25 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'rut' => ['required', 'string', 'max:15', Rule::unique('users')],
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
             'role_id' => 'required|exists:roles,id',
             'phone' => 'nullable|string|max:20',
-            'entity' => 'required|in:IASD,FESDG',
+            'address' => 'nullable|string|max:500',
+            'entity' => 'required|in:IASD,FESDG,BOTH',
         ]);
 
         User::create([
             'name' => $request->name,
+            'lastname' => $request->lastname,
+            'rut' => $request->rut,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role_id' => $request->role_id,
             'phone' => $request->phone,
+            'address' => $request->address,
             'entity' => $request->entity,
             'is_active' => true,
         ]);
@@ -60,18 +66,24 @@ class UserController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'rut' => ['required', 'string', 'max:15', Rule::unique('users')->ignore($user->id)],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|string|min:8',
             'role_id' => 'required|exists:roles,id',
             'phone' => 'nullable|string|max:20',
-            'entity' => 'required|in:IASD,FESDG',
+            'address' => 'nullable|string|max:500',
+            'entity' => 'required|in:IASD,FESDG,BOTH',
         ]);
 
         $data = [
             'name' => $request->name,
+            'lastname' => $request->lastname,
+            'rut' => $request->rut,
             'email' => $request->email,
             'role_id' => $request->role_id,
             'phone' => $request->phone,
+            'address' => $request->address,
             'entity' => $request->entity,
         ];
 

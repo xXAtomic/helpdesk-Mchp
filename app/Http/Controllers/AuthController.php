@@ -51,13 +51,23 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
+            'lastname' => ['required', 'string', 'max:255'],
+            'rut' => ['required', 'string', 'max:15', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => ['required', 'string', 'max:20'],
+            'address' => ['required', 'string', 'max:500'],
+            'entity' => ['required', 'string'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         $user = \App\Models\User::create([
             'name' => $request->name,
+            'lastname' => $request->lastname,
+            'rut' => $request->rut,
             'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'entity' => $request->entity,
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
             'role_id' => 4, // Rol de 'Usuario' por defecto
         ]);

@@ -16,7 +16,8 @@ class LegalDocumentSeeder extends Seeder
                 'content' => 'Template para IASD',
                 'version' => '1.0',
                 'is_active' => true,
-                'requires_asset' => true
+                'requires_asset' => true,
+                'entity' => 'IASD'
             ]
         );
 
@@ -27,7 +28,8 @@ class LegalDocumentSeeder extends Seeder
                 'content' => 'Template para FESDG',
                 'version' => '1.0',
                 'is_active' => true,
-                'requires_asset' => true
+                'requires_asset' => true,
+                'entity' => 'FESDG'
             ]
         );
     }

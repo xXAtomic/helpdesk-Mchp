@@ -12,7 +12,8 @@ class LegalDocument extends Model
         'content', 
         'version', 
         'is_active', 
-        'requires_asset'
+        'requires_asset',
+        'entity'
     ];
 
     public function signatures()

@@ -121,13 +121,36 @@
         <form method="POST" action="{{ route('register') }}" class="space-y-6">
             @csrf
             
-            <div class="space-y-2">
-                <label class="block text-[0.6rem] font-black text-slate-600 uppercase tracking-[0.3em] ml-2">Nombre Completo</label>
-                <div class="relative">
-                    <input type="text" name="name" required value="{{ old('name') }}" placeholder="Ej: Juan Pérez"
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="block text-[0.6rem] font-black text-slate-600 uppercase tracking-[0.3em] ml-2">Nombre</label>
+                    <input type="text" name="name" required value="{{ old('name') }}" placeholder="Ej: Juan"
                            class="w-full px-7 py-5 rounded-3xl input-gravity outline-none font-bold text-[0.9rem] placeholder:text-slate-800 transition-all">
-                    <i class="fas fa-user absolute right-7 top-1/2 -translate-y-1/2 text-slate-700"></i>
                 </div>
+                <div class="space-y-2">
+                    <label class="block text-[0.6rem] font-black text-slate-600 uppercase tracking-[0.3em] ml-2">Apellido</label>
+                    <input type="text" name="lastname" required value="{{ old('lastname') }}" placeholder="Ej: Pérez"
+                           class="w-full px-7 py-5 rounded-3xl input-gravity outline-none font-bold text-[0.9rem] placeholder:text-slate-800 transition-all">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="block text-[0.6rem] font-black text-slate-600 uppercase tracking-[0.3em] ml-2">RUT</label>
+                    <input type="text" name="rut" required value="{{ old('rut') }}" placeholder="12.345.678-9"
+                           class="w-full px-7 py-5 rounded-3xl input-gravity outline-none font-bold text-[0.9rem] placeholder:text-slate-800 transition-all">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-[0.6rem] font-black text-slate-600 uppercase tracking-[0.3em] ml-2">Teléfono</label>
+                    <input type="text" name="phone" required value="{{ old('phone') }}" placeholder="+56 9 ..."
+                           class="w-full px-7 py-5 rounded-3xl input-gravity outline-none font-bold text-[0.9rem] placeholder:text-slate-800 transition-all">
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-[0.6rem] font-black text-slate-600 uppercase tracking-[0.3em] ml-2">Dirección Particular</label>
+                <input type="text" name="address" required value="{{ old('address') }}" placeholder="Calle, Número, Ciudad"
+                       class="w-full px-7 py-5 rounded-3xl input-gravity outline-none font-bold text-[0.9rem] placeholder:text-slate-800 transition-all">
             </div>
 
             <div class="space-y-2">
@@ -137,6 +160,16 @@
                            class="w-full px-7 py-5 rounded-3xl input-gravity outline-none font-bold text-[0.9rem] placeholder:text-slate-800 transition-all">
                     <i class="fas fa-envelope absolute right-7 top-1/2 -translate-y-1/2 text-slate-700"></i>
                 </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-[0.6rem] font-black text-slate-600 uppercase tracking-[0.3em] ml-2">Entidad Perteneciente</label>
+                <select name="entity" required class="w-full px-7 py-5 rounded-3xl input-gravity outline-none font-bold text-[0.9rem] appearance-none cursor-pointer">
+                    <option value="" disabled selected>Seleccione Entidad</option>
+                    <option value="IASD" {{ old('entity') == 'IASD' ? 'selected' : '' }}>IASD (Iglesia Adventista)</option>
+                    <option value="FESDG" {{ old('entity') == 'FESDG' ? 'selected' : '' }}>FESDG (Fundación Sanders)</option>
+                    <option value="BOTH" {{ old('entity') == 'BOTH' ? 'selected' : '' }}>Ambas Entidades</option>
+                </select>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

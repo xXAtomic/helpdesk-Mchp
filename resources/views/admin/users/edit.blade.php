@@ -17,24 +17,44 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Nombre -->
                 <div class="space-y-2">
-                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Nombre Completo</label>
+                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Nombre</label>
                     <input type="text" name="name" required value="{{ old('name', $user->name) }}"
-                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl text-slate-900 font-semibold focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-300">
+                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl text-slate-900 font-semibold focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+
+                <!-- Apellido -->
+                <div class="space-y-2">
+                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Apellido</label>
+                    <input type="text" name="lastname" required value="{{ old('lastname', $user->lastname) }}"
+                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl text-slate-900 font-semibold focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+
+                <!-- RUT -->
+                <div class="space-y-2">
+                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">RUT</label>
+                    <input type="text" name="rut" required value="{{ old('rut', $user->rut) }}"
+                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-blue-500 transition-all">
                 </div>
 
                 <!-- Email -->
                 <div class="space-y-2">
                     <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Email Institucional</label>
                     <input type="email" name="email" required value="{{ old('email', $user->email) }}"
-                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl text-slate-900 font-semibold focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-300">
+                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl text-slate-900 font-semibold focus:ring-2 focus:ring-blue-500 transition-all">
                 </div>
 
-                <!-- Password -->
+                <!-- Dirección -->
+                <div class="md:col-span-2 space-y-2">
+                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Dirección Particular</label>
+                    <input type="text" name="address" value="{{ old('address', $user->address) }}"
+                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl text-slate-900 font-semibold focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+
+                <!-- Teléfono -->
                 <div class="space-y-2">
-                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Nueva Contraseña (Opcional)</label>
-                    <input type="password" name="password"
-                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl text-slate-900 font-semibold focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-300">
-                    <p class="text-[0.6rem] text-slate-400 italic">Dejar vacío para mantener la actual. Mínimo 8 caracteres.</p>
+                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Teléfono</label>
+                    <input type="text" name="phone" value="{{ old('phone', $user->phone) }}"
+                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl text-slate-900 font-semibold focus:ring-2 focus:ring-blue-500 transition-all">
                 </div>
 
                 <!-- Rol -->
@@ -50,21 +70,23 @@
                     </select>
                 </div>
 
-                <!-- Teléfono -->
-                <div class="space-y-2">
-                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Teléfono (Opcional)</label>
-                    <input type="text" name="phone" value="{{ old('phone', $user->phone) }}"
-                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl text-slate-900 font-semibold focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-300">
-                </div>
-
                 <!-- Entidad -->
-                <div class="space-y-2">
+                <div class="md:col-span-2 space-y-2">
                     <label class="text-[0.7rem] font-bold text-blue-600 uppercase tracking-widest ml-1">Entidad Perteneciente</label>
                     <select name="entity" required
                         class="w-full px-5 py-4 bg-blue-50 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-blue-500 transition-all appearance-none cursor-pointer">
                         <option value="IASD" {{ old('entity', $user->entity) == 'IASD' ? 'selected' : '' }}>⛪ IASD - Iglesia Adventista</option>
                         <option value="FESDG" {{ old('entity', $user->entity) == 'FESDG' ? 'selected' : '' }}>🎓 FESDG - Fundación Sanders</option>
+                        <option value="BOTH" {{ old('entity', $user->entity) == 'BOTH' ? 'selected' : '' }}>💎 AMBAS ENTIDADES (IASD y FESDG)</option>
                     </select>
+                </div>
+
+                <!-- Password -->
+                <div class="md:col-span-2 space-y-2">
+                    <label class="text-[0.7rem] font-bold text-slate-400 uppercase tracking-widest ml-1">Cambiar Contraseña (Opcional)</label>
+                    <input type="password" name="password" placeholder="••••••••"
+                        class="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl text-slate-900 font-semibold focus:ring-2 focus:ring-blue-500 transition-all">
+                    <p class="text-[0.6rem] text-slate-400 italic">Dejar vacío para no modificar.</p>
                 </div>
             </div>
 
