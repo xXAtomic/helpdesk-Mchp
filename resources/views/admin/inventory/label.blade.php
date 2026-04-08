@@ -72,22 +72,37 @@
     </div>
 
     <style>
+        @page {
+            size: auto;
+            margin: 0mm;
+        }
         @media print {
-            body * { visibility: hidden !important; background: white !important; }
-            #printable-label, #printable-label * { visibility: visible !important; }
+            body { 
+                background: white !important; 
+                margin: 0 !important; 
+                padding: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            /* Ocultar todo menos la etiqueta */
+            body > *:not(.max-w-xl), 
+            .no-print, 
+            header, footer, nav, aside { 
+                display: none !important; 
+            }
+            
             #printable-label { 
-                position: fixed !important; 
-                left: 50% !important; 
-                top: 50% !important; 
-                transform: translate(-50%, -50%) !important;
+                position: absolute !important; 
+                top: 0 !important;
+                left: 0 !important;
                 width: 100mm !important; 
                 height: 60mm !important;
-                border: 1px solid #000 !important;
+                border: 1px solid #e2e8f0 !important;
                 box-shadow: none !important;
+                margin: 0 !important;
+                padding: 5mm !important;
                 border-radius: 0 !important;
-                padding: 10mm !important;
             }
-            .no-print { display: none !important; }
         }
     </style>
 </div>
