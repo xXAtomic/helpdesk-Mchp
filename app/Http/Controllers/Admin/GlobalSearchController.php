@@ -40,12 +40,15 @@ class GlobalSearchController extends Controller
             ->orWhere('serial_number', 'like', "%$query%")
             ->orWhere('name', 'like', "%$query%")
             ->orWhere('brand', 'like', "%$query%")
+            ->orWhereHas('user', function($qu) use ($query) {
+                $qu->where('name', 'like', "%$query%");
+            })
             ->take(5)
             ->get()
             ->map(fn($a) => [
                 'type' => 'Activo',
                 'title' => $a->asset_tag,
-                'subtitle' => $a->brand . ' ' . $a->model,
+                'subtitle' => $a->brand . ' ' . $a->model . ($a->user ? ' ('.$a->user->name.')' : ''),
                 'url' => route('admin.inventory.show', $a->id),
                 'icon' => 'fas fa-laptop',
                 'color' => 'bg-emerald-500'

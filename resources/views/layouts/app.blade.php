@@ -177,6 +177,18 @@
             @if(isset($header))
                 <header class="bg-white border-b border-gray-200 py-4 px-8 flex justify-between items-center shadow-sm">
                     <h1 class="text-xl font-bold text-gray-800">{{ $header }}</h1>
+                    
+                    @if(auth()->user()->role_id == 1)
+                        <div class="hidden md:flex flex-1 max-w-md mx-8">
+                            <div class="relative w-full group">
+                                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-indigo-500 transition-colors"></i>
+                                <input type="text" readonly onclick="toggleGlobalSearch()" 
+                                       placeholder="¿Qué buscas hoy? (Equipos, Tickets, Usuarios)"
+                                       class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-12 pr-4 text-[0.7rem] font-black uppercase italic text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/10 cursor-pointer hover:bg-white transition-all tracking-widest">
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="flex items-center gap-4">
                         <span class="text-xs font-bold px-2 py-1 bg-gray-100 text-gray-600 rounded-lg">
                             {{ auth()->user()->role->name ?? 'Usuario' }}
