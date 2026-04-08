@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use App\Models\Asset;
 use App\Models\TicketStatus;
+use App\Models\TicketRating;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -47,6 +48,10 @@ class BossDashboardController extends Controller
             $avgResponseTime = '0 h';
         }
 
+        // 6. Calificación promedio de satisfacción (CSAT)
+        $avgRating = TicketRating::avg('rating') ?? 0;
+        $avgRating = round($avgRating, 1);
+
         // Datos para gráficos (por ejemplo, tickets por categoría)
         $ticketsByCategory = DB::table('tickets')
             ->join('ticket_categories', 'tickets.category_id', '=', 'ticket_categories.id')
@@ -61,6 +66,7 @@ class BossDashboardController extends Controller
             'equipmentCount', 
             'inProcessTickets', 
             'avgResponseTime',
+            'avgRating',
             'ticketsByCategory'
         ));
     }

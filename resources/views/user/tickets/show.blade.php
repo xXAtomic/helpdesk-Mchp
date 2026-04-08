@@ -24,6 +24,51 @@
         </a>
     </div>
 
+    <!-- ENCUESTA DE SATISFACCIÓN (SI ESTÁ CERRADO) -->
+    @if(optional($ticket->status)->is_closed)
+        @if(!$ticket->rating)
+            <div class="mb-12 bg-gradient-to-br from-indigo-600 to-indigo-900 p-8 rounded-3xl shadow-xl shadow-indigo-500/20 group relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+                <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div class="text-center md:text-left">
+                        <h3 class="text-xl font-black text-white uppercase tracking-tight italic">¡Tu opinión nos importa!</h3>
+                        <p class="text-indigo-100 text-[0.7rem] font-medium uppercase tracking-widest mt-1">Califica la atención recibida para este incidente</p>
+                    </div>
+                    <form action="{{ route('user.tickets.rate', $ticket) }}" method="POST" class="flex flex-col sm:flex-row items-center gap-4 bg-white/10 p-4 rounded-2xl backdrop-blur-sm border border-white/10">
+                        @csrf
+                        <div class="flex gap-2">
+                            @for($i=1; $i<=5; $i++)
+                                <input type="radio" name="rating" id="star{{ $i }}" value="{{ $i }}" class="hidden peer" required>
+                                <label for="star{{ $i }}" class="cursor-pointer text-2xl text-indigo-300 hover:text-yellow-400 peer-checked:text-yellow-400 transition-all duration-200">
+                                    ★
+                                </label>
+                            @endfor
+                        </div>
+                        <input type="text" name="comment" placeholder="Comentario opcional..." class="bg-indigo-950/50 border-none rounded-lg px-4 py-2 text-[0.7rem] text-white placeholder:text-indigo-300/50 focus:ring-1 focus:ring-yellow-400 outline-none w-full sm:w-48">
+                        <button type="submit" class="bg-yellow-400 text-indigo-950 px-6 py-2 rounded-lg font-black text-[0.65rem] uppercase tracking-widest hover:bg-white transition-all">
+                            Enviar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        @else
+            <div class="mb-12 bg-slate-50 border border-slate-200 p-6 rounded-2xl flex items-center justify-between">
+                <div>
+                    <h4 class="text-[0.6rem] font-black text-slate-400 uppercase tracking-widest mb-1">Tu Valoración de este Servicio</h4>
+                    <div class="flex items-center gap-4">
+                        <div class="flex text-yellow-500 text-lg">
+                            @for($i=1; $i<=5; $i++)
+                                {{ $i <= $ticket->rating->rating ? '★' : '☆' }}
+                            @endfor
+                        </div>
+                        <p class="text-sm font-bold text-slate-900 italic">"{{ $ticket->rating->comment ?? 'Sin comentarios adicionales.' }}"</p>
+                    </div>
+                </div>
+                <div class="bg-emerald-50 text-emerald-600 px-3 py-1 rounded-md text-[0.6rem] font-black uppercase">Feedback Registrado</div>
+            </div>
+        @endif
+    @endif
+
     <!-- CUERPO DE LA CONVERSACIÓN -->
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-12">
         

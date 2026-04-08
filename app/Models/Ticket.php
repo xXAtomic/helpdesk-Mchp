@@ -93,6 +93,11 @@ class Ticket extends Model
         return $this->hasMany(TicketAttachment::class); 
     }
 
+    public function rating()
+    {
+        return $this->hasOne(TicketRating::class);
+    }
+
     // --- LÓGICA DE NEGOCIO ---
 
     /**

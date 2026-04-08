@@ -72,18 +72,21 @@
             </div>
         </div>
 
-        <!-- SLA Performance -->
-        <div class="bg-gradient-to-br from-emerald-600/10 to-transparent border border-emerald-500/20 p-6 rounded-2xl hover:border-emerald-500/50 transition-all group">
+        <!-- Satisfaction CSAT -->
+        <div class="bg-gradient-to-br from-indigo-600/10 to-transparent border border-indigo-500/20 p-6 rounded-2xl hover:border-indigo-500/50 transition-all group">
             <div class="flex justify-between items-start mb-4">
-                <div class="p-3 bg-emerald-500/20 rounded-xl text-emerald-400 group-hover:scale-110 transition-transform">
-                    <i class="fas fa-tachometer-alt text-xl"></i>
+                <div class="p-3 bg-indigo-500/20 rounded-xl text-indigo-400 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-smile text-xl"></i>
                 </div>
-                <span class="text-xs text-emerald-500 font-bold bg-emerald-500/10 px-2 py-1 rounded">98.2%</span>
+                <span class="text-xs text-indigo-500 font-bold bg-indigo-500/10 px-2 py-1 rounded">CSAT</span>
             </div>
-            <p class="text-slate-400 text-sm">Índice de Cumplimiento SLA</p>
-            <h4 class="text-3xl font-black text-white mt-1">Óptimo</h4>
-            <div class="mt-4 flex gap-1">
-                @for($i=0; $i<5; $i++) <div class="h-1 flex-1 bg-emerald-500/50 rounded-full"></div> @endfor
+            <p class="text-slate-400 text-sm">Satisfacción Promedio</p>
+            <h4 class="text-3xl font-black text-white mt-1">{{ $avgRating }} / 5.0</h4>
+            <div class="mt-4 flex gap-1 items-center">
+                @for($i=1; $i<=5; $i++)
+                    <div class="h-1 flex-1 {{ $i <= $avgRating ? 'bg-yellow-400' : 'bg-slate-700' }} rounded-full transition-all"></div>
+                @endfor
+                <span class="text-[10px] text-yellow-400 ml-2 font-black italic">★ SCORE</span>
             </div>
         </div>
 

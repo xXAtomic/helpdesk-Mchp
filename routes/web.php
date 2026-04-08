@@ -99,6 +99,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/', [\App\Http\Controllers\User\TicketController::class, 'store'])->name('user.tickets.store');
         Route::get('/{ticket}', [\App\Http\Controllers\User\TicketController::class, 'show'])->name('user.tickets.show');
         Route::post('/{ticket}/reply', [\App\Http\Controllers\User\TicketController::class, 'reply'])->name('user.tickets.reply');
+        Route::post('/{ticket}/rate', [\App\Http\Controllers\User\TicketController::class, 'rate'])->name('user.tickets.rate');
     });
 
     // MOTOR DE INTELIGENCIA GRAVITYBOT 🧠🤖

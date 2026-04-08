@@ -100,4 +100,27 @@ class TicketController extends Controller
             return redirect()->route('user.tickets.show', $ticket)->with('error', '❌ ERROR AL ENVIAR: ' . $e->getMessage());
         }
     }
+    public function rate(Request $request, Ticket $ticket)
+    {
+        if ($ticket->user_id !== request()->user()->id) {
+            abort(403);
+        }
+
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:1000',
+        ]);
+
+        if ($ticket->rating) {
+            return back()->with('error', '❌ ESTE TICKET YA HA SIDO CALIFICADO.');
+        }
+
+        $ticket->rating()->create([
+            'user_id' => $request->user()->id,
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+
+        return redirect()->route('user.tickets.show', $ticket)->with('success', '✅ ¡GRACIAS! TU VALORACIÓN HA SIDO REGISTRADA.');
+    }
 }
