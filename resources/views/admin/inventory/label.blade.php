@@ -34,60 +34,63 @@
         }
     </style>
 </head>
-<body class="p-10">
+<body class="bg-white p-4">
 
 <div class="max-w-xl mx-auto" id="label-container">
-    <div class="bg-white border-2 border-slate-100 p-8 rounded-3xl shadow-2xl relative overflow-hidden" id="printable-label">
+    <div class="bg-white border-[1px] border-slate-200 p-6 rounded-xl relative overflow-hidden" id="printable-label">
+        <style>
+            #printable-label { box-shadow: none !important; }
+        </style>
         <!-- Logo y Cabecera -->
-        <div class="flex items-center justify-between mb-8 border-b border-slate-100 pb-5">
+        <div class="flex items-center justify-between mb-6 border-b border-slate-200 pb-4">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-black text-lg italic">G</div>
                 <div>
-                    <h2 class="text-[0.7rem] font-black text-slate-800 uppercase tracking-tighter italic leading-none">Gravity <span class="text-indigo-600">Inventory</span></h2>
+                    <h2 class="text-[0.8rem] font-black text-slate-800 uppercase tracking-tighter italic leading-none">Gravity <span class="text-indigo-600">Inventory</span></h2>
                     <p class="text-[0.45rem] text-slate-400 font-bold uppercase tracking-widest mt-1">Activo Fijo TI</p>
                 </div>
             </div>
             <div class="text-right">
                 <p class="text-[0.45rem] text-slate-500 font-black uppercase tracking-widest mb-0.5">Propiedad de:</p>
-                <p class="text-[0.55rem] font-bold text-slate-800 uppercase italic">Misión Chilena del Pacífico</p>
+                <p class="text-[0.6rem] font-bold text-slate-800 uppercase italic">Misión Chilena del Pacífico</p>
             </div>
         </div>
 
         <!-- Cuerpo -->
         <div class="flex items-start gap-8">
             <!-- QR -->
-            <div class="bg-slate-50 p-3 rounded-2xl border border-slate-100 shrink-0">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data={{ urlencode(route('admin.inventory.show', $item->id)) }}" 
-                     alt="QR" class="w-28 h-28">
+            <div class="bg-white p-1 border border-slate-100 shrink-0">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data={{ urlencode(route('admin.inventory.show', $item->id)) }}" 
+                     alt="QR" class="w-32 h-32">
             </div>
 
             <div class="flex-1 space-y-4">
                 <div>
-                    <label class="text-[0.45rem] font-black text-indigo-500 uppercase tracking-widest mb-0.5 block italic">Asset Tag ID</label>
-                    <p class="text-xl font-black text-slate-900 tracking-tighter italic uppercase border-b-2 border-indigo-100 inline-block">{{ $item->asset_tag }}</p>
+                    <label class="text-[0.55rem] font-black text-indigo-500 uppercase tracking-widest mb-0.5 block italic">Asset Tag ID</label>
+                    <p class="text-2xl font-black text-slate-900 tracking-tighter italic uppercase border-b-2 border-indigo-100 inline-block">{{ $item->asset_tag }}</p>
                 </div>
                 
                 <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-[0.4rem] font-black text-slate-400 uppercase tracking-widest block">Marca/Modelo</label>
-                        <p class="text-[0.6rem] font-black text-slate-800 uppercase italic leading-tight">{{ $item->brand }}<br>{{ $item->model }}</p>
+                    <div class="border-l-2 border-slate-100 pl-2">
+                        <label class="text-[0.45rem] font-black text-slate-400 uppercase tracking-widest block">Marca/Modelo</label>
+                        <p class="text-[0.7rem] font-black text-slate-800 uppercase italic leading-tight">{{ $item->brand }}<br>{{ $item->model }}</p>
                     </div>
-                    <div>
-                        <label class="text-[0.4rem] font-black text-slate-400 uppercase tracking-widest block">Categoría</label>
-                        <p class="text-[0.6rem] font-black text-slate-800 uppercase italic">{{ $item->type }}</p>
+                    <div class="border-l-2 border-slate-100 pl-2">
+                        <label class="text-[0.45rem] font-black text-slate-400 uppercase tracking-widest block">Categoría</label>
+                        <p class="text-[0.7rem] font-black text-slate-800 uppercase italic">{{ $item->type }}</p>
                     </div>
                 </div>
 
-                <div>
+                <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
                     <label class="text-[0.4rem] font-black text-slate-400 uppercase tracking-widest block">N° de Serie</label>
-                    <p class="text-[0.6rem] font-mono font-bold text-slate-600 uppercase tracking-tight">{{ $item->serial_number }}</p>
+                    <p class="text-[0.65rem] font-mono font-bold text-slate-600 uppercase tracking-tight">{{ $item->serial_number }}</p>
                 </div>
             </div>
         </div>
 
-        <div class="mt-6 pt-4 border-t border-slate-50 flex justify-between items-center opacity-50">
-            <span class="text-[0.4rem] font-bold text-slate-300 uppercase tracking-[0.2em]">Gravity v2.0</span>
-            <span class="text-[0.45rem] font-black text-indigo-400 uppercase">{{ now()->format('Y') }}</span>
+        <div class="mt-5 pt-3 border-t border-slate-100 flex justify-between items-center">
+            <span class="text-[0.4rem] font-bold text-slate-300 uppercase tracking-[0.2em]">Gravity Audit v2.0</span>
+            <span class="text-xs font-black text-indigo-400 italic">{{ now()->format('Y') }}</span>
         </div>
     </div>
 
