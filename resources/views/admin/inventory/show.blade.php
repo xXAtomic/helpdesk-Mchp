@@ -12,7 +12,14 @@
             </div>
             <div>
                 <span class="text-[0.6rem] font-black text-indigo-400 uppercase tracking-[0.4em] mb-2 block italic">Ficha Técnica Centralizada</span>
-                <h1 class="text-4xl font-black text-white tracking-tighter uppercase italic leading-none">{{ $item->asset_tag }}</h1>
+                <h1 class="text-4xl font-black text-white tracking-tighter uppercase italic leading-none">
+                    {{ $item->asset_tag }}
+                    @if($item->entity)
+                        <span class="ml-4 px-3 py-1 bg-white/10 text-white rounded-lg text-[0.6rem] font-black border border-white/20">
+                            {{ $item->entity }}
+                        </span>
+                    @endif
+                </h1>
                 <p class="text-slate-400 font-bold mt-2 italic">{{ $item->brand }} {{ $item->model }}</p>
             </div>
         </div>
@@ -51,6 +58,10 @@
                     <div class="p-6 bg-slate-50 rounded-2xl border border-transparent hover:border-indigo-100 transition-all">
                         <p class="text-[0.55rem] font-black text-slate-400 uppercase tracking-widest mb-1 italic">Usuario Asignado</p>
                         <p class="text-sm font-black text-indigo-600 uppercase italic">{{ $item->user->name ?? 'SIN ASIGNAR' }}</p>
+                    </div>
+                    <div class="p-6 bg-indigo-50/50 rounded-2xl border border-indigo-100 transition-all">
+                        <p class="text-[0.55rem] font-black text-indigo-400 uppercase tracking-widest mb-1 italic">Entidad Perteneciente</p>
+                        <p class="text-sm font-black text-indigo-600 uppercase italic">{{ $item->entity ?? 'N/A' }}</p>
                     </div>
                 </div>
             </div>

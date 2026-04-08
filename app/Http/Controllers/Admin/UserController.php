@@ -31,6 +31,7 @@ class UserController extends Controller
             'password' => 'required|string|min:8',
             'role_id' => 'required|exists:roles,id',
             'phone' => 'nullable|string|max:20',
+            'entity' => 'required|in:IASD,FESDG',
         ]);
 
         User::create([
@@ -39,6 +40,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'role_id' => $request->role_id,
             'phone' => $request->phone,
+            'entity' => $request->entity,
             'is_active' => true,
         ]);
 
@@ -62,6 +64,7 @@ class UserController extends Controller
             'password' => 'nullable|string|min:8',
             'role_id' => 'required|exists:roles,id',
             'phone' => 'nullable|string|max:20',
+            'entity' => 'required|in:IASD,FESDG',
         ]);
 
         $data = [
@@ -69,6 +72,7 @@ class UserController extends Controller
             'email' => $request->email,
             'role_id' => $request->role_id,
             'phone' => $request->phone,
+            'entity' => $request->entity,
         ];
 
         if ($request->filled('password')) {

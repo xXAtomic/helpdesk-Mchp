@@ -21,7 +21,8 @@ class Asset extends Model
         'last_maintenance_at',
         'next_maintenance_at',
         'purchase_cost',
-        'purchased_at'
+        'purchased_at',
+        'entity'
     ];
 
     protected $casts = [

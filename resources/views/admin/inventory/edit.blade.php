@@ -69,10 +69,20 @@
                         </div>
 
                         <!-- Serial -->
-                        <div class="md:col-span-2 space-y-2">
+                        <div class="space-y-2">
                             <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">Número de Serie (S/N)</label>
                             <input type="text" name="serial_number" value="{{ $item->serial_number }}" required
                                 class="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-2xl text-slate-900 font-mono font-bold focus:border-indigo-500 focus:bg-white transition-all">
+                        </div>
+
+                        <!-- Entidad Legal -->
+                        <div class="space-y-2">
+                            <label class="text-[0.65rem] font-black text-indigo-600 uppercase tracking-widest ml-1">Entidad Perteneciente</label>
+                            <select name="entity" required
+                                class="w-full px-6 py-5 bg-indigo-50 border-2 border-transparent rounded-2xl text-slate-900 font-bold focus:border-indigo-500 focus:bg-white transition-all appearance-none">
+                                <option value="IASD" {{ $item->entity == 'IASD' ? 'selected' : '' }}>⛪ IASD - Iglesia Adventista</option>
+                                <option value="FESDG" {{ $item->entity == 'FESDG' ? 'selected' : '' }}>🎓 FESDG - Fundación Sanders</option>
+                            </select>
                         </div>
                     </div>
                 </div>

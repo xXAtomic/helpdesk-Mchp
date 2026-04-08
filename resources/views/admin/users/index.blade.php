@@ -34,6 +34,7 @@
                     <tr class="bg-slate-50/50 border-b border-slate-100">
                         <th class="px-8 py-6 text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">Nombre / Email</th>
                         <th class="px-8 py-6 text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">Rol de Acceso</th>
+                        <th class="px-8 py-6 text-[0.65rem] font-black text-slate-400 uppercase tracking-widest text-center">Entidad</th>
                         <th class="px-8 py-6 text-[0.65rem] font-black text-slate-400 uppercase tracking-widest">Estado</th>
                         <th class="px-8 py-6 text-[0.65rem] font-black text-slate-400 uppercase tracking-widest text-right">Acciones</th>
                     </tr>
@@ -49,6 +50,15 @@
                             <span class="px-3 py-1 rounded-lg bg-slate-100 text-slate-600 text-[0.6rem] font-black tracking-widest border border-slate-200">
                                 {{ $user->role->name ?? 'SIN ROL' }}
                             </span>
+                        </td>
+                        <td class="px-8 py-6 text-center">
+                            @if($user->entity)
+                                <span class="text-[0.65rem] font-black {{ $user->entity == 'IASD' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700' }} px-2 py-0.5 rounded italic uppercase tracking-tighter">
+                                    {{ $user->entity }}
+                                </span>
+                            @else
+                                <span class="text-[0.55rem] font-bold text-slate-300 italic uppercase">-</span>
+                            @endif
                         </td>
                         <td class="px-8 py-6">
                             @if($user->is_active)

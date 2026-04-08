@@ -56,6 +56,16 @@
                     <input type="text" name="phone" value="{{ old('phone', $user->phone) }}"
                         class="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl text-slate-900 font-semibold focus:ring-2 focus:ring-blue-500 transition-all placeholder:text-slate-300">
                 </div>
+
+                <!-- Entidad -->
+                <div class="space-y-2">
+                    <label class="text-[0.7rem] font-bold text-blue-600 uppercase tracking-widest ml-1">Entidad Perteneciente</label>
+                    <select name="entity" required
+                        class="w-full px-5 py-4 bg-blue-50 border-none rounded-2xl text-slate-900 font-bold focus:ring-2 focus:ring-blue-500 transition-all appearance-none cursor-pointer">
+                        <option value="IASD" {{ old('entity', $user->entity) == 'IASD' ? 'selected' : '' }}>⛪ IASD - Iglesia Adventista</option>
+                        <option value="FESDG" {{ old('entity', $user->entity) == 'FESDG' ? 'selected' : '' }}>🎓 FESDG - Fundación Sanders</option>
+                    </select>
+                </div>
             </div>
 
             <div class="pt-10 flex gap-4">

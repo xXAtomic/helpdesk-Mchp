@@ -49,6 +49,7 @@ class EquipmentController extends Controller
             'serial_number' => 'required|unique:assets',
             'location'      => 'required',
             'purchase_cost' => 'nullable|numeric|min:0',
+            'entity'        => 'required|in:IASD,FESDG',
         ]);
 
         $data = $request->all();

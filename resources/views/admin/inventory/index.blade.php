@@ -112,6 +112,7 @@
                 <thead>
                     <tr class="bg-slate-50 border-b border-slate-100">
                         <th class="px-6 py-4 text-[0.6rem] font-black text-slate-400 uppercase tracking-widest italic">Id / Etiqueta</th>
+                        <th class="px-6 py-4 text-[0.6rem] font-black text-slate-400 uppercase tracking-widest italic text-center">Entidad</th>
                         <th class="px-6 py-4 text-[0.6rem] font-black text-slate-400 uppercase tracking-widest italic">Dispositivo</th>
                         <th class="px-6 py-4 text-[0.6rem] font-black text-slate-400 uppercase tracking-widest italic">N° Serie</th>
                         <th class="px-6 py-4 text-[0.6rem] font-black text-slate-400 uppercase tracking-widest italic">Ubicación</th>
@@ -127,6 +128,16 @@
                             <span class="text-[0.7rem] font-bold text-indigo-500 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-100 italic uppercase">
                                 {{ $item->asset_tag }}
                             </span>
+                        </td>
+                        
+                        <td class="px-6 py-4 text-center">
+                            @if($item->entity)
+                                <span class="text-[0.65rem] font-black {{ $item->entity == 'IASD' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700' }} px-2 py-0.5 rounded italic uppercase tracking-tighter">
+                                    {{ $item->entity }}
+                                </span>
+                            @else
+                                <span class="text-[0.55rem] font-bold text-slate-300 italic uppercase">-</span>
+                            @endif
                         </td>
                         
                         <td class="px-6 py-4">
