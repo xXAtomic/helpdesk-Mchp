@@ -142,7 +142,6 @@
                     </div>
                 </form>
             </div>
-            </div>
         </div>
 
         <!-- COLUMNA DERECHA: CONTROLES ADMINISTRATIVOS -->
