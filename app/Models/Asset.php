@@ -20,12 +20,14 @@ class Asset extends Model
         'user_id',
         'last_maintenance_at',
         'next_maintenance_at',
-        'purchase_cost'
+        'purchase_cost',
+        'purchased_at'
     ];
 
     protected $casts = [
         'last_maintenance_at' => 'date',
         'next_maintenance_at' => 'date',
+        'purchased_at' => 'date',
     ];
 
     public function user()
