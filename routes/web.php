@@ -81,6 +81,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('supplies', \App\Http\Controllers\Admin\SupplyController::class)->names('admin.supplies');
         Route::post('/supplies/{supply}/dispatch', [\App\Http\Controllers\Admin\SupplyController::class, 'dispatch'])->name('admin.supplies.dispatch');
         Route::post('/supplies/{supply}/restock', [\App\Http\Controllers\Admin\SupplyController::class, 'restock'])->name('admin.supplies.restock');
+        Route::post('/supplies/logs/{log}/return', [\App\Http\Controllers\Admin\SupplyController::class, 'return'])->name('admin.supplies.return');
 
     });
 

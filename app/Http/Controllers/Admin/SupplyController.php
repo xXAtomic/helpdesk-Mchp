@@ -96,6 +96,30 @@ class SupplyController extends Controller
         return back()->with('success', '✅ REABASTECIMIENTO EXITOSO.');
     }
 
+    public function return(SupplyLog $log)
+    {
+        if ($log->status !== 'PENDING_RETURN') {
+            return back()->with('error', '⚠️ Esta transacción ya fue procesada.');
+        }
+
+        DB::transaction(function() use ($log) {
+            $log->supply->increment('stock', $log->quantity);
+            $log->update(['status' => 'RETURNED']);
+            
+            // Log de retorno oficial
+            $log->supply->logs()->create([
+                'user_id' => $log->user_id,
+                'admin_id' => auth()->id(),
+                'quantity' => $log->quantity,
+                'action' => 'RETURN',
+                'status' => 'COMPLETED',
+                'notes' => 'Devolución formal de material del préstamo #' . $log->id
+            ]);
+        });
+
+        return back()->with('success', '✅ INSUMO REINTEGRADO AL STOCK: El inventario ha sido actualizado.');
+    }
+
     public function show(Supply $supply)
     {
         $supply->load(['logs.user', 'logs.admin']);

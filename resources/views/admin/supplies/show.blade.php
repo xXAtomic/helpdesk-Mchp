@@ -158,9 +158,16 @@
                                     </td>
                                     <td class="py-8">
                                         @if($log->status === 'PENDING_RETURN')
-                                            <span class="bg-rose-50 text-rose-600 px-4 py-2 rounded-xl text-[0.55rem] font-black uppercase tracking-widest italic border border-rose-100 shadow-sm">Pendiente</span>
+                                            <form action="{{ route('admin.supplies.return', $log) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white px-4 py-2 rounded-xl text-[0.55rem] font-black uppercase tracking-widest italic border border-rose-100 shadow-sm transition-all flex items-center gap-2">
+                                                    <i class="fas fa-undo text-[0.5rem]"></i> Devolver
+                                                </button>
+                                            </form>
+                                        @elseif($log->status === 'RETURNED')
+                                            <span class="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl text-[0.55rem] font-black uppercase tracking-widest italic border border-emerald-100 shadow-sm">Reintegrado</span>
                                         @else
-                                            <span class="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl text-[0.55rem] font-black uppercase tracking-widest italic border border-emerald-100 shadow-sm">Completado</span>
+                                            <span class="bg-indigo-50 text-indigo-600 px-4 py-2 rounded-xl text-[0.55rem] font-black uppercase tracking-widest italic border border-indigo-100 shadow-sm">Completado</span>
                                         @endif
                                     </td>
                                 </tr>
