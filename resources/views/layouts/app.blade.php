@@ -113,6 +113,13 @@
 
                 <!-- 📊 DASHBOARD -->
                 @if($roleId == 1)
+                    <!-- BUSCADOR NEURAL 🧠 -->
+                    <button onclick="toggleGlobalSearch()" class="nav-icon group relative" title="Búsqueda Neural (Ctrl+K)">
+                        <i class="fas fa-search transition-transform group-hover:rotate-12"></i>
+                        <span class="absolute left-full ml-4 px-2 py-1 bg-slate-900 text-white text-[0.5rem] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">BUSCAR</span>
+                    </button>
+                    <div class="my-2 border-b border-white/5 w-8"></div>
+                    
                     <a href="{{ route('admin.dashboard') }}" class="nav-icon {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" title="Dashboard">📊</a>
                 @elseif($roleId == 2)
                     <a href="{{ route('boss.dashboard') }}" class="nav-icon {{ request()->routeIs('boss.dashboard') ? 'active' : '' }}" title="Mi Dashboard">📈</a>
@@ -241,7 +248,96 @@
 
     </div>
 
+    <!-- 🧠 MODAL DE BÚSQUEDA NEURAL GLOBAL -->
+    <div id="global-search-modal" class="fixed inset-0 z-[2000] hidden">
+        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-xl" onclick="toggleGlobalSearch()"></div>
+        <div class="relative max-w-2xl mx-auto mt-20 px-4">
+            <div class="bg-white rounded-[3rem] shadow-2xl overflow-hidden border border-white/20 transform transition-all scale-100">
+                <div class="bg-slate-950 p-8">
+                    <div class="relative group">
+                        <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-indigo-400 text-lg group-hover:scale-110 transition-transform"></i>
+                        <input type="text" id="global-search-input" oninput="performGlobalSearch(this.value)" 
+                               placeholder="¿Qué estás buscando? (Tickets, Activos, Usuarios...)"
+                               class="w-full bg-slate-900 border-2 border-slate-800 rounded-2xl py-6 pl-16 pr-8 text-white font-bold italic placeholder:text-slate-600 outline-none focus:border-indigo-500 transition-all text-lg">
+                        <div class="absolute right-6 top-1/2 -translate-y-1/2 px-3 py-1 bg-slate-800 rounded-lg text-[0.6rem] font-black text-slate-500 uppercase italic border border-white/5">ESC PARA CERRAR</div>
+                    </div>
+                </div>
+                <div id="global-search-results" class="max-h-[60vh] overflow-y-auto bg-white custom-scrollbar">
+                    <!-- Resultados dinámicos -->
+                </div>
+                <div class="bg-slate-50 p-4 text-center border-t border-slate-100">
+                    <p class="text-[0.55rem] font-black text-slate-400 uppercase tracking-widest italic leading-none">Powered by Gravity Neural Search v1.0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // --- MOTOR DE BÚSQUEDA NEURAL ---
+        function toggleGlobalSearch() {
+            const modal = document.getElementById('global-search-modal');
+            if(modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                document.getElementById('global-search-input').focus();
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        // Shortcut Ctrl+K
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                toggleGlobalSearch();
+            }
+            if (e.key === 'Escape') {
+                document.getElementById('global-search-modal').classList.add('hidden');
+            }
+        });
+
+        let searchTimeout;
+        async function performGlobalSearch(q) {
+            const resultsContainer = document.getElementById('global-search-results');
+            if (q.length < 2) {
+                resultsContainer.innerHTML = '';
+                return;
+            }
+
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(async () => {
+                resultsContainer.innerHTML = '<div class="p-8 text-center text-slate-400 font-bold italic animate-pulse lowercase text-xs tracking-widest">procesando consulta neural...</div>';
+                
+                try {
+                    const res = await fetch(`/admin/global-search?q=${encodeURIComponent(q)}`);
+                    const data = await res.json();
+                    
+                    if (data.length === 0) {
+                        resultsContainer.innerHTML = '<div class="p-8 text-center text-slate-400 font-bold italic text-xs uppercase tracking-widest">Sin coincidencias en el sistema</div>';
+                        return;
+                    }
+
+                    resultsContainer.innerHTML = data.map(item => `
+                        <a href="${item.url}" class="flex items-center gap-6 p-6 hover:bg-slate-50 transition-all border-b border-slate-50 group first:rounded-t-3xl last:rounded-b-3xl">
+                            <div class="w-12 h-12 ${item.color} rounded-2xl flex items-center justify-center text-white text-lg shadow-lg group-hover:scale-110 transition-transform">
+                                <i class="${item.icon}"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-[0.5rem] font-black text-slate-400 uppercase tracking-widest">${item.type}</span>
+                                    <span class="w-1 h-1 bg-slate-200 rounded-full"></span>
+                                    <h4 class="text-sm font-black text-slate-900 uppercase italic tracking-tight">${item.title}</h4>
+                                </div>
+                                <p class="text-[0.6rem] font-bold text-slate-400 uppercase tracking-widest mt-1 italic">${item.subtitle}</p>
+                            </div>
+                            <i class="fas fa-chevron-right text-slate-200 group-hover:text-indigo-500 group-hover:translate-x-1 transition-all"></i>
+                        </a>
+                    `).join('');
+                } catch (e) {
+                    resultsContainer.innerHTML = '<div class="p-8 text-center text-rose-500 font-bold italic text-xs">Error en la red neuronal de búsqueda</div>';
+                }
+            }, 300);
+        }
+
         function gravityBotToggle() {
             const win = document.getElementById('bot-window');
             if(!win) return;

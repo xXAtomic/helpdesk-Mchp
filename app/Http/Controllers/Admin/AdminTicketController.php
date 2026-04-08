@@ -74,7 +74,7 @@ class AdminTicketController extends Controller
             $ticket, 
             $request->body, 
             auth()->id(), 
-            true, // Admins usually reply as internal/staff
+            $request->has('is_internal'), // Si el checkbox 'Nota Interna' está marcado
             $request->file('attachments') ?? []
         );
 

@@ -78,6 +78,11 @@ class Ticket extends Model
         return $this->hasMany(TicketResponse::class); 
     }
 
+    public function publicReplies() 
+    { 
+        return $this->hasMany(TicketResponse::class)->where('is_internal', false); 
+    }
+
     public function attachments() 
     { 
         return $this->hasMany(TicketAttachment::class); 

@@ -174,30 +174,69 @@
                 </div>
             </div>
 
-            <div class="bg-gray-50 p-10 rounded-[3rem] border border-gray-100 shadow-inner">
-                <h4 class="text-[0.6rem] font-black text-gray-400 uppercase tracking-[0.4em] mb-10 italic">Performance Radar</h4>
-                <div class="space-y-10">
-                    <div>
-                        <div class="flex justify-between items-end mb-3">
-                            <span class="text-[0.6rem] font-black text-slate-800 uppercase italic">Tasa de Resolución</span>
-                            <span class="text-lg font-black text-indigo-600 italic leading-none">{{ $stats['total_tickets'] > 0 ? round(($stats['total_tickets'] - $stats['open_tickets']) / $stats['total_tickets'] * 100) : 0 }}%</span>
+            <!-- TECH WORKLOAD WIDGET 📊 -->
+            <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-xl overflow-hidden group">
+                <div class="flex items-center justify-between mb-8">
+                    <h4 class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.3em] italic">Workload Distribution</h4>
+                    <span class="w-8 h-8 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 text-[10px] shadow-inner"><i class="fas fa-chart-bar"></i></span>
+                </div>
+                
+                <div class="space-y-6">
+                    @foreach($stats['tech_workload'] as $tech)
+                        <div>
+                            <div class="flex justify-between items-end mb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[0.6rem] font-black text-slate-800 uppercase italic">{{ $tech->name }}</span>
+                                    <span class="px-2 py-0.5 bg-slate-100 text-slate-400 text-[8px] font-bold rounded-md">{{ $tech->role->name ?? 'TECH' }}</span>
+                                </div>
+                                <span class="text-xs font-black text-indigo-600 italic">{{ $tech->assigned_tickets_count }} ONGOING</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-slate-50 rounded-full overflow-hidden">
+                                @php 
+                                    $percent = $stats['open_tickets'] > 0 ? ($tech->assigned_tickets_count / $stats['open_tickets']) * 100 : 0;
+                                @endphp
+                                <div class="h-full bg-indigo-500 rounded-full transition-all duration-1000 group-hover:bg-indigo-600" style="width: {{ $percent }}%"></div>
+                            </div>
                         </div>
-                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                            <div class="h-full bg-indigo-600 rounded-full transition-all duration-1000" style="width: {{ $stats['total_tickets'] > 0 ? ($stats['total_tickets'] - $stats['open_tickets']) / $stats['total_tickets'] * 100 : 0 }}%"></div>
-                        </div>
-                    </div>
+                    @endforeach
                     
-                    <div class="pt-6 border-t border-gray-200">
-                        <a href="{{ route('admin.users.index') }}" class="group flex items-center justify-between p-2 rounded-xl hover:bg-white transition-all">
-                             <div>
-                                 <p class="text-[0.6rem] font-black text-slate-400 uppercase italic mb-1">Administración</p>
-                                 <p class="text-[0.7rem] font-black text-slate-900 uppercase">Personal TI</p>
-                             </div>
-                             <div class="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center text-slate-300 group-hover:text-indigo-600 transition-colors">
-                                 <i class="fas fa-users-cog text-[0.8rem]"></i>
-                             </div>
-                        </a>
+                    @if($stats['tech_workload']->isEmpty())
+                        <div class="text-center py-6 border-2 border-dashed border-slate-100 rounded-3xl">
+                            <p class="text-[0.6rem] font-bold text-slate-300 uppercase italic">Sin técnicos activos</p>
+                        </div>
+                    @endif
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-slate-50">
+                    <a href="{{ route('admin.users.index') }}" class="w-full flex items-center justify-center gap-2 py-4 bg-slate-950 text-white rounded-2xl text-[0.6rem] font-black uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-lg italic">
+                        <i class="fas fa-users-cog"></i> Gestionar Staff TI
+                    </a>
+                </div>
+            </div>
+
+            <!-- INVENTORY HEALTH MINI-CHART 🧪 -->
+            <div class="bg-gray-50 p-10 rounded-[3rem] border border-gray-100 relative overflow-hidden group">
+                <div class="absolute -right-8 -top-8 w-24 h-24 bg-white opacity-50 rounded-full blur-2xl group-hover:bg-indigo-50 transition-colors"></div>
+                <h4 class="text-[0.6rem] font-black text-slate-500 uppercase tracking-[0.4em] mb-8 italic">Asset Health Index</h4>
+                
+                <div class="flex items-center justify-center mb-8 relative">
+                    <canvas id="inventoryHealthChart" class="max-w-[140px] max-h-[140px]"></canvas>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                        <span class="text-xs font-black text-slate-900 leading-none">{{ $stats['total_equipment'] }}</span>
+                        <span class="text-[0.5rem] font-bold text-slate-400 uppercase tracking-tighter">Total</span>
                     </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    @foreach($stats['equipment_health'] as $health)
+                        <div class="bg-white p-3 rounded-xl border border-white hover:border-slate-200 transition-all flex items-center gap-3">
+                            <div class="w-2 h-2 rounded-full {{ $health->status == 'Operativo' ? 'bg-emerald-500' : ($health->status == 'Mantenimiento' ? 'bg-amber-500' : 'bg-rose-500') }}"></div>
+                            <div>
+                                <p class="text-[8px] font-black text-slate-400 uppercase italic leading-none mb-1">{{ $health->status }}</p>
+                                <p class="text-xs font-black text-slate-900 italic leading-none">{{ $health->total }}</p>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
 
@@ -298,6 +337,31 @@
                         usePointStyle: true
                     }
                 },
+                scales: { x: { display: false }, y: { display: false } }
+            }
+        });
+
+        // 3. Gráfico de Salud de Inventario (Mini Donut)
+        new Chart(document.getElementById('inventoryHealthChart'), {
+            type: 'doughnut',
+            data: {
+                labels: {!! json_encode($stats['equipment_health']->pluck('status')) !!},
+                datasets: [{
+                    data: {!! json_encode($stats['equipment_health']->pluck('total')) !!},
+                    backgroundColor: {!! json_encode($stats['equipment_health']->map(function($h){
+                        if($h->status == 'Operativo') return '#10b981';
+                        if($h->status == 'Mantenimiento') return '#f59e0b';
+                        return '#ef4444';
+                    })) !!},
+                    borderWidth: 0,
+                    hoverOffset: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '80%',
+                plugins: { legend: { display: false } },
                 scales: { x: { display: false }, y: { display: false } }
             }
         });

@@ -71,7 +71,7 @@ class TicketController extends Controller
             abort(403);
         }
 
-        $ticket->load('replies.user', 'status', 'priority', 'category');
+        $ticket->load(['publicReplies.user', 'status', 'priority', 'category', 'attachments']);
         return view('user.tickets.show', compact('ticket'));
     }
 

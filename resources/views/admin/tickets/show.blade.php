@@ -64,20 +64,27 @@
 
             <!-- RESPUESTAS (REPLIES) -->
             @foreach($ticket->replies as $reply)
-                <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden {{ $reply->user->role->slug == 'admin' ? 'bg-slate-50 border-slate-200 shadow-md' : '' }}">
-                    @if($reply->user->role->slug == 'admin')
-                        <div class="absolute right-0 top-0 px-3 py-1 bg-slate-900 text-white text-[0.55rem] font-black uppercase tracking-widest rounded-bl-xl italic">SOPORTE TI</div>
+                <div class="p-8 rounded-2xl border shadow-sm relative overflow-hidden 
+                    {{ $reply->is_internal ? 'bg-amber-50 border-amber-200 shadow-amber-100' : ($reply->user->role->slug == 'admin' ? 'bg-slate-50 border-slate-200 shadow-md' : 'bg-white border-gray-100') }}">
+                    
+                    @if($reply->is_internal)
+                        <div class="absolute right-0 top-0 px-4 py-1.5 bg-amber-500 text-white text-[0.55rem] font-black uppercase tracking-[0.2em] rounded-bl-2xl shadow-lg italic">
+                            <i class="fas fa-lock mr-1"></i> NOTA INTERNA (SOLO STAFF)
+                        </div>
+                    @elseif($reply->user->role->slug == 'admin')
+                        <div class="absolute right-0 top-0 px-3 py-1 bg-slate-900 text-white text-[0.55rem] font-black uppercase tracking-widest rounded-bl-xl italic">OFICIAL SOPORTE</div>
                     @endif
+
                     <div class="flex items-center gap-4 mb-6">
-                        <div class="w-10 h-10 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold italic">
+                        <div class="w-10 h-10 rounded-lg {{ $reply->is_internal ? 'bg-amber-600' : 'bg-indigo-600' }} text-white flex items-center justify-center font-bold italic shadow-inner">
                             {{ substr($reply->user->name, 0, 1) }}
                         </div>
                         <div>
-                            <p class="text-sm font-bold text-slate-900 uppercase italic">{{ $reply->user->name }}</p>
-                            <p class="text-[0.6rem] font-medium text-slate-400 uppercase tracking-widest italic">{{ $reply->created_at->format('d/M H:i') }}</p>
+                            <p class="text-sm font-black text-slate-900 uppercase italic">{{ $reply->user->name }}</p>
+                            <p class="text-[0.6rem] font-bold text-slate-400 uppercase tracking-widest italic leading-none mt-1">{{ $reply->created_at->format('d M, Y \a \l\a\s H:i') }}</p>
                         </div>
                     </div>
-                    <div class="text-[0.95rem] text-slate-700 leading-relaxed font-medium italic">
+                    <div class="text-[0.95rem] {{ $reply->is_internal ? 'text-amber-900' : 'text-slate-700' }} leading-relaxed font-medium italic">
                         {!! nl2br(e($reply->body)) !!}
                     </div>
 
@@ -85,11 +92,11 @@
                     @if($reply->attachments->count() > 0)
                         <div class="mt-8 grid grid-cols-4 gap-4">
                             @foreach($reply->attachments as $attachment)
-                                <a href="{{ Storage::url($attachment->file_path) }}" target="_blank" class="group block overflow-hidden rounded-lg border border-gray-200">
+                                <a href="{{ Storage::url($attachment->file_path) }}" target="_blank" class="group block overflow-hidden rounded-lg border {{ $reply->is_internal ? 'border-amber-200 shadow-inner' : 'border-gray-200 shadow-sm' }} transition-all hover:scale-105">
                                     @if(Str::contains($attachment->file_type, 'image'))
                                         <img src="{{ Storage::url($attachment->file_path) }}" class="aspect-video w-full object-cover">
                                     @else
-                                        <div class="aspect-video w-full bg-slate-50 flex items-center justify-center text-[0.6rem] font-black text-slate-400 uppercase p-2">{{ $attachment->file_name }}</div>
+                                        <div class="aspect-video w-full flex items-center justify-center text-[0.6rem] font-black text-slate-400 uppercase p-2 bg-white/50">ARCHIVO: {{ $attachment->file_name }}</div>
                                     @endif
                                 </a>
                             @endforeach
@@ -99,26 +106,42 @@
             @endforeach
             
             <!-- FORMULARIO DE RESPUESTA (ESTILO CLONADO SLATE-950) -->
-            <div class="bg-slate-950 p-10 rounded-3xl shadow-xl mt-16 relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-600/5 rounded-full -mr-16 -mt-16 blur-2xl"></div>
-                <h4 class="text-lg font-bold text-white mb-8 tracking-tight uppercase italic italic">Intervención Técnica</h4>
+            <div class="bg-slate-950 p-10 rounded-[3rem] shadow-2xl mt-16 relative overflow-hidden border border-white/5">
+                <div class="absolute -right-20 -top-20 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl"></div>
+                <h4 class="text-xl font-black text-white mb-8 tracking-tighter uppercase italic flex items-center gap-3">
+                     <span class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-xs">🚀</span>
+                     Registrar Intervención
+                </h4>
                 <form action="{{ route('admin.tickets.reply', $ticket->id) }}" method="POST" enctype="multipart/form-data" class="space-y-8 relative z-10">
                     @csrf
-                    <textarea name="body" required rows="5" placeholder="Escribe tu observación detallada aquí..."
-                              class="w-full px-6 py-5 rounded-xl bg-slate-900 border border-slate-800 text-white font-medium text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all outline-none placeholder:text-slate-600 italic"></textarea>
+                    <div class="relative">
+                        <textarea name="body" required rows="5" placeholder="Escribe tu observación detallada aquí..."
+                                  class="w-full px-8 py-6 rounded-2xl bg-slate-900/50 border border-slate-800 text-white font-medium text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all outline-none placeholder:text-slate-600 italic shadow-inner"></textarea>
+                    </div>
                     
                     <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
-                        <label class="flex items-center gap-4 bg-slate-900 px-6 py-3 rounded-lg border border-slate-800 cursor-pointer hover:border-slate-600 transition-all">
-                            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                            <span class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest italic">Incluir Evidencia</span>
-                            <input type="file" name="attachments[]" multiple class="hidden">
-                        </label>
+                        <div class="flex items-center gap-6">
+                            <label class="flex items-center gap-4 bg-slate-900 px-6 py-4 rounded-2xl border border-slate-800 cursor-pointer hover:border-slate-600 transition-all group">
+                                <i class="fas fa-paperclip text-indigo-400 group-hover:rotate-12 transition-transform"></i>
+                                <span class="text-[0.6rem] font-black text-slate-400 uppercase tracking-widest italic">Anexar Evidencia</span>
+                                <input type="file" name="attachments[]" multiple class="hidden">
+                            </label>
+
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <div class="relative">
+                                    <input type="checkbox" name="is_internal" value="1" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-amber-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                </div>
+                                <span class="text-[0.6rem] font-black text-slate-500 uppercase tracking-widest group-hover:text-amber-400 transition-all italic">¿Nota Interna?</span>
+                            </label>
+                        </div>
                         
-                        <button type="submit" class="w-full sm:w-auto bg-indigo-600 text-white px-12 py-4 rounded-lg font-bold text-[0.7rem] uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-500/20 italic">
-                            Enviar y Notificar 🚀
+                        <button type="submit" class="w-full sm:w-auto bg-indigo-600 text-white px-14 py-5 rounded-2xl font-black text-[0.7rem] uppercase tracking-widest hover:bg-slate-950 transition-all shadow-xl shadow-indigo-900/20 italic">
+                            Ejecutar y Notificar 
                         </button>
                     </div>
                 </form>
+            </div>
             </div>
         </div>
 

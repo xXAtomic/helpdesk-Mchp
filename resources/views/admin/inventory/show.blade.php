@@ -55,38 +55,88 @@
                 </div>
             </div>
 
-            <!-- LOGS DE MANTENIMIENTO -->
-            <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-sm">
-                <h3 class="text-xl font-black text-slate-900 uppercase italic tracking-tighter mb-8 flex items-center gap-3">
-                    <span class="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center text-emerald-600 text-xs"><i class="fas fa-history"></i></span>
-                    Historial de Intervenciones
+            <!-- TECH TIMELINE: LÍNEA DE VIDA VISUAL ⏳ -->
+            <div class="bg-white p-12 rounded-[3.5rem] border border-gray-100 shadow-2xl relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-slate-50 rounded-full blur-3xl -mr-24 -mt-24 group-hover:bg-indigo-50 transition-colors duration-1000"></div>
+                
+                <h3 class="text-2xl font-black text-slate-900 uppercase italic tracking-tighter mb-12 flex items-center gap-4 relative z-10">
+                    <span class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white text-lg shadow-lg shadow-indigo-200 rotate-3 group-hover:rotate-12 transition-transform duration-500">
+                        <i class="fas fa-stream"></i>
+                    </span>
+                    Tech Lifecycle Timeline
                 </h3>
                 
-                <div class="space-y-6">
-                    @forelse($item->logs as $log)
-                        <div class="flex gap-6 relative">
-                            @if(!$loop->last)
-                                <div class="absolute left-4 top-10 bottom-0 w-px bg-slate-100"></div>
-                            @endif
-                            <div class="w-8 h-8 rounded-full bg-slate-900 border-4 border-white shadow-lg z-10 shrink-0 flex items-center justify-center text-[10px] text-indigo-400 font-black italic">
-                                {{ $loop->iteration }}
+                <div class="relative space-y-12">
+                    <!-- Línea vertical central -->
+                    <div class="absolute left-6 top-2 bottom-2 w-1 bg-gradient-to-b from-indigo-500 via-slate-100 to-slate-200 rounded-full"></div>
+
+                    @forelse($item->logs->sortByDesc('created_at') as $log)
+                        @php
+                            $icon = 'fa-info-circle';
+                            $colorClass = 'bg-slate-900';
+                            $glowClass = 'shadow-slate-200';
+                            
+                            if(Str::contains(strtolower($log->action), 'mantenimiento')) {
+                                $icon = 'fa-tools';
+                                $colorClass = 'bg-emerald-500';
+                                $glowClass = 'shadow-emerald-200';
+                            } elseif(Str::contains(strtolower($log->action), 'creado')) {
+                                $icon = 'fa-plus-circle';
+                                $colorClass = 'bg-indigo-600';
+                                $glowClass = 'shadow-indigo-200';
+                            } elseif(Str::contains(strtolower($log->action), 'estado')) {
+                                $icon = 'fa-exchange-alt';
+                                $colorClass = 'bg-amber-500';
+                                $glowClass = 'shadow-amber-200';
+                            }
+                        @endphp
+                        
+                        <div class="relative pl-20 transition-all duration-500 hover:translate-x-3">
+                            <!-- Nodo de la línea -->
+                            <div class="absolute left-2 top-0 w-9 h-9 rounded-xl {{ $colorClass }} border-4 border-white shadow-xl z-20 flex items-center justify-center text-white text-[10px] transform group-hover:scale-110 transition-transform">
+                                <i class="fas {{ $icon }}"></i>
                             </div>
-                            <div class="flex-1 p-6 bg-slate-50 rounded-3xl group hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent hover:border-slate-100">
-                                <div class="flex items-center justify-between mb-3">
-                                    <span class="text-[0.6rem] font-black text-indigo-600 uppercase tracking-widest italic">{{ $log->action }}</span>
-                                    <span class="text-[0.55rem] font-medium text-slate-400 uppercase">{{ $log->created_at->format('d M, Y H:i') }}</span>
+
+                            <div class="bg-slate-50 p-8 rounded-[2.5rem] border border-transparent hover:border-indigo-100 hover:bg-white hover:shadow-2xl transition-all duration-500 relative">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                                    <div>
+                                        <span class="px-3 py-1 rounded-lg text-[0.6rem] font-black uppercase tracking-widest {{ $colorClass }} text-white italic mb-2 inline-block">
+                                            {{ $log->action }}
+                                        </span>
+                                        <h4 class="text-sm font-black text-slate-900 uppercase italic tracking-tight">Registro de Auditoría</h4>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-[0.6rem] font-black text-slate-400 uppercase tracking-widest italic">{{ $log->created_at->format('d M, Y') }}</p>
+                                        <p class="text-[0.55rem] font-bold text-indigo-400 uppercase tracking-tight italic">{{ $log->created_at->format('H:i \h\r\s') }}</p>
+                                    </div>
                                 </div>
-                                <p class="text-sm font-medium text-slate-700 leading-relaxed italic">"{{ $log->details }}"</p>
-                                <div class="mt-4 flex items-center gap-2">
-                                    <div class="w-5 h-5 bg-slate-200 rounded-full flex items-center justify-center text-[8px] text-slate-500 font-bold">U</div>
-                                    <span class="text-[0.55rem] font-black text-slate-400 uppercase tracking-widest italic">{{ $log->user->name ?? 'System' }}</span>
+                                
+                                <blockquote class="text-[0.95rem] font-medium text-slate-600 leading-relaxed italic border-l-4 border-indigo-100 pl-6 my-4">
+                                    "{!! nl2br(e($log->details)) !!}"
+                                </blockquote>
+
+                                <div class="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 bg-slate-950 rounded-lg flex items-center justify-center text-white text-[10px] font-black italic shadow-lg">
+                                            {{ substr($log->user->name ?? 'S', 0, 1) }}
+                                        </div>
+                                        <div>
+                                            <p class="text-[0.55rem] font-black text-slate-400 uppercase tracking-widest italic leading-none">Responsable</p>
+                                            <p class="text-[0.65rem] font-black text-slate-900 uppercase italic mt-1">{{ $log->user->name ?? 'SISTEMA GRAVITY' }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="hidden md:block">
+                                        <span class="text-[0.55rem] font-bold text-slate-300 uppercase italic">Token de Verificación: #{{ substr(md5($log->id), 0, 8) }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     @empty
-                        <div class="text-center py-10 opacity-30">
-                            <i class="fas fa-folder-open text-4xl mb-4 block"></i>
-                            <p class="text-xs font-black uppercase tracking-widest italic">Sin registros de auditoría</p>
+                        <div class="text-center py-20 bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200">
+                            <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-slate-200 text-3xl mx-auto shadow-inner mb-6">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <p class="text-[0.7rem] font-black text-slate-400 uppercase tracking-[0.3em] italic">Sin historial de vida registrado</p>
                         </div>
                     @endforelse
                 </div>

@@ -63,6 +63,9 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/export/inventory-pdf', [ReportController::class, 'exportInventoryPdf'])->name('admin.reports.inventory.pdf');
             });
         });
+        
+        // BÚSQUEDA GLOBAL NEURAL 🧠
+        Route::get('/global-search', [\App\Http\Controllers\Admin\GlobalSearchController::class, 'search'])->name('admin.global.search');
 
     });
 

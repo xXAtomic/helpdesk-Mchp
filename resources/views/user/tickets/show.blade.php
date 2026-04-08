@@ -67,7 +67,7 @@
             </div>
 
             <!-- RESPUESTAS -->
-            @foreach($ticket->replies as $reply)
+            @foreach($ticket->publicReplies as $reply)
                 @php $isStaff = ($reply->user->role_id ?? 3) != 3; @endphp
                 <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden {{ $isStaff ? 'bg-slate-50 border-slate-200' : '' }}">
                     @if($isStaff)

@@ -44,6 +44,18 @@ class DashboardController extends Controller
         // Últimos 5 tickets para la tabla de actividad
         $recentTickets = Ticket::with(['user', 'status', 'priority'])->latest()->take(5)->get();
 
+        // 📈 Carga de Trabajo de Técnicos
+        $stats['tech_workload'] = User::whereHas('role', fn($q) => $q->whereIn('slug', ['admin', 'technician']))
+            ->withCount(['assignedTickets' => fn($q) => $q->whereNull('closed_at')])
+            ->orderBy('assigned_tickets_count', 'desc')
+            ->take(5)
+            ->get();
+
+        // 🖥️ Salud del Inventario (Donut Chart)
+        $stats['equipment_health'] = Asset::select('status', \DB::raw('count(*) as total'))
+            ->groupBy('status')
+            ->get();
+
         return view('admin.dashboard', compact('stats', 'recentTickets'));
     }
 }
