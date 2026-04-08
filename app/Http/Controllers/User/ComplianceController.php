@@ -115,10 +115,17 @@ class ComplianceController extends Controller
             'entity_full_name' => $entityData['full_name'],
         ];
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('documents.receipt_devolution', $data);
+        // Decidir plantilla según slug del documento
+        $view = 'documents.receipt_devolution'; 
+        if (str_contains($document->slug, 'prestamo') || str_contains($document->slug, 'responsabilidad')) {
+            $view = 'documents.loan_responsibility';
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView($view, $data);
         
         return $pdf->download("Acta_{$document->slug}_{$user->name}.pdf");
     }
+
 
 
     /**

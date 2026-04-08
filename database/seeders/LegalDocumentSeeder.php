@@ -32,5 +32,31 @@ class LegalDocumentSeeder extends Seeder
                 'entity' => 'FESDG'
             ]
         );
+
+        // NUEVOS DOCUMENTOS DE PRÉSTAMO
+        LegalDocument::updateOrCreate(
+            ['slug' => 'responsabilidad-prestamo-iasd'],
+            [
+                'title' => 'Responsabilidad de Préstamo IASD',
+                'content' => 'Término de préstamo para Misión Chilena del Pacífico',
+                'version' => '1.0',
+                'is_active' => true,
+                'requires_asset' => true,
+                'entity' => 'IASD'
+            ]
+        );
+
+        LegalDocument::updateOrCreate(
+            ['slug' => 'responsabilidad-prestamo-fesdg'],
+            [
+                'title' => 'Responsabilidad de Préstamo FESDG',
+                'content' => 'Término de préstamo para Fundación Educacional Sanders de Groot',
+                'version' => '1.0',
+                'is_active' => true,
+                'requires_asset' => true,
+                'entity' => 'FESDG'
+            ]
+        );
     }
+
 }
