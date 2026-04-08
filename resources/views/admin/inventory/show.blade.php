@@ -159,9 +159,10 @@
                         Escanea para acceder a esta ficha técnica desde cualquier terminal móvil.
                     </p>
                     
-                    <button onclick="window.print()" class="w-full bg-white text-indigo-900 py-5 rounded-[1.5rem] font-black text-[0.7rem] uppercase tracking-widest hover:bg-slate-950 hover:text-white transition-all shadow-xl italic">
-                        Imprimir Etiqueta QR
-                    </button>
+                    <a href="{{ route('admin.inventory.label', $item->id) }}" target="_blank" 
+                       class="w-full bg-white text-indigo-900 py-5 rounded-[1.5rem] font-black text-[0.7rem] uppercase tracking-widest hover:border-white hover:bg-slate-950 hover:text-white transition-all shadow-xl italic flex items-center justify-center gap-3">
+                        <i class="fas fa-print"></i> Generar Etiqueta Pro
+                    </a>
                 </div>
             </div>
 

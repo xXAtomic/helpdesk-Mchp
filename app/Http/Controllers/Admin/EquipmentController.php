@@ -48,6 +48,7 @@ class EquipmentController extends Controller
             'model'         => 'required',
             'serial_number' => 'required|unique:assets',
             'location'      => 'required',
+            'purchase_cost' => 'nullable|numeric|min:0',
         ]);
 
         $data = $request->all();
@@ -80,6 +81,10 @@ class EquipmentController extends Controller
     }
 
     public function update(Request $request, $id) {
+        $request->validate([
+            'purchase_cost' => 'nullable|numeric|min:0',
+        ]);
+
         $item = Asset::findOrFail($id);
         $oldData = $item->toArray();
         
@@ -102,6 +107,14 @@ class EquipmentController extends Controller
         $item = Asset::findOrFail($id);
         $item->delete();
         return redirect()->route('admin.inventory.index')->with('success', 'Equipo eliminado.');
+    }
+
+    /**
+     * Genera una etiqueta imprimible con Código QR para el activo. ✨
+     */
+    public function generateLabel($id) {
+        $item = Asset::findOrFail($id);
+        return view('admin.inventory.label', compact('item'));
     }
 
     /**

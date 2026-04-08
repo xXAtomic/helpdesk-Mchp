@@ -173,7 +173,10 @@
                         </td>
 
                         <td class="px-6 py-4 text-right">
-                            <div class="opacity-0 group-hover:opacity-100 transition-opacity flex justify-end items-center gap-4 text-xs">
+                            <div class="opacity-0 group-hover:opacity-100 transition-opacity flex justify-end items-center gap-4 text-[0.6rem]">
+                                <a href="{{ route('admin.inventory.label', $item->id) }}" target="_blank" class="text-emerald-600 hover:text-emerald-900 font-black uppercase tracking-widest italic border-b border-transparent hover:border-emerald-600 transition-all">
+                                    QR Label
+                                </a>
                                 <a href="{{ route('admin.inventory.show', $item->id) }}" class="text-indigo-600 hover:text-indigo-900 font-black uppercase tracking-widest italic border-b border-transparent hover:border-indigo-600 transition-all">
                                     Ficha
                                 </a>

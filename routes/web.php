@@ -43,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}', [EquipmentController::class, 'update'])->name('admin.inventory.update');
             Route::delete('/{id}', [EquipmentController::class, 'destroy'])->name('admin.inventory.destroy');
             Route::post('/{id}/maintenance', [EquipmentController::class, 'storeMaintenance'])->name('admin.inventory.maintenance.store');
+            Route::get('/{id}/label', [EquipmentController::class, 'generateLabel'])->name('admin.inventory.label');
         });
 
         // GESTIÓN DE USUARIOS
