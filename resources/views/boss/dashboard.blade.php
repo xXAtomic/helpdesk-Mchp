@@ -113,7 +113,7 @@
             <p class="text-slate-400 text-sm">Tickets Resueltos Mes</p>
             <h4 class="text-3xl font-black text-white mt-1">{{ str_pad($monthlyResolvedCount, 2, '0', STR_PAD_LEFT) }}</h4>
             <div class="mt-4 flex items-center text-[10px] text-slate-500 uppercase tracking-widest italic">
-                <i class="fas fa-calendar-check mr-2 text-purple-500"></i> Reinicio en {{ Carbon\Carbon::now()->endOfMonth()->diffInDays() }} días
+                <i class="fas fa-calendar-check mr-2 text-purple-500"></i> Reinicio en {{ Carbon\Carbon::now()->daysInMonth - Carbon\Carbon::now()->day }} días
             </div>
         </div>
     </div>
