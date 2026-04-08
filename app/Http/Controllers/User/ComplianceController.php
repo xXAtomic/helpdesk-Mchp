@@ -97,11 +97,19 @@ class ComplianceController extends Controller
         $user = auth()->user();
         $assets = $user->assets;
         
+        // Buscamos la firma certificada
+        $signature = DocumentSignature::where('user_id', $user->id)
+            ->where('legal_document_id', $document->id)
+            ->where('is_accepted', true)
+            ->first();
+
         $entityData = $this->getEntityData($user->entity);
 
         $data = [
+            'document' => $document,
             'user' => $user,
             'assets' => $assets,
+            'signature' => $signature,
             'entity_name' => $entityData['name'],
             'entity_rut' => $entityData['rut'],
             'entity_full_name' => $entityData['full_name'],
@@ -109,8 +117,9 @@ class ComplianceController extends Controller
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('documents.receipt_devolution', $data);
         
-        return $pdf->download("Acta_Entrega_{$user->name}_{$entityData['name']}.pdf");
+        return $pdf->download("Acta_{$document->slug}_{$user->name}.pdf");
     }
+
 
     /**
      * Retorna los datos estáticos de la entidad.
