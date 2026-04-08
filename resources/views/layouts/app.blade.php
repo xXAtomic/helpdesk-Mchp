@@ -237,8 +237,8 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" id="bot-close" onclick="gravityBotToggle()" class="cursor-pointer w-10 h-10 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center text-slate-400 border border-white/5 transition-all">
-                    <i class="fas fa-times"></i>
+                <button type="button" id="bot-close" onclick="gravityBotToggle(event)" class="group cursor-pointer w-10 h-10 bg-white/5 hover:bg-rose-500/20 rounded-xl flex items-center justify-center text-slate-500 border border-white/10 transition-all duration-300">
+                    <i class="fas fa-times group-hover:rotate-90 transition-transform"></i>
                 </button>
             </div>
 
@@ -265,7 +265,7 @@
         </div>
 
         <!-- Botón Lanzador -->
-        <button onclick="gravityBotToggle()" id="bot-launcher" class="w-20 h-20 bg-slate-950 rounded-[2rem] flex items-center justify-center text-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all hover:scale-110 active:scale-90 border-4 border-indigo-600/20 group relative overflow-hidden">
+        <button onclick="gravityBotToggle(event)" id="bot-launcher" class="w-20 h-20 bg-slate-950 rounded-[2rem] flex items-center justify-center text-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all hover:scale-110 active:scale-90 border-4 border-indigo-600/20 group relative overflow-hidden">
             <span class="relative z-10">🧠</span>
             <div class="absolute top-2 right-2 w-4 h-4 bg-emerald-500 rounded-full border-4 border-slate-950 animate-bounce"></div>
         </button>
@@ -362,12 +362,14 @@
             }, 300);
         }
 
-        function gravityBotToggle() {
+        function gravityBotToggle(e) {
+            if(e) e.preventDefault();
             const win = document.getElementById('bot-window');
             if(!win) return;
 
-            // Si está oculto o tiene la clase hiddes, lo mostramos
-            if (win.style.display === 'none' || win.classList.contains('hidden')) {
+            const isHidden = win.classList.contains('hidden') || win.style.display === 'none';
+
+            if (isHidden) {
                 win.style.display = 'flex';
                 win.classList.remove('hidden');
                 setTimeout(() => {
@@ -375,12 +377,11 @@
                     win.classList.add('opacity-100', 'scale-100');
                 }, 10);
             } else {
-                // De lo contrario, iniciamos animación de salida
                 win.classList.remove('opacity-100', 'scale-100');
                 win.classList.add('opacity-0', 'scale-95');
                 setTimeout(() => {
-                    win.style.display = 'none';
                     win.classList.add('hidden');
+                    win.style.display = 'none';
                 }, 300);
             }
         }
