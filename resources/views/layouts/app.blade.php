@@ -146,6 +146,13 @@
                     <a href="{{ route('knowledge.index') }}" class="nav-icon {{ request()->routeIs('knowledge.*') ? 'active' : '' }}" title="Manuales">📚</a>
                 @endif
 
+                <!-- ⚖️ COMPLIANCE -->
+                @if($roleId == 1)
+                    <a href="{{ route('admin.compliance.index') }}" class="nav-icon {{ request()->routeIs('admin.compliance.*') ? 'active' : '' }}" title="Legal & Firmas">⚖️</a>
+                @else
+                    <a href="{{ route('user.compliance.index') }}" class="nav-icon {{ request()->routeIs('user.compliance.*') ? 'active' : '' }}" title="Mis Compromisos">⚖️</a>
+                @endif
+
                 <!-- 👥 USUARIOS -->
                 @if($roleId == 1)
                     <a href="{{ route('admin.users.index') }}" class="nav-icon {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" title="Usuarios">👥</a>
