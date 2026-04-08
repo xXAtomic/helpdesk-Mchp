@@ -42,7 +42,6 @@
             </div>
         </div>
 
-        <!-- Tendencia y Carga (Area) -->
         <div class="lg:col-span-8 bg-slate-900/40 backdrop-blur-2xl border border-slate-800 p-8 rounded-3xl shadow-2xl">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest">Flujo Operativo (Semanales)</h3>
@@ -52,6 +51,26 @@
                 </div>
             </div>
             <div id="mainTrendChart" class="min-h-[300px]"></div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DE ANALÍTICA PREDICTIVA -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+        <div class="lg:col-span-12 bg-slate-900/40 backdrop-blur-2xl border border-slate-800 p-8 rounded-3xl shadow-2xl overflow-hidden group">
+            <div class="flex items-center justify-between mb-8 border-b border-slate-800 pb-6">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-6 bg-indigo-500 rounded-full"></div>
+                        <h3 class="text-white text-lg font-black uppercase tracking-tighter italic">Mapa de Calor: Presión por Departamento</h3>
+                    </div>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold mt-2 ml-5 italic">Identificación de áreas con mayor demanda de soporte técnico</p>
+                </div>
+                <div class="flex items-center gap-2 px-4 py-2 bg-slate-950 rounded-xl border border-slate-800">
+                    <span class="w-2 h-2 bg-rose-500 rounded-full animate-pulse shadow-[0_0_10px_#f43f5e]"></span>
+                    <span class="text-[10px] text-slate-300 font-black uppercase tracking-widest">En Tiempo Real</span>
+                </div>
+            </div>
+            <div id="departmentHeatChart" class="min-h-[350px]"></div>
         </div>
     </div>
 
@@ -173,6 +192,58 @@ document.addEventListener('DOMContentLoaded', function () {
         tooltip: { theme: 'dark' }
     };
     new ApexCharts(document.querySelector("#mainTrendChart"), optionsMain).render();
+
+    // 3. Department Heatmap (Análisis Predictivo)
+    const deptStats = @json($ticketsByDepartment);
+    const deptLabels = deptStats.map(d => d.name);
+    const deptData = deptStats.map(d => d.total);
+
+    var optionsHeat = {
+        series: [{
+            name: 'Total Tickets',
+            data: deptData
+        }],
+        chart: {
+            height: 350,
+            type: 'bar',
+            toolbar: { show: false },
+            background: 'transparent',
+            fontFamily: 'Inter, sans-serif'
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 15,
+                horizontal: true,
+                distributed: true,
+                barHeight: '70%',
+                dataLabels: { position: 'top' }
+            }
+        },
+        colors: deptData.map((val, idx) => {
+            // El primero es la "zona caliente"
+            if (val > 10) return '#f43f5e'; // Rojo intenso
+            if (val > 5) return '#fb923c';  // Naranja
+            return '#3b82f6';               // Azul estable
+        }),
+        xaxis: {
+            categories: deptLabels,
+            labels: { style: { colors: '#94a3b8', fontSize: '11px', fontWeight: 700 } }
+        },
+        yaxis: {
+            labels: { style: { colors: '#fff', fontSize: '12px', fontWeight: 800 } }
+        },
+        grid: { borderColor: '#1e293b', strokeDashArray: 4 },
+        dataLabels: {
+            enabled: true,
+            formatter: (val) => val + " INCIDENTES",
+            style: { colors: ['#fff'], fontSize: '10px', fontWeight: 900 }
+        },
+        tooltip: {
+            theme: 'dark',
+            y: { title: { formatter: (q) => "Demanda de Soporte: " } }
+        }
+    };
+    new ApexCharts(document.querySelector("#departmentHeatChart"), optionsHeat).render();
 });
 </script>
 @endsection

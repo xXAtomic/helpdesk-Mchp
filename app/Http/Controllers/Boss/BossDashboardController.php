@@ -52,11 +52,19 @@ class BossDashboardController extends Controller
         $avgRating = TicketRating::avg('rating') ?? 0;
         $avgRating = round($avgRating, 1);
 
-        // Datos para gráficos (por ejemplo, tickets por categoría)
+        // 7. Datos para gráficos
         $ticketsByCategory = DB::table('tickets')
             ->join('ticket_categories', 'tickets.category_id', '=', 'ticket_categories.id')
             ->select('ticket_categories.name', DB::raw('count(*) as total'))
             ->groupBy('ticket_categories.name')
+            ->get();
+
+        $ticketsByDepartment = DB::table('tickets')
+            ->join('departments', 'tickets.department_id', '=', 'departments.id')
+            ->select('departments.name', DB::raw('count(*) as total'))
+            ->groupBy('departments.name')
+            ->orderBy('total', 'desc')
+            ->limit(8)
             ->get();
 
         return view('boss.dashboard', compact(
@@ -67,7 +75,8 @@ class BossDashboardController extends Controller
             'inProcessTickets', 
             'avgResponseTime',
             'avgRating',
-            'ticketsByCategory'
+            'ticketsByCategory',
+            'ticketsByDepartment'
         ));
     }
 }
