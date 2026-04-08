@@ -67,6 +67,17 @@ class BossDashboardController extends Controller
             ->limit(8)
             ->get();
 
+        // 8. Datos Financieros (Sugerencia #7) ✨
+        $totalHardwareInvestment = Asset::sum('purchase_cost') ?? 0;
+        $monthlySuppliesExpense = \App\Models\SupplyLog::where('action', 'RESTOCK')
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->with('supply')
+            ->get()
+            ->sum(function($log) {
+                return $log->quantity * ($log->supply->unit_cost ?? 0);
+            });
+
         return view('boss.dashboard', compact(
             'ticketsCount', 
             'resolvedCount', 
@@ -76,7 +87,9 @@ class BossDashboardController extends Controller
             'avgResponseTime',
             'avgRating',
             'ticketsByCategory',
-            'ticketsByDepartment'
+            'ticketsByDepartment',
+            'totalHardwareInvestment',
+            'monthlySuppliesExpense'
         ));
     }
 }

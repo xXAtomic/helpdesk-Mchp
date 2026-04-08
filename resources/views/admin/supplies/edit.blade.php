@@ -55,10 +55,17 @@
                 </div>
             </div>
 
-            <div class="space-y-4">
-                <label class="block text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.25em] ml-2">Ubicación Física</label>
-                <input type="text" name="location" value="{{ $supply->location }}" 
-                       class="w-full px-8 py-6 rounded-2xl bg-gray-50 border-2 border-transparent text-slate-900 font-medium text-[0.95rem] focus:bg-white focus:border-indigo-500 transition-all outline-none">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="space-y-4">
+                    <label class="block text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.25em] ml-2">Ubicación Física</label>
+                    <input type="text" name="location" value="{{ $supply->location }}" 
+                           class="w-full px-8 py-6 rounded-2xl bg-gray-50 border-2 border-transparent text-slate-900 font-medium text-[0.95rem] focus:bg-white focus:border-indigo-500 transition-all outline-none">
+                </div>
+                <div class="space-y-4">
+                    <label class="block text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.25em] ml-2">Costo Unitario ($)</label>
+                    <input type="number" step="0.01" name="unit_cost" value="{{ $supply->unit_cost }}" required 
+                           class="w-full px-8 py-6 rounded-2xl bg-indigo-50 border-2 border-transparent text-indigo-900 font-black text-xl focus:bg-white focus:border-indigo-500 transition-all outline-none">
+                </div>
             </div>
 
             <div class="pt-8">

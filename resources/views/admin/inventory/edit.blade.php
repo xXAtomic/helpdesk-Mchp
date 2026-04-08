@@ -128,10 +128,17 @@
                         </label>
                     </div>
 
-                    <div class="mt-8 space-y-2">
-                        <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">Ubicación Física</label>
-                        <input type="text" name="location" value="{{ $item->location }}" required
-                            class="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-2xl text-slate-900 font-bold focus:border-indigo-500 focus:bg-white transition-all italic">
+                    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-2">
+                            <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">Ubicación Física</label>
+                            <input type="text" name="location" value="{{ $item->location }}" required
+                                class="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-2xl text-slate-900 font-bold focus:border-indigo-500 focus:bg-white transition-all italic">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[0.65rem] font-black text-indigo-600 uppercase tracking-widest ml-1">Costo de Adquisición ($)</label>
+                            <input type="number" step="0.01" name="purchase_cost" value="{{ $item->purchase_cost }}" required
+                                class="w-full px-6 py-5 bg-indigo-50 border-2 border-transparent rounded-2xl text-slate-900 font-black focus:border-indigo-500 focus:bg-white transition-all text-xl italic shadow-inner">
+                        </div>
                     </div>
                 </div>
 

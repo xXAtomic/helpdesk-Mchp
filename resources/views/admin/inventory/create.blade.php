@@ -129,16 +129,24 @@
                                 placeholder="Ej: Almacén TI">
                         </div>
                         
-                        <div class="pt-6 border-t border-slate-100">
-                             <div class="flex items-center gap-3 mb-4">
-                                <div class="w-1.5 h-4 bg-indigo-400 rounded-full"></div>
-                                <h2 class="text-[0.6rem] font-black text-slate-400 uppercase italic tracking-widest">Ciclo Preventivo</h2>
-                            </div>
+                        <div class="pt-6 border-t border-slate-100 space-y-6">
                             <div class="space-y-2">
-                                <label class="text-[0.65rem] font-black text-indigo-600 uppercase tracking-widest ml-1">Próxima Revisión Sugerida</label>
-                                <input type="date" name="next_maintenance_at"
-                                    value="{{ now()->addMonths(6)->format('Y-m-d') }}"
-                                    class="w-full px-6 py-5 bg-indigo-50/50 border-2 border-transparent rounded-2xl text-slate-900 font-black focus:border-indigo-500 focus:bg-white transition-all uppercase italic">
+                                <label class="text-[0.65rem] font-black text-indigo-600 uppercase tracking-widest ml-1">Costo de Adquisición ($)</label>
+                                <input type="number" step="0.01" name="purchase_cost" value="0.00" required
+                                    class="w-full px-6 py-5 bg-indigo-50/50 border-2 border-transparent rounded-2xl text-slate-900 font-black focus:border-indigo-500 focus:bg-white transition-all text-xl italic shadow-inner">
+                            </div>
+                            
+                            <div class="pt-6 border-t border-slate-100">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div class="w-1.5 h-4 bg-indigo-400 rounded-full"></div>
+                                    <h2 class="text-[0.6rem] font-black text-slate-400 uppercase italic tracking-widest">Ciclo Preventivo</h2>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-[0.65rem] font-black text-indigo-600 uppercase tracking-widest ml-1">Próxima Revisión Sugerida</label>
+                                    <input type="date" name="next_maintenance_at"
+                                        value="{{ now()->addMonths(6)->format('Y-m-d') }}"
+                                        class="w-full px-6 py-5 bg-indigo-50/50 border-2 border-transparent rounded-2xl text-slate-900 font-black focus:border-indigo-500 focus:bg-white transition-all uppercase italic">
+                                </div>
                             </div>
                         </div>
                     </div>

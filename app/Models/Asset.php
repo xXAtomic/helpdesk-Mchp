@@ -19,7 +19,8 @@ class Asset extends Model
         'location',
         'user_id',
         'last_maintenance_at',
-        'next_maintenance_at'
+        'next_maintenance_at',
+        'purchase_cost'
     ];
 
     protected $casts = [

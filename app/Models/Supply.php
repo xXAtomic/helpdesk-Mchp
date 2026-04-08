@@ -15,7 +15,8 @@ class Supply extends Model
         'type',
         'stock',
         'min_stock',
-        'location'
+        'location',
+        'unit_cost'
     ];
 
     public function logs()

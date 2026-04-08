@@ -139,6 +139,48 @@
             </div>
         </div>
     </div>
+
+    <!-- SECCIÓN FINANCIERA (Sugerencia #7) 💵 -->
+    <div class="mt-12 mb-12">
+        <div class="flex items-center gap-3 mb-8">
+            <div class="w-2 h-6 bg-emerald-500 rounded-full"></div>
+            <h3 class="text-white text-lg font-black uppercase tracking-tighter italic">Salud Financiera TI</h3>
+            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-500 text-[0.6rem] font-black uppercase rounded-lg border border-emerald-500/20 shadow-lg shadow-emerald-500/5">Auditoría en Tiempo Real</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Valor Total del Patrimonio Hardware -->
+            <div class="bg-slate-900/60 border border-emerald-500/30 p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                <div class="relative z-10 text-center md:text-left">
+                    <p class="text-slate-400 text-xs font-bold uppercase tracking-[0.2em] mb-4 italic">Inversión en Hardware (Patrimonio)</p>
+                    <h4 class="text-6xl font-black text-white italic tracking-tighter hover:text-emerald-400 transition-colors">
+                        ${{ number_format($totalHardwareInvestment, 0, ',', '.') }}
+                    </h4>
+                    <p class="text-[0.65rem] text-slate-500 font-bold uppercase tracking-widest mt-6 flex items-center justify-center md:justify-start gap-2">
+                        <i class="fas fa-shield-alt text-emerald-500"></i> Valor Total Activo en Inventario
+                    </p>
+                </div>
+            </div>
+
+            <!-- Gasto en Insumos Mensual -->
+            <div class="bg-slate-900/60 border border-blue-500/30 p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                <div class="relative z-10 text-center md:text-left">
+                    <p class="text-slate-400 text-xs font-bold uppercase tracking-[0.2em] mb-4 italic">Gasto en Operaciones (Este Mes)</p>
+                    <h4 class="text-6xl font-black text-white italic tracking-tighter hover:text-blue-400 transition-colors">
+                        ${{ number_format($monthlySuppliesExpense, 0, ',', '.') }}
+                    </h4>
+                    <div class="mt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <p class="text-[0.65rem] text-slate-500 font-bold uppercase tracking-widest flex items-center gap-2">
+                            <i class="fas fa-shopping-cart text-blue-500"></i> Consumibles y Reposiciones
+                        </p>
+                        <span class="px-3 py-1 bg-blue-500/20 text-blue-400 text-[0.6rem] font-black rounded-lg border border-blue-500/20 uppercase italic tracking-widest">{{ Carbon\Carbon::now()->translatedFormat('F Y') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
