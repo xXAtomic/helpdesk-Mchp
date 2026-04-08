@@ -18,7 +18,7 @@
         </div>
         <div class="relative z-10 flex flex-col items-end gap-3">
              <span class="px-4 py-2 bg-emerald-500/10 text-emerald-400 rounded-xl text-[0.6rem] font-black uppercase tracking-widest border border-emerald-500/20 italic">
-                 {{ $item->status }} // ACTUAL
+                 {{ $item->status }} // ESTADO ACTUAL
              </span>
              <a href="{{ route('admin.inventory.edit', $item->id) }}" class="text-[0.6rem] font-black text-slate-500 hover:text-white uppercase tracking-widest transition-all">
                  Editar Recurso <i class="fas fa-edit ml-1"></i>

@@ -106,7 +106,7 @@
                  <span class="text-3xl">🛰️</span>
             </div>
             <h1 class="text-4xl font-black italic tracking-tighter uppercase gravity-logo-text leading-none">Gravity</h1>
-            <p class="text-[0.55rem] font-black text-slate-500 uppercase tracking-[0.5em] mt-3">Access Portal • 2.0</p>
+            <p class="text-[0.55rem] font-black text-slate-500 uppercase tracking-[0.5em] mt-3">Portal de Acceso • 2.0</p>
         </div>
 
         <!-- ERROR BLOCK -->
@@ -125,7 +125,7 @@
             @csrf
             
             <div class="space-y-2">
-                <label class="block text-[0.6rem] font-black text-slate-600 uppercase tracking-[0.3em] ml-2">Email Address</label>
+                <label class="block text-[0.6rem] font-black text-slate-600 uppercase tracking-[0.3em] ml-2">Dirección de Correo</label>
                 <div class="relative group">
                     <input type="email" name="email" required autofocus placeholder="correo@mchp.cl"
                            class="w-full px-6 py-5 rounded-2xl input-gravity outline-none font-bold text-[0.9rem] placeholder:text-slate-800 transition-all">
@@ -134,7 +134,7 @@
             </div>
 
             <div class="space-y-2">
-                <label class="text-[0.6rem] font-black text-slate-600 uppercase tracking-[0.3em] ml-2">Access Key</label>
+                <label class="text-[0.6rem] font-black text-slate-600 uppercase tracking-[0.3em] ml-2">Clave de Acceso</label>
                 <div class="relative group">
                     <input type="password" name="password" required placeholder="••••••••"
                            class="w-full px-6 py-5 rounded-2xl input-gravity outline-none font-bold text-[0.9rem] placeholder:text-slate-800 transition-all">
@@ -152,7 +152,7 @@
             <div class="pt-6 flex flex-col items-center gap-6">
                 <div class="flex items-center gap-4 w-full">
                     <div class="h-[1px] bg-white/5 flex-1"></div>
-                    <span class="text-[0.5rem] font-black text-slate-700 uppercase tracking-widest">Global Support</span>
+                    <span class="text-[0.5rem] font-black text-slate-700 uppercase tracking-widest">Soporte Global IT</span>
                     <div class="h-[1px] bg-white/5 flex-1"></div>
                 </div>
 

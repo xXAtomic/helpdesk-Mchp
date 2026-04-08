@@ -7,7 +7,7 @@
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-10 border-b border-slate-100 pb-8 gap-6">
         <div>
             <div class="flex items-center gap-2 mb-1.5">
-                <span class="px-2.5 py-0.5 bg-indigo-600 text-white text-[0.6rem] font-black uppercase tracking-widest rounded italic shadow-md shadow-indigo-100">Inventory</span>
+                <span class="px-2.5 py-0.5 bg-indigo-600 text-white text-[0.6rem] font-black uppercase tracking-widest rounded italic shadow-md shadow-indigo-100">Inventario</span>
                 <span class="text-[0.65rem] font-black text-slate-300 uppercase tracking-widest">{{ now()->format('M Y') }}</span>
             </div>
             <h1 class="text-3xl font-black text-slate-900 tracking-tighter italic uppercase leading-none">
