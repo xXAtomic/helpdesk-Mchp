@@ -26,17 +26,20 @@
             <p class="text-[0.6rem] font-black text-indigo-400 uppercase tracking-widest mb-1 italic">RESUELTOS HOY</p>
             <p class="text-3xl font-black text-indigo-900 tracking-tighter italic uppercase font-black uppercase tracking-widest">{{ auth()->user()->tickets()->where('status_id', 3)->where('updated_at', '>=', now()->startOfDay())->count() }} CERRADOS</p>
         </div>
-        <div class="bg-white p-8 rounded-xl border border-gray-100 shadow-sm transition-all hover:shadow-md">
-            <p class="text-[0.6rem] font-black text-gray-400 uppercase tracking-widest mb-1 italic">EQUIPOS ASIGNADOS</p>
-            <p class="text-3xl font-black text-slate-900 tracking-tighter italic uppercase font-black uppercase tracking-widest">{{ auth()->user()->inventories() ? auth()->user()->inventories()->count() : 0 }} DISPOSITIVOS</p>
-        </div>
+        <button onclick="document.getElementById('mi-equipamiento').scrollIntoView({behavior: 'smooth'})" 
+                class="bg-white p-8 rounded-xl border border-gray-100 shadow-sm transition-all hover:shadow-xl hover:border-indigo-200 text-left group">
+            <p class="text-[0.6rem] font-black text-gray-400 uppercase tracking-widest mb-1 italic group-hover:text-indigo-500 transition-colors">EQUIPOS ASIGNADOS</p>
+            <p class="text-3xl font-black text-slate-900 tracking-tighter italic uppercase font-black uppercase tracking-widest">
+                {{ $assignedAssets->count() }} {{ $assignedAssets->count() == 1 ? 'DISPOSITIVO' : 'DISPOSITIVOS' }}
+                <i class="fas fa-arrow-down ml-2 text-indigo-400 opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-y-1"></i>
+            </p>
+        </button>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-12">
         
-        <!-- ACCIONES PRINCIPALES (TARJETAS GRANDES LIMPIAS) -->
+        <!-- ACCIONES PRINCIPALES -->
         <div class="lg:col-span-2 space-y-10">
-            
             <!-- CARD: NUEVO TICKET -->
             <div class="group bg-white p-12 rounded-xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col justify-between overflow-hidden relative">
                 <div class="absolute -right-10 -top-10 w-24 h-24 bg-gray-50 rounded-full group-hover:scale-[3] transition-transform duration-700 opacity-50"></div>
@@ -52,7 +55,7 @@
                 </div>
             </div>
 
-            <!-- TABLA DE ACTIVIDAD RECIENTE (ESTILO MY-TICKETS) -->
+            <!-- TABLA DE ACTIVIDAD RECIENTE -->
             <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                 <div class="px-8 py-5 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
                     <h3 class="text-[0.65rem] font-black text-gray-500 uppercase tracking-widest">Últimos Registros</h3>
@@ -60,7 +63,7 @@
                 </div>
                 <table class="w-full text-left">
                     <tbody class="divide-y divide-gray-50">
-                        @forelse(auth()->user()->tickets()->latest()->take(3)->get() as $ticket)
+                        @forelse($latestTickets as $ticket)
                             <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="px-8 py-6">
                                     <p class="text-sm font-bold text-slate-900">{{ $ticket->title }}</p>
@@ -81,101 +84,9 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
 
-        <!-- COLUMNA LATERAL: DOCUMENTACIÓN -->
-        <div class="space-y-8">
-            <div class="bg-slate-950 p-10 rounded-xl shadow-2xl overflow-hidden relative">
-                <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-indigo-500/10 rounded-full"></div>
-                <div class="relative z-10">
-                    <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center text-white text-xl border border-white/10 mb-8">
-                        <i class="fas fa-book-open"></i>
-                    </div>
-                    <h3 class="text-xl font-black text-white uppercase tracking-tight italic mb-3">Guías Técnicas</h3>
-                    <p class="text-[0.65rem] font-bold text-slate-500 uppercase tracking-widest leading-relaxed mb-10">Documentación oficial para autogestión de equipos y software operativo.</p>
-                    <a href="{{ route('knowledge.index') }}" class="inline-block w-full bg-white text-slate-950 py-4 rounded-lg font-black text-[0.65rem] uppercase tracking-widest text-center hover:bg-indigo-400 transition-colors">
-                        Explorar Manuales
-                    </a>
-                </div>
-            </div>
-
-            <!-- SECCIÓN: MI EQUIPAMIENTO ASIGNADO (PREMIUM GRID) ✨ -->
-            <div class="space-y-8">
-                <div class="flex items-center justify-between border-b border-gray-100 pb-6">
-                    <div class="flex items-center gap-4">
-                        <div class="w-2 h-8 bg-indigo-600 rounded-full shadow-[0_0_15px_rgba(79,70,229,0.4)]"></div>
-                        <div>
-                            <h3 class="text-lg font-black text-slate-900 uppercase italic tracking-tighter">Mi Equipamiento</h3>
-                            <p class="text-[0.6rem] font-bold text-slate-400 uppercase tracking-[0.2em] italic">Activos TI bajo su responsabilidad directa</p>
-                        </div>
-                    </div>
-                    <div class="hidden sm:flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-xl border border-slate-100">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="text-[0.6rem] font-black text-slate-500 uppercase italic">Sincronizado</span>
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    @forelse($assignedAssets as $item)
-                        <div onclick="openAssetModal({{ json_encode($item) }})" 
-                             class="group bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-indigo-100/50 hover:-translate-y-2 transition-all duration-500 cursor-pointer relative overflow-hidden">
-                            
-                            <!-- Decoración de Fondo -->
-                            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-indigo-50/30 rounded-full blur-2xl group-hover:bg-indigo-100/50 transition-colors duration-700"></div>
-                            
-                            <div class="relative z-10">
-                                <div class="flex items-start justify-between mb-8">
-                                    <div class="w-16 h-16 bg-slate-950 rounded-2xl flex items-center justify-center text-white text-3xl shadow-xl group-hover:bg-indigo-600 transition-colors duration-500">
-                                        @if($item->type == 'Laptop') <i class="fas fa-laptop"></i>
-                                        @elseif($item->type == 'Desktop') <i class="fas fa-desktop"></i>
-                                        @elseif($item->type == 'Monitor') <i class="fas fa-tv"></i>
-                                        @elseif($item->type == 'Impresora') <i class="fas fa-print"></i>
-                                        @elseif($item->type == 'Smartphone') <i class="fas fa-mobile-alt"></i>
-                                        @else <i class="fas fa-box"></i> @endif
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="text-[0.55rem] font-black text-indigo-500 bg-indigo-50 px-2 py-1 rounded-md uppercase tracking-widest italic border border-indigo-100 mb-2 inline-block">
-                                            {{ $item->asset_tag }}
-                                        </span>
-                                        <div class="flex items-center justify-end gap-1.5">
-                                            <span class="w-1.5 h-1.5 rounded-full {{ $item->status == 'Operativo' ? 'bg-emerald-500' : 'bg-amber-500' }}"></span>
-                                            <span class="text-[0.55rem] font-black text-slate-400 uppercase tracking-tighter italic">{{ $item->status }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="space-y-1">
-                                    <h4 class="text-sm font-black text-slate-900 uppercase italic tracking-tighter group-hover:text-indigo-600 transition-colors">{{ $item->brand }}</h4>
-                                    <p class="text-base font-black text-slate-900 uppercase italic leading-none truncate">{{ $item->model }}</p>
-                                    <p class="text-[0.65rem] font-bold text-slate-300 uppercase italic tracking-widest mt-2 border-t border-slate-50 pt-3">{{ $item->entity ?? 'Misión Chilena del Pacífico' }}</p>
-                                </div>
-
-                                <div class="mt-6 flex items-center justify-between">
-                                    <span class="text-[0.5rem] font-black text-slate-400 uppercase tracking-widest font-mono italic">{{ $item->serial_number }}</span>
-                                    <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-indigo-50 group-hover:text-indigo-500 transition-all">
-                                        <i class="fas fa-chevron-right text-[0.6rem]"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="md:col-span-2 xl:col-span-3 py-20 bg-slate-50/50 rounded-[3rem] border-2 border-dashed border-slate-200 text-center relative group overflow-hidden">
-                             <div class="absolute inset-0 bg-indigo-500/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                             <div class="relative z-10">
-                                <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-slate-200 text-3xl mx-auto shadow-inner mb-6">
-                                    <i class="fas fa-box-open"></i>
-                                </div>
-                                <h3 class="text-slate-900 font-black text-lg uppercase italic tracking-tighter">Inventario Personal Vacío</h3>
-                                <p class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.2em] italic max-w-sm mx-auto mt-2">No se han detectado activos vinculados a su cuenta. Contacte a TI si esto es un error.</p>
-                             </div>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-        </div>
-
-        <!-- COLUMNA LATERAL: DOCUMENTACIÓN -->
+        <!-- COLUMNA LATERAL: DOCUMENTACIÓN Y COMPLIANCE -->
         <div class="space-y-8">
             <div class="bg-slate-950 p-10 rounded-[2.5rem] shadow-2xl overflow-hidden relative group">
                 <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-indigo-500/10 rounded-full group-hover:scale-150 transition-transform duration-1000"></div>
@@ -214,6 +125,79 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN: MI EQUIPAMIENTO ASIGNADO (FULL WIDTH SECTION) ✨ -->
+    <div id="mi-equipamiento" class="space-y-8 scroll-mt-10 pb-20">
+        <div class="flex items-center justify-between border-b border-gray-100 pb-6">
+            <div class="flex items-center gap-4">
+                <div class="w-2 h-8 bg-indigo-600 rounded-full shadow-[0_0_15px_rgba(79,70,229,0.4)]"></div>
+                <div>
+                    <h3 class="text-lg font-black text-slate-900 uppercase italic tracking-tighter">Inventario de Responsabilidad</h3>
+                    <p class="text-[0.6rem] font-bold text-slate-400 uppercase tracking-[0.2em] italic">Activos TI bajo su responsabilidad directa</p>
+                </div>
+            </div>
+            <div class="hidden sm:flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-xl border border-slate-100">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-[0.6rem] font-black text-slate-500 uppercase italic">Registro Oficial MChP</span>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            @forelse($assignedAssets as $item)
+                <div onclick="openAssetModal({{ json_encode($item) }})" 
+                     class="group bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-indigo-100/50 hover:-translate-y-2 transition-all duration-500 cursor-pointer relative overflow-hidden">
+                    
+                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-indigo-50/30 rounded-full blur-2xl group-hover:bg-indigo-100/50 transition-colors duration-700"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="flex items-start justify-between mb-8">
+                            <div class="w-16 h-16 bg-slate-950 rounded-2xl flex items-center justify-center text-white text-3xl shadow-xl group-hover:bg-indigo-600 transition-colors duration-500">
+                                @if($item->type == 'Laptop') <i class="fas fa-laptop"></i>
+                                @elseif($item->type == 'Desktop') <i class="fas fa-desktop"></i>
+                                @elseif($item->type == 'Monitor') <i class="fas fa-tv"></i>
+                                @elseif($item->type == 'Impresora') <i class="fas fa-print"></i>
+                                @elseif($item->type == 'Smartphone') <i class="fas fa-mobile-alt"></i>
+                                @else <i class="fas fa-box"></i> @endif
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[0.55rem] font-black text-indigo-500 bg-indigo-50 px-2 py-1 rounded-md uppercase tracking-widest italic border border-indigo-100 mb-2 inline-block">
+                                    {{ $item->asset_tag }}
+                                </span>
+                                <div class="flex items-center justify-end gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full {{ $item->status == 'Operativo' ? 'bg-emerald-500' : 'bg-amber-500' }}"></span>
+                                    <span class="text-[0.55rem] font-black text-slate-400 uppercase tracking-tighter italic">{{ $item->status }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <h4 class="text-xs font-black text-slate-400 uppercase italic tracking-tighter group-hover:text-indigo-600 transition-colors">{{ $item->brand }}</h4>
+                            <p class="text-lg font-black text-slate-900 uppercase italic leading-none truncate">{{ $item->model }}</p>
+                            <p class="text-[0.6rem] font-bold text-indigo-400 uppercase italic tracking-widest mt-3 pt-3 border-t border-slate-50">{{ $item->entity ?? 'Misión Chilena del Pacífico' }}</p>
+                        </div>
+
+                        <div class="mt-6 flex items-center justify-between">
+                            <span class="text-[0.5rem] font-black text-slate-300 uppercase tracking-widest font-mono italic">{{ $item->serial_number }}</span>
+                            <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-300 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-sm">
+                                <i class="fas fa-search-plus text-xs"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="col-span-1 md:col-span-2 lg:col-span-3 xl:col-span-4 py-20 bg-slate-50/50 rounded-[3rem] border-2 border-dashed border-slate-200 text-center relative group overflow-hidden">
+                     <div class="absolute inset-0 bg-indigo-500/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                     <div class="relative z-10">
+                        <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-slate-200 text-3xl mx-auto shadow-inner mb-6">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <h3 class="text-slate-900 font-black text-lg uppercase italic tracking-tighter">Inventario Personal Vacío</h3>
+                        <p class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.2em] italic max-w-sm mx-auto mt-2">No se han detectado activos vinculados a su cuenta. Contacte a TI si esto es un error.</p>
+                     </div>
+                </div>
+            @endforelse
         </div>
     </div>
 </div>
