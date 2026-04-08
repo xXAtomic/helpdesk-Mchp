@@ -36,7 +36,7 @@
                     <p class="text-[10px] text-slate-500 uppercase">Total</p>
                 </div>
                 <div class="text-center">
-                    <p class="text-2xl font-bold text-blue-400">45</p>
+                    <p class="text-2xl font-bold text-blue-400">{{ $resolvedCount }}</p>
                     <p class="text-[10px] text-slate-500 uppercase">Resueltos</p>
                 </div>
             </div>
@@ -96,7 +96,7 @@
                 <span class="text-xs text-amber-500 font-bold bg-amber-500/10 px-2 py-1 rounded">-12% vs ayer</span>
             </div>
             <p class="text-slate-400 text-sm">Tiempo Prom. Respuesta</p>
-            <h4 class="text-3xl font-black text-white mt-1">24 min</h4>
+            <h4 class="text-3xl font-black text-white mt-1">{{ $avgResponseTime }}</h4>
             <div class="mt-4 text-xs italic text-slate-500">
                 "Excelente rendimiento del equipo"
             </div>

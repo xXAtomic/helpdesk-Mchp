@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Boss;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ticket;
-use App\Models\Equipment;
+use App\Models\Asset;
 use App\Models\TicketStatus;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -13,18 +13,16 @@ class BossDashboardController extends Controller
 {
     public function index()
     {
-        // 1. Número de tickets abiertos
-        $openTickets = Ticket::whereHas('status', function($q) {
-            $q->where('is_closed', false);
-        })->count();
+        // 1. Total de tickets
+        $ticketsCount = Ticket::count();
 
         // 2. Número de tickets cerrados
-        $closedTickets = Ticket::whereHas('status', function($q) {
+        $resolvedCount = Ticket::whereHas('status', function($q) {
             $q->where('is_closed', true);
         })->count();
 
         // 3. Número de equipos registrados en el inventario
-        $totalAssets = Equipment::count();
+        $equipmentCount = Asset::count();
 
         // 4. Tickets en proceso (En Progreso)
         $inProcessTickets = Ticket::whereHas('status', function($q) {
@@ -32,15 +30,14 @@ class BossDashboardController extends Controller
         })->count();
 
         // 5. Tiempo de respuesta promedio (desde creación hasta resolución)
-        // Calculamos el promedio de horas
         $ticketsWithResolution = Ticket::whereNotNull('resolved_at')->get();
         if ($ticketsWithResolution->count() > 0) {
             $totalHours = $ticketsWithResolution->sum(function($ticket) {
                 return $ticket->created_at->diffInHours($ticket->resolved_at);
             });
-            $avgResponseTime = round($totalHours / $ticketsWithResolution->count(), 1) . ' horas';
+            $avgResponseTime = round($totalHours / $ticketsWithResolution->count(), 1) . ' h';
         } else {
-            $avgResponseTime = 'N/A';
+            $avgResponseTime = '0 h';
         }
 
         // Datos para gráficos (por ejemplo, tickets por categoría)
@@ -51,9 +48,9 @@ class BossDashboardController extends Controller
             ->get();
 
         return view('boss.dashboard', compact(
-            'openTickets', 
-            'closedTickets', 
-            'totalAssets', 
+            'ticketsCount', 
+            'resolvedCount', 
+            'equipmentCount', 
             'inProcessTickets', 
             'avgResponseTime',
             'ticketsByCategory'
