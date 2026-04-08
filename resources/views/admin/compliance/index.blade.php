@@ -39,7 +39,7 @@
                             <a href="{{ route('admin.compliance.show', $doc->id) }}" class="p-3 bg-slate-950 text-white rounded-xl hover:bg-indigo-600 transition-all">
                                 <i class="fas fa-eye text-xs"></i>
                             </a>
-                            <form action="{{ route('admin.compliance.destroy', $doc->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta plantilla? Se borrarán todos los registros asociados.');" class="inline">
+                            <form action="{{ route('admin.compliance.destroy', $doc->id) }}" method="POST" onsubmit="return prompt('Para confirmar la eliminación definitiva de esta plantilla y TODAS sus firmas, escriba ELIMINAR:') === 'ELIMINAR';" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="p-3 bg-rose-50 text-rose-400 rounded-xl hover:bg-rose-600 hover:text-white transition-all">

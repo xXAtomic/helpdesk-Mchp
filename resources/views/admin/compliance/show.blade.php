@@ -72,7 +72,7 @@
                                         <span class="inline-flex items-center px-4 py-1.5 bg-emerald-50 text-emerald-600 text-[0.55rem] font-black uppercase tracking-widest rounded-full italic border border-emerald-100">
                                             Firma Válida
                                         </span>
-                                        <form action="{{ route('admin.compliance.signature.destroy', $signature->id) }}" method="POST" onsubmit="return confirm('¿Anular esta firma? El usuario tendrá que firmar el documento de nuevo.');">
+                                        <form action="{{ route('admin.compliance.signature.destroy', $signature->id) }}" method="POST" onsubmit="return prompt('Para anular esta firma permanentemente, escriba ELIMINAR:') === 'ELIMINAR';">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-rose-400 hover:text-rose-600 transition-colors p-2">
