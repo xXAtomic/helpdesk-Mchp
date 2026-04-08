@@ -10,12 +10,35 @@
         <p class="text-[0.65rem] font-black text-indigo-500 uppercase tracking-widest mt-3 italic">Versión del Documento: {{ $document->version }}</p>
     </div>
 
-    <div class="bg-white p-12 rounded-[4rem] border border-slate-100 shadow-2xl mb-12 relative overflow-hidden">
+    <div class="bg-white p-12 rounded-[2.5rem] border border-slate-100 shadow-2xl mb-12 relative overflow-hidden">
         <div class="absolute inset-x-0 top-0 h-4 {{ isset($signature) ? 'bg-emerald-500' : 'bg-slate-950' }}"></div>
-        <div class="prose prose-slate max-w-none text-slate-700 font-medium italic leading-relaxed">
-            {!! nl2br(e($document->content)) !!}
+        
+        <!-- VISTA PREVIA DEL DOCUMENTO COMPLETO ✨ -->
+        <div class="bg-slate-50 p-6 md:p-12 rounded-[2rem] border border-slate-100 shadow-inner overflow-hidden relative">
+            <div class="absolute top-0 right-0 p-4">
+                <span class="text-[0.5rem] font-bold text-slate-300 uppercase tracking-widest italic border border-slate-200 px-3 py-1 rounded-lg">Vista Previa Digital</span>
+            </div>
+            
+            <div class="scale-90 md:scale-100 origin-top">
+                @include('documents.receipt_devolution', [
+                    'user' => auth()->user(),
+                    'assets' => $assets,
+                    'entity_name' => $entityData['name'],
+                    'entity_rut' => $entityData['rut'],
+                    'entity_full_name' => $entityData['full_name'],
+                    'isPreview' => true
+                ])
+            </div>
         </div>
     </div>
+
+    @if(isset($signature))
+        <div class="flex flex-col md:flex-row gap-4 mb-8">
+            <a href="{{ route('user.compliance.download', $document->id) }}" class="flex-1 bg-indigo-600 text-white py-6 rounded-2xl font-black text-[0.7rem] uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-xl italic text-center flex items-center justify-center gap-4">
+                <i class="fas fa-file-pdf text-lg"></i> Descargar Copia Certificada (PDF)
+            </a>
+        </div>
+    @endif
 
     @if(isset($signature))
         <div class="bg-emerald-50 p-10 rounded-[3rem] border border-emerald-100 flex flex-col items-center text-center">

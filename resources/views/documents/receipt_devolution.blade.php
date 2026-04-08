@@ -6,34 +6,35 @@
     <style>
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 11pt;
-            line-height: 1.5;
+            font-size: {{ isset($isPreview) ? '10pt' : '11pt' }};
+            line-height: {{ isset($isPreview) ? '1.4' : '1.5' }};
             color: #333;
             margin: 0;
-            padding: 40px;
+            padding: {{ isset($isPreview) ? '10px' : '40px' }};
+            background-color: {{ isset($isPreview) ? 'white' : 'transparent' }};
         }
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: {{ isset($isPreview) ? '15px' : '30px' }};
         }
         .header h1 {
-            font-size: 14pt;
+            font-size: {{ isset($isPreview) ? '12pt' : '14pt' }};
             font-weight: bold;
             margin-bottom: 5px;
             text-transform: uppercase;
         }
         .header p {
-            font-size: 10pt;
+            font-size: 9pt;
             margin: 0;
         }
         .title-box {
             text-align: center;
-            margin-bottom: 30px;
-            border: 2px solid #000;
-            padding: 10px;
+            margin-bottom: 20px;
+            border: 1.5px solid #000;
+            padding: 8px;
         }
         .title-box h2 {
-            font-size: 12pt;
+            font-size: 11pt;
             margin: 0;
             text-transform: uppercase;
         }
@@ -43,26 +44,26 @@
         .asset-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 15px 0;
         }
         .asset-table th, .asset-table td {
             border: 1px solid #000;
-            padding: 8px;
+            padding: 6px;
             text-align: left;
-            font-size: 10pt;
+            font-size: 9pt;
         }
         .asset-table th {
             background-color: #f2f2f2;
         }
         .footer-date {
-            margin-top: 40px;
+            margin-top: 30px;
         }
         .signature-area {
-            margin-top: 60px;
+            margin-top: 40px;
             width: 100%;
         }
         .signature-box {
-            width: 300px;
+            width: 45%;
             float: left;
             text-align: center;
         }
@@ -71,13 +72,15 @@
             margin-bottom: 5px;
         }
         .compliance-note {
-            font-size: 8pt;
-            color: #666;
-            margin-top: 50px;
+            font-size: 7pt;
+            color: #999;
+            margin-top: 40px;
             border-top: 1px dashed #ccc;
             padding-top: 10px;
             clear: both;
         }
+        ol { padding-left: 20px; }
+        li { margin-bottom: 10px; font-size: 9pt; }
     </style>
 </head>
 <body>
