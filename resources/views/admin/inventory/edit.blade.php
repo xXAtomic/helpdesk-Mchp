@@ -128,7 +128,7 @@
                         </label>
                     </div>
 
-                    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="mt-8 space-y-6">
                         <div class="space-y-2">
                             <label class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest ml-1">Ubicación Física</label>
                             <input type="text" name="location" value="{{ $item->location }}" required
@@ -222,80 +222,78 @@
             <div class="absolute left-10 md:left-14 top-10 bottom-10 w-[1px] bg-gradient-to-b from-indigo-500/0 via-indigo-500/20 to-indigo-500/0 hidden md:block"></div>
 
             @forelse($item->logs as $log)
-                <div class="group bg-white/5 hover:bg-white/10 p-8 md:p-10 rounded-[2.5rem] border border-white/5 transition-all flex flex-col md:flex-row md:items-start gap-10 relative">
-                    <!-- Icono de Acción Explosivo -->
-                    <div class="w-20 h-20 rounded-3xl flex items-center justify-center text-3xl shrink-0 shadow-2xl relative z-10 transition-transform group-hover:scale-110 duration-500 {{ match($log->action) { 'CREATE' => 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30', 'UPDATE' => 'bg-amber-500/20 text-amber-400 border border-amber-500/30', default => 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30' } }}">
-                        {{ match($log->action) { 'CREATE' => '✨', 'UPDATE' => '🔄', 'ASSIGN' => '👤', default => '📋' } }}
-                    </div>
-
-                    <!-- Contenido Pro-SaaS -->
-                    <div class="flex-1 relative z-10">
-                        <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-8 pb-6 border-b border-white/5">
+                <div class="group bg-white/5 hover:bg-white/10 p-8 md:p-12 rounded-[2.5rem] border border-white/5 transition-all space-y-8 relative overflow-hidden">
+                    <div class="absolute left-0 top-0 bottom-0 w-1.5 {{ match($log->action) { 'CREATE' => 'bg-emerald-500', 'UPDATE' => 'bg-amber-500', default => 'bg-indigo-500' } }} opacity-50"></div>
+                    
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-white/5">
+                        <div class="flex items-center gap-6">
+                            <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl shrink-0 {{ match($log->action) { 'CREATE' => 'bg-emerald-500/20 text-emerald-400', 'UPDATE' => 'bg-amber-500/20 text-amber-400', default => 'bg-indigo-500/20 text-indigo-400' } }}">
+                                {{ match($log->action) { 'CREATE' => '✨', 'UPDATE' => '🔄', 'ASSIGN' => '👤', default => '📋' } }}
+                            </div>
                             <div>
-                                <h4 class="text-white font-black text-xl italic uppercase tracking-tighter">{{ $log->details }}</h4>
-                                <div class="flex items-center gap-3 mt-2">
-                                    <span class="w-6 h-6 rounded-lg bg-indigo-500/20 flex items-center justify-center text-[0.6rem] text-indigo-400">👤</span>
-                                    <p class="text-[0.65rem] text-slate-500 font-bold uppercase tracking-widest italic">Operador Técnico: <span class="text-indigo-300">{{ $log->user->name }}</span></p>
-                                </div>
-                            </div>
-                            <div class="flex flex-col items-start xl:items-end gap-2">
-                                <span class="text-[0.6rem] font-black text-slate-500 uppercase tracking-widest mb-1 italic">Gravity Timestamp</span>
-                                <span class="text-[0.7rem] font-black text-slate-300 bg-slate-900 border border-white/10 px-6 py-3 rounded-2xl group-hover:border-indigo-500/50 transition-all uppercase tracking-widest italic shadow-lg">
-                                    {{ $log->created_at->format('d M, Y • H:i:s') }}
-                                </span </div>
-                        </div>
-
-                        <!-- Detalles Técnicos de Datos (Diff Inteligente) -->
-                        @if($log->action == 'UPDATE')
-                        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8">
-                            <div class="bg-rose-500/5 p-6 rounded-3xl border border-rose-500/10 group-hover:border-rose-500/20 transition-all">
-                                <p class="text-[0.6rem] font-black text-rose-500/60 uppercase tracking-[0.2em] mb-4 italic flex items-center gap-2">
-                                    <span class="w-2 h-2 bg-rose-500 rounded-full"></span> VALOR REEMPLAZADO
-                                </p>
-                                <div class="space-y-3">
-                                    @php $hasOld = false; @endphp
-                                    @foreach($log->old_data as $key => $value)
-                                        @if(isset($log->new_data[$key]) && $log->new_data[$key] != $value && in_array($key, ['asset_tag', 'brand', 'model', 'serial_number', 'status', 'location', 'user_id']))
-                                            @php $hasOld = true; @endphp
-                                            <div class="flex items-center justify-between border-b border-white/5 pb-2 last:border-0 last:pb-0">
-                                                <span class="text-[0.6rem] text-slate-600 font-black uppercase italic">{{ str_replace('_', ' ', $key) }}:</span>
-                                                <span class="text-[0.7rem] text-slate-400 font-bold line-through ml-4 italic">{{ $value ?? 'N/A' }}</span>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                    @if(!$hasOld) <p class="text-[0.6rem] text-slate-700 italic">Sin cambios estructurales detectados.</p> @endif
-                                </div>
-                            </div>
-
-                            <div class="bg-emerald-500/5 p-6 rounded-3xl border border-emerald-500/10 group-hover:border-emerald-500/20 transition-all shadow-[0_0_30px_rgba(52,211,153,0.03)]">
-                                <p class="text-[0.6rem] font-black text-emerald-400 uppercase tracking-[0.2em] mb-4 italic flex items-center gap-2">
-                                    <span class="w-2 h-2 bg-emerald-400 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.5)]"></span> NUEVA CONFIGURACIÓN
-                                </p>
-                                <div class="space-y-3">
-                                    @php $hasNew = false; @endphp
-                                    @foreach($log->new_data as $key => $value)
-                                        @if(isset($log->old_data[$key]) && $log->old_data[$key] != $value && in_array($key, ['asset_tag', 'brand', 'model', 'serial_number', 'status', 'location', 'user_id']))
-                                            @php $hasNew = true; @endphp
-                                            <div class="flex items-center justify-between border-b border-white/5 pb-2 last:border-0 last:pb-0">
-                                                <span class="text-[0.6rem] text-indigo-400 font-black uppercase italic">{{ str_replace('_', ' ', $key) }}:</span>
-                                                <span class="text-[0.75rem] text-white font-black ml-4 italic">{{ $value ?? 'N/A' }}</span>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                    @if(!$hasNew) <p class="text-[0.6rem] text-slate-700 italic">Parámetros técnicos mantenidos.</p> @endif
-                                </div>
+                                <h4 class="text-white font-black text-base italic uppercase tracking-tighter">{{ $log->details }}</h4>
+                                <p class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest italic mt-1">Operador: <span class="text-indigo-400">{{ $log->user->name }}</span></p>
                             </div>
                         </div>
-                        @else
-                            <div class="bg-indigo-500/5 p-8 rounded-3xl border border-indigo-500/10 flex items-center gap-6 group-hover:bg-indigo-500/10 transition-all">
-                                <div class="w-12 h-12 bg-indigo-500/20 rounded-2xl flex items-center justify-center text-xl">📄</div>
-                                <div>
-                                    <p class="text-[0.65rem] text-slate-300 font-black uppercase italic tracking-widest">Snapshot del Activo Generado</p>
-                                    <p class="text-[0.55rem] text-slate-500 font-bold uppercase tracking-widest mt-1 italic">Todos los parámetros técnicos fueron registrados para la trazabilidad inicial.</p>
-                                </div>
-                            </div>
-                        @endif
+                        <div class="bg-slate-900 border border-white/10 px-6 py-3 rounded-2xl flex flex-col items-center shrink-0">
+                            <span class="text-[0.5rem] font-black text-slate-500 uppercase tracking-widest mb-1">Gravity Timestamp</span>
+                            <span class="text-[0.7rem] font-black text-slate-300 uppercase tracking-widest italic">{{ $log->created_at->format('d M, Y • H:i:s') }}</span>
+                        </div>
                     </div>
+
+                    @if($log->action == 'UPDATE')
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+                        <div class="bg-rose-500/5 p-6 rounded-3xl border border-rose-500/10 hover:border-rose-500/20 transition-all">
+                            <p class="text-[0.6rem] font-black text-rose-500/60 uppercase tracking-[0.2em] mb-4 italic flex items-center gap-2">
+                                <span class="w-2 h-2 bg-rose-500 rounded-full"></span> VALOR REEMPLAZADO
+                            </p>
+                            <div class="space-y-3">
+                                @php $hasOld = false; @endphp
+                                @if(is_array($log->old_data))
+                                @foreach($log->old_data as $key => $value)
+                                    @if(isset($log->new_data[$key]) && $log->new_data[$key] != $value && in_array($key, ['asset_tag', 'brand', 'model', 'serial_number', 'status', 'location', 'user_id', 'purchase_cost']))
+                                        @php $hasOld = true; @endphp
+                                        <div class="flex items-center justify-between border-b border-white/5 pb-2 last:border-0 last:pb-0">
+                                            <span class="text-[0.6rem] text-slate-600 font-black uppercase italic">{{ str_replace('_', ' ', $key) }}:</span>
+                                            <span class="text-[0.7rem] text-slate-400 font-bold line-through ml-4 italic">{{ $value ?? 'N/A' }}</span>
+                                        </div>
+                                    @endif
+                                @endforeach
+                                @endif
+                                @if(!$hasOld) <p class="text-[0.62rem] text-slate-700 italic">Sin cambios críticos.</p> @endif
+                            </div>
+                        </div>
+
+                        <div class="bg-emerald-500/5 p-6 rounded-3xl border border-emerald-500/10 hover:border-emerald-500/20 transition-all shadow-[0_0_30px_rgba(52,211,153,0.03)]">
+                            <p class="text-[0.6rem] font-black text-emerald-400 uppercase tracking-[0.2em] mb-4 italic flex items-center gap-2">
+                                <span class="w-2 h-2 bg-emerald-400 rounded-full shadow-[0_0_10px_rgba(52,211,153,0.5)]"></span> NUEVA CONFIGURACIÓN
+                            </p>
+                            <div class="space-y-3">
+                                @php $hasNew = false; @endphp
+                                @if(is_array($log->new_data))
+                                @foreach($log->new_data as $key => $value)
+                                    @if(isset($log->old_data[$key]) && $log->old_data[$key] != $value && in_array($key, ['asset_tag', 'brand', 'model', 'serial_number', 'status', 'location', 'user_id', 'purchase_cost']))
+                                        @php $hasNew = true; @endphp
+                                        <div class="flex items-center justify-between border-b border-white/5 pb-2 last:border-0 last:pb-0">
+                                            <span class="text-[0.6rem] text-indigo-400 font-black uppercase italic">{{ str_replace('_', ' ', $key) }}:</span>
+                                            <span class="text-[0.75rem] text-white font-black ml-4 italic">{{ $value ?? 'N/A' }}</span>
+                                        </div>
+                                    @endif
+                                @endforeach
+                                @endif
+                                @if(!$hasNew) <p class="text-[0.62rem] text-slate-700 italic">Sin cambios en la estructura.</p> @endif
+                            </div>
+                        </div>
+                    </div>
+                    @else
+                        <div class="bg-indigo-500/5 p-8 rounded-3xl border border-indigo-500/10 flex items-center gap-6">
+                            <div class="w-12 h-12 bg-indigo-500/20 rounded-2xl flex items-center justify-center text-xl">📄</div>
+                            <div>
+                                <p class="text-[0.65rem] text-slate-300 font-black uppercase italic tracking-widest">Snapshot del Activo</p>
+                                <p class="text-[0.55rem] text-slate-500 font-bold uppercase tracking-widest mt-1 italic">Registro inicial almacenado correctamente.</p>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             @empty
                 <div class="text-center py-24 bg-white/5 rounded-[3rem] border border-dashed border-white/10 relative group hover:border-indigo-500/30 transition-all">
