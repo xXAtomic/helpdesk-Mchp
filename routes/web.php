@@ -67,6 +67,16 @@ Route::middleware(['auth'])->group(function () {
         // BÚSQUEDA GLOBAL NEURAL 🧠
         Route::get('/global-search', [\App\Http\Controllers\Admin\GlobalSearchController::class, 'search'])->name('admin.global.search');
 
+        // 👨‍⚖️ GESTIÓN DE COMPLIANCE
+        Route::prefix('compliance')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\ComplianceController::class, 'index'])->name('admin.compliance.index');
+            Route::get('/create', [\App\Http\Controllers\Admin\ComplianceController::class, 'create'])->name('admin.compliance.create');
+            Route::post('/', [\App\Http\Controllers\Admin\ComplianceController::class, 'store'])->name('admin.compliance.store');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\ComplianceController::class, 'show'])->name('admin.compliance.show');
+            Route::get('/{id}/edit', [\App\Http\Controllers\Admin\ComplianceController::class, 'edit'])->name('admin.compliance.edit');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\ComplianceController::class, 'update'])->name('admin.compliance.update');
+        });
+
     });
 
     // --- 👔 PANEL DEL JEFE (BOSS) ---
@@ -98,6 +108,13 @@ Route::middleware(['auth'])->group(function () {
     // PERFIL DE USUARIO 👤✨
     Route::get('/profile', [\App\Http\Controllers\User\ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [\App\Http\Controllers\User\ProfileController::class, 'update'])->name('profile.update');
+
+    // ⚖️ COMPLIANCE PARA USUARIOS
+    Route::prefix('compliance')->group(function () {
+        Route::get('/', [\App\Http\Controllers\User\ComplianceController::class, 'index'])->name('user.compliance.index');
+        Route::get('/{id}', [\App\Http\Controllers\User\ComplianceController::class, 'show'])->name('user.compliance.show');
+        Route::post('/{id}/sign', [\App\Http\Controllers\User\ComplianceController::class, 'sign'])->name('user.compliance.sign');
+    });
 
 });
 
