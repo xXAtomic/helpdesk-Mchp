@@ -19,9 +19,9 @@
             </div>
         </div>
         <div class="mt-8 md:mt-0 flex flex-col items-end gap-2">
-            <span class="text-[0.55rem] font-black text-slate-300 uppercase tracking-widest italic">System Status: Stable</span>
+            <span class="text-[0.55rem] font-black text-slate-300 uppercase tracking-widest italic">Estado del Sistema: Estable</span>
             <span class="inline-flex items-center px-6 py-2 bg-slate-950 rounded-xl text-[0.65rem] font-black text-indigo-400 uppercase tracking-[0.2em] italic border border-white/10 shadow-xl">
-                 ADMIN_SESSION_ACTIVE // PRO
+                 SESIÓN_ADMIN_ACTIVA // PRO
             </span>
         </div>
     </div>
@@ -71,7 +71,7 @@
         <div class="xl:col-span-2 bg-white p-10 rounded-[2.5rem] border border-gray-50 shadow-sm hover:shadow-xl transition-all">
             <div class="flex items-center justify-between mb-10">
                 <div>
-                     <span class="text-[0.6rem] font-black text-indigo-500 uppercase tracking-widest italic mb-1 block">Data Stream</span>
+                     <span class="text-[0.6rem] font-black text-indigo-500 uppercase tracking-widest italic mb-1 block">Flujo de Datos</span>
                      <h3 class="text-2xl font-black text-slate-900 uppercase italic tracking-tighter">Volumen de Solicitudes (7D)</h3>
                 </div>
                 <div class="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 shadow-inner">
@@ -87,7 +87,7 @@
         <div class="bg-white p-10 rounded-[2.5rem] border border-gray-50 shadow-sm hover:shadow-xl transition-all">
             <div class="flex items-center justify-between mb-10">
                 <div>
-                     <span class="text-[0.6rem] font-black text-emerald-500 uppercase tracking-widest italic mb-1 block">Health Check</span>
+                     <span class="text-[0.6rem] font-black text-emerald-500 uppercase tracking-widest italic mb-1 block">Estado de Salud</span>
                      <h3 class="text-2xl font-black text-slate-900 uppercase italic tracking-tighter">Distribución</h3>
                 </div>
                 <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 shadow-inner">
@@ -177,7 +177,7 @@
             <!-- TECH WORKLOAD WIDGET 📊 -->
             <div class="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-xl overflow-hidden group">
                 <div class="flex items-center justify-between mb-8">
-                    <h4 class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.3em] italic">Workload Distribution</h4>
+                    <h4 class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.3em] italic">Distribución de Carga</h4>
                     <span class="w-8 h-8 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 text-[10px] shadow-inner"><i class="fas fa-chart-bar"></i></span>
                 </div>
                 
@@ -189,7 +189,7 @@
                                     <span class="text-[0.6rem] font-black text-slate-800 uppercase italic">{{ $tech->name }}</span>
                                     <span class="px-2 py-0.5 bg-slate-100 text-slate-400 text-[8px] font-bold rounded-md">{{ $tech->role->name ?? 'TECH' }}</span>
                                 </div>
-                                <span class="text-xs font-black text-indigo-600 italic">{{ $tech->assigned_tickets_count }} ONGOING</span>
+                                <span class="text-xs font-black text-indigo-600 italic">{{ $tech->assigned_tickets_count }} EN PROCESO</span>
                             </div>
                             <div class="w-full h-1.5 bg-slate-50 rounded-full overflow-hidden">
                                 @php 
@@ -217,7 +217,7 @@
             <!-- INVENTORY HEALTH MINI-CHART 🧪 -->
             <div class="bg-gray-50 p-10 rounded-[3rem] border border-gray-100 relative overflow-hidden group">
                 <div class="absolute -right-8 -top-8 w-24 h-24 bg-white opacity-50 rounded-full blur-2xl group-hover:bg-indigo-50 transition-colors"></div>
-                <h4 class="text-[0.6rem] font-black text-slate-500 uppercase tracking-[0.4em] mb-8 italic">Asset Health Index</h4>
+                <h4 class="text-[0.6rem] font-black text-slate-500 uppercase tracking-[0.4em] mb-8 italic">Índice de Salud de Activos</h4>
                 
                 <div class="flex items-center justify-center mb-8 relative">
                     <canvas id="inventoryHealthChart" class="max-w-[140px] max-h-[140px]"></canvas>
@@ -241,7 +241,7 @@
             </div>
 
             <p class="text-[0.55rem] font-black text-slate-300 text-center uppercase tracking-[0.5em] italic mt-10">
-                Gravity Platform v2.5 • Atomic Dev 🚀
+                Plataforma Gravity v2.5 • Atomic Dev 🚀
             </p>
         </div>
 

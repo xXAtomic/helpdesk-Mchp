@@ -278,7 +278,7 @@
                     <!-- Resultados dinámicos -->
                 </div>
                 <div class="bg-slate-50 p-4 text-center border-t border-slate-100">
-                    <p class="text-[0.55rem] font-black text-slate-400 uppercase tracking-widest italic leading-none">Powered by Gravity Neural Search v1.0</p>
+                    <p class="text-[0.55rem] font-black text-slate-400 uppercase tracking-widest italic leading-none">Potenciado por Gravity Neural Search v1.0</p>
                 </div>
             </div>
         </div>

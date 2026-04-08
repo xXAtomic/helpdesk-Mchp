@@ -63,7 +63,7 @@
                     <span class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white text-lg shadow-lg shadow-indigo-200 rotate-3 group-hover:rotate-12 transition-transform duration-500">
                         <i class="fas fa-stream"></i>
                     </span>
-                    Tech Lifecycle Timeline
+                    Ciclo de Vida del Activo Gravity
                 </h3>
                 
                 <div class="relative space-y-12">
