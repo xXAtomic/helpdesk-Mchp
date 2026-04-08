@@ -109,21 +109,36 @@
                     <h5 class="text-[0.65rem] font-black text-slate-900 uppercase italic tracking-widest">Estado Legal</h5>
                 </div>
                 <div class="space-y-5">
-                    <div class="p-6 bg-slate-50 rounded-[1.5rem] border border-transparent hover:border-emerald-100 hover:bg-emerald-50/30 transition-all flex items-center gap-5 group/item">
+                    <a href="{{ route('user.compliance.index') }}" class="block p-6 bg-slate-50 rounded-[1.5rem] border border-transparent hover:border-emerald-100 hover:bg-emerald-50/30 transition-all flex items-center gap-5 group/item">
                         <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-2xl shadow-sm border border-slate-100 group-hover/item:scale-110 transition-transform">📄</div>
                         <div>
                             <p class="text-[0.65rem] font-black text-slate-900 uppercase italic leading-none">Actas de Entrega</p>
-                            <p class="text-[0.55rem] font-bold text-emerald-600 uppercase tracking-widest italic mt-1.5">Pendiente de Firma</p>
+                            @if($pendingComplianceCount > 0)
+                                <p class="text-[0.55rem] font-bold text-amber-600 uppercase tracking-widest italic mt-1.5">
+                                    {{ $pendingComplianceCount }} Pendiente{{ $pendingComplianceCount > 1 ? 's' : '' }}
+                                </p>
+                            @else
+                                <p class="text-[0.55rem] font-bold text-emerald-600 uppercase tracking-widest italic mt-1.5">Todo al día</p>
+                            @endif
                         </div>
-                    </div>
-                    <div class="p-6 bg-slate-50 rounded-[1.5rem] border border-transparent hover:border-indigo-100 hover:bg-indigo-50/30 transition-all flex items-center gap-5 group/item">
-                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-2xl shadow-sm border border-slate-100 group-hover/item:scale-110 transition-transform">⚖️</div>
+                    </a>
+                    
+                    <div class="p-6 bg-slate-50 rounded-[1.5rem] border border-transparent flex items-center gap-5">
+                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-2xl shadow-sm border border-slate-100">⚖️</div>
                         <div>
                             <p class="text-[0.65rem] font-black text-slate-900 uppercase italic leading-none">Políticas de Uso</p>
-                            <p class="text-[0.55rem] font-bold text-slate-400 uppercase tracking-widest italic mt-1.5">Aceptado Mar 2024</p>
+                            <p class="text-[0.55rem] font-bold text-slate-400 uppercase tracking-widest italic mt-1.5">Verificado via login</p>
                         </div>
                     </div>
                 </div>
+                
+                @if($pendingComplianceCount > 0)
+                    <div class="mt-8">
+                        <a href="{{ route('user.compliance.index') }}" class="block w-full text-center bg-amber-500 text-white py-4 rounded-xl font-black text-[0.6rem] uppercase tracking-widest hover:bg-amber-600 transition-colors shadow-lg">
+                            Firmar Pendientes Ahora
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

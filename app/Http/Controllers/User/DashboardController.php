@@ -34,12 +34,23 @@ class DashboardController extends Controller
         // 3. Equipos asignados al usuario ✨
         $assignedAssets = $user->assets()->with('logs')->get();
 
+        // 4. Compliance Status ⚖️
+        $signedIds = \App\Models\DocumentSignature::where('user_id', $user->id)
+            ->where('is_accepted', true)
+            ->pluck('legal_document_id')
+            ->toArray();
+
+        $pendingComplianceCount = \App\Models\LegalDocument::where('is_active', true)
+            ->whereNotIn('id', $signedIds)
+            ->count();
+
         return view('user.dashboard', compact(
             'totalTickets',
             'openTickets',
             'closedTickets',
             'latestTickets',
-            'assignedAssets'
+            'assignedAssets',
+            'pendingComplianceCount'
         ));
     }
 }

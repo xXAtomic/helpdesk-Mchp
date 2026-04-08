@@ -34,17 +34,23 @@ class ComplianceController extends Controller
     }
 
     /**
-     * Muestra el documento específico para firmar.
+     * Muestra el documento específico para firmar con vista previa dinámica.
      */
     public function show($id)
     {
         $document = LegalDocument::findOrFail($id);
-        $signature = DocumentSignature::where('user_id', auth()->id())
+        $user = auth()->user();
+        
+        $signature = DocumentSignature::where('user_id', $user->id)
             ->where('legal_document_id', $document->id)
             ->where('is_accepted', true)
             ->first();
 
-        return view('user.compliance.show', compact('document', 'signature'));
+        // Datos de la entidad para la vista previa
+        $entityData = $this->getEntityData($user->entity);
+        $assets = $user->assets;
+
+        return view('user.compliance.show', compact('document', 'signature', 'entityData', 'assets'));
     }
 
     /**
@@ -68,10 +74,55 @@ class ComplianceController extends Controller
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
                 'is_accepted' => true,
-                'signature_token' => Str::uuid()->toString(),
+                'signature_token' => (string) Str::uuid(),
             ]
         );
 
         return redirect()->route('user.compliance.index')->with('success', 'Documento firmado correctamente. Gracias por tu compromiso.');
     }
+
+    /**
+     * Genera y descarga el PDF del acta.
+     */
+    public function downloadPDF($id)
+    {
+        $document = LegalDocument::findOrFail($id);
+        $user = auth()->user();
+        $assets = $user->assets;
+        
+        $entityData = $this->getEntityData($user->entity);
+
+        $data = [
+            'user' => $user,
+            'assets' => $assets,
+            'entity_name' => $entityData['name'],
+            'entity_rut' => $entityData['rut'],
+            'entity_full_name' => $entityData['full_name'],
+        ];
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('documents.receipt_devolution', $data);
+        
+        return $pdf->download("Acta_Entrega_{$user->name}_{$entityData['name']}.pdf");
+    }
+
+    /**
+     * Retorna los datos estáticos de la entidad.
+     */
+    private function getEntityData($entity)
+    {
+        if ($entity === 'FESDG') {
+            return [
+                'name' => 'FESDG',
+                'full_name' => 'Fundación Educacional Sanders de Groot',
+                'rut' => '65.102.254-1'
+            ];
+        }
+
+        return [
+            'name' => 'IASD',
+            'full_name' => 'Misión Chilena del Pacífico',
+            'rut' => '65.002.737-K'
+        ];
+    }
 }
+

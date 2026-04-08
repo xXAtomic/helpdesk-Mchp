@@ -124,6 +124,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [\App\Http\Controllers\User\ComplianceController::class, 'index'])->name('user.compliance.index');
         Route::get('/{id}', [\App\Http\Controllers\User\ComplianceController::class, 'show'])->name('user.compliance.show');
         Route::post('/{id}/sign', [\App\Http\Controllers\User\ComplianceController::class, 'sign'])->name('user.compliance.sign');
+        Route::get('/{id}/download', [\App\Http\Controllers\User\ComplianceController::class, 'downloadPDF'])->name('user.compliance.download');
     });
 
 });
