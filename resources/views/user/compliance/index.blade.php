@@ -55,19 +55,21 @@
         @else
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 @foreach($signed as $sig)
-                    <div class="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100 relative group overflow-hidden">
-                        <div class="absolute -right-8 -top-8 w-24 h-24 bg-white rounded-full opacity-50 group-hover:scale-150 transition-transform duration-700"></div>
+                    <div class="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-lg relative group overflow-hidden hover:shadow-2xl transition-all duration-500">
+                        <div class="absolute -right-8 -top-8 w-24 h-24 bg-indigo-50 rounded-full opacity-40 group-hover:scale-150 transition-transform duration-700"></div>
                         
                         <div class="relative z-10">
                             <div class="flex items-center justify-between mb-6">
-                                <span class="px-3 py-1 bg-emerald-100 text-emerald-700 text-[0.5rem] font-black uppercase tracking-widest rounded-lg italic">Firmado</span>
+                                <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[0.5rem] font-black uppercase tracking-widest rounded-lg italic border border-emerald-100">Certificado</span>
                                 <span class="text-[0.55rem] font-bold text-slate-400 italic">{{ $sig->signed_at->format('d M, Y') }}</span>
                             </div>
-                            <h3 class="text-md font-black text-slate-800 uppercase italic tracking-tighter mb-4 leading-tight">{{ $sig->document->title }}</h3>
+                            <h3 class="text-md font-black text-slate-800 uppercase italic tracking-tighter mb-4 leading-tight group-hover:text-indigo-600 transition-colors">{{ $sig->document->title }}</h3>
                             
-                            <div class="flex items-center justify-between mt-6 pt-6 border-t border-white">
+                            <div class="flex items-center justify-between mt-6 pt-6 border-t border-slate-50">
                                 <span class="text-[0.5rem] font-mono text-slate-300 truncate w-32">ID: {{ substr($sig->signature_token, 0, 8) }}...</span>
-                                <a href="{{ route('user.compliance.show', $sig->document->id) }}" class="text-[0.6rem] font-black text-slate-400 uppercase tracking-widest hover:text-indigo-600 transition-all italic">Ver Original <i class="fas fa-eye ml-1 text-[10px]"></i></a>
+                                <a href="{{ route('user.compliance.show', $sig->document->id) }}" class="text-[0.6rem] font-black text-indigo-600 uppercase tracking-widest hover:text-slate-950 transition-all italic flex items-center gap-2">
+                                    Ver Documento <i class="fas fa-chevron-right text-[8px]"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
