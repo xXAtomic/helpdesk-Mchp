@@ -31,11 +31,15 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // 3. Equipos asignados al usuario ✨
+        $assignedAssets = $user->assets()->with('logs')->get();
+
         return view('user.dashboard', compact(
             'totalTickets',
             'openTickets',
             'closedTickets',
-            'latestTickets'
+            'latestTickets',
+            'assignedAssets'
         ));
     }
 }
