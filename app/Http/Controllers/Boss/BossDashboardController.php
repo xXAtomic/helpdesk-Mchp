@@ -16,10 +16,17 @@ class BossDashboardController extends Controller
         // 1. Total de tickets
         $ticketsCount = Ticket::count();
 
-        // 2. Número de tickets cerrados
+        // 2. Número de tickets cerrados TOTAL
         $resolvedCount = Ticket::whereHas('status', function($q) {
             $q->where('is_closed', true);
         })->count();
+
+        // 2b. Tickets resueltos este mes (Contador Mensual)
+        $monthlyResolvedCount = Ticket::whereHas('status', function($q) {
+                $q->where('is_closed', true);
+            })
+            ->whereBetween('resolved_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])
+            ->count();
 
         // 3. Número de equipos registrados en el inventario
         $equipmentCount = Asset::count();
@@ -50,6 +57,7 @@ class BossDashboardController extends Controller
         return view('boss.dashboard', compact(
             'ticketsCount', 
             'resolvedCount', 
+            'monthlyResolvedCount',
             'equipmentCount', 
             'inProcessTickets', 
             'avgResponseTime',

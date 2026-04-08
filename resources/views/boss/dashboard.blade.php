@@ -102,23 +102,18 @@
             </div>
         </div>
 
-        <!-- Usuarios Críticos -->
+        <!-- Tickets Atendidos Mes -->
         <div class="bg-gradient-to-br from-purple-600/10 to-transparent border border-purple-500/20 p-6 rounded-2xl hover:border-purple-500/50 transition-all group">
             <div class="flex justify-between items-start mb-4">
                 <div class="p-3 bg-purple-500/20 rounded-xl text-purple-400 group-hover:scale-110 transition-transform">
-                    <i class="fas fa-user-shield text-xl"></i>
+                    <i class="fas fa-check-double text-xl"></i>
                 </div>
-                <button class="text-[10px] text-purple-400 font-bold uppercase hover:underline">Ver Todos</button>
+                <span class="text-[10px] text-purple-400 font-bold bg-purple-500/10 px-2 py-1 rounded uppercase tracking-tighter">{{ Carbon\Carbon::now()->translatedFormat('M Y') }}</span>
             </div>
-            <p class="text-slate-400 text-sm">Gerencia Atendida</p>
-            <h4 class="text-3xl font-black text-white mt-1">08</h4>
-            <div class="mt-4 flex -space-x-2">
-                @for($i=1; $i<=4; $i++)
-                <div class="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[10px] text-white ring-2 ring-slate-900">
-                    G{{$i}}
-                </div>
-                @endfor
-                <div class="w-7 h-7 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[8px] text-slate-500">+4</div>
+            <p class="text-slate-400 text-sm">Tickets Resueltos Mes</p>
+            <h4 class="text-3xl font-black text-white mt-1">{{ str_pad($monthlyResolvedCount, 2, '0', STR_PAD_LEFT) }}</h4>
+            <div class="mt-4 flex items-center text-[10px] text-slate-500 uppercase tracking-widest italic">
+                <i class="fas fa-calendar-check mr-2 text-purple-500"></i> Reinicio en {{ Carbon\Carbon::now()->endOfMonth()->diffInDays() }} días
             </div>
         </div>
     </div>
