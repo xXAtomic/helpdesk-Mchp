@@ -139,6 +139,11 @@
                     <a href="{{ route('admin.inventory.index') }}" class="nav-icon {{ request()->routeIs('admin.inventory.*') ? 'active' : '' }}" title="Inventario">🖥️</a>
                 @endif
 
+                <!-- 📦 INSUMOS -->
+                @if($roleId == 1)
+                    <a href="{{ route('admin.supplies.index') }}" class="nav-icon {{ request()->routeIs('admin.supplies.*') ? 'active' : '' }}" title="Insumos y Stock">📦</a>
+                @endif
+
                 <!-- 📚 MANUALES -->
                 @if($roleId == 1)
                     <a href="{{ route('admin.knowledge.index') }}" class="nav-icon {{ request()->routeIs('admin.knowledge.*') ? 'active' : '' }}" title="Gestión Manuales">📚</a>

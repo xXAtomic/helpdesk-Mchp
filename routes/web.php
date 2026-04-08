@@ -77,6 +77,11 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/{id}', [\App\Http\Controllers\Admin\ComplianceController::class, 'update'])->name('admin.compliance.update');
         });
 
+        // GESTIÓN DE INSUMOS 📦
+        Route::resource('supplies', \App\Http\Controllers\Admin\SupplyController::class)->names('admin.supplies');
+        Route::post('/supplies/{supply}/dispatch', [\App\Http\Controllers\Admin\SupplyController::class, 'dispatch'])->name('admin.supplies.dispatch');
+        Route::post('/supplies/{supply}/restock', [\App\Http\Controllers\Admin\SupplyController::class, 'restock'])->name('admin.supplies.restock');
+
     });
 
     // --- 👔 PANEL DEL JEFE (BOSS) ---

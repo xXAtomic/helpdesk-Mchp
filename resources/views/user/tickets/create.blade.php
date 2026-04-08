@@ -124,7 +124,7 @@
                     <div class="flex items-center gap-5 mb-10">
                         <div id="modalIcon" class="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center text-4xl shadow-inner border border-slate-100 shrink-0">📖</div>
                         <div>
-                            <span id="modalCategory" class="px-3 py-1 bg-indigo-50 text-[0.6rem] font-black text-indigo-600 uppercase tracking-[0.2em] italic mb-2 inline-block rounded-lg uppercase">SOLUCIÓN SUGERIDA</span>
+                            <span id="modalCategory" class="px-3 py-1 bg-indigo-50 text-[0.6rem] font-black text-indigo-600 uppercase tracking-[0.2em] italic mb-2 inline-block rounded-lg">SOLUCIÓN SUGERIDA</span>
                             <h2 id="modalTitle" class="text-3xl font-black text-slate-900 tracking-tighter italic uppercase leading-none">Título</h2>
                         </div>
                     </div>
