@@ -68,21 +68,32 @@
         .content-area::-webkit-scrollbar { width: 6px; }
         .content-area::-webkit-scrollbar-track { background: transparent; }
         .content-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        /* TOAST NOTIFICATIONS (CYBER-BLUE) */
+        /* TOAST NOTIFICATIONS (CYBER-BLUE & VARIANTS) */
         .toast-container { 
-            position: fixed; top: 2rem; left: 50%; transform: translateX(-50%); 
-            z-index: 9999; display: flex; flex-direction: column; gap: 0.75rem; pointer-events: none;
+            position: fixed; top: 1.5rem; right: 1.5rem; 
+            z-index: 10000; display: flex; flex-direction: column; gap: 0.75rem; pointer-events: none;
         }
         .toast {
-            background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(20px); border: 2px solid rgba(79, 70, 229, 0.4);
-            color: white; padding: 1rem 2rem; border-radius: 1.5rem; font-weight: 800; font-style: italic;
-            text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.75rem; pointer-events: auto;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 20px rgba(79, 70, 229, 0.2);
-            animation: toast-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, toast-out 0.5s 4.5s forwards;
-            display: flex; align-items: center; gap: 0.75rem; min-width: 300px;
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); 
+            color: white; padding: 1.25rem 1.75rem; border-radius: 1.25rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.7rem; pointer-events: auto;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            animation: toast-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards, toast-out 0.4s 4.5s forwards;
+            display: flex; align-items: center; gap: 1rem; min-width: 320px;
+            border-left: 5px solid #6366f1;
         }
-        @keyframes toast-in { from { transform: translateY(-100px) scale(0.8); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
-        @keyframes toast-out { from { transform: translateY(0) scale(1); opacity: 1; } to { transform: translateY(-50px) scale(0.9); opacity: 0; } }
+        .toast.success { border-left-color: #10b981; box-shadow: 0 0 20px rgba(16, 185, 129, 0.1); }
+        .toast.error { border-left-color: #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.1); }
+        .toast.warning { border-left-color: #f59e0b; box-shadow: 0 0 20px rgba(245, 158, 11, 0.1); }
+        
+        .toast-icon {
+            width: 32px; h-32px; border-radius: 10px; display: flex; items-center; justify-center; font-size: 1rem;
+            background: rgba(255,255,255,0.05);
+        }
+
+        @keyframes toast-in { from { transform: translateX(100%) scale(0.9); opacity: 0; } to { transform: translateX(0) scale(1); opacity: 1; } }
+        @keyframes toast-out { from { transform: translateX(0) scale(1); opacity: 1; } to { transform: translateX(120%) scale(0.9); opacity: 0; } }
+
     </style>
 </head>
 <body class="transition-colors duration-300">
@@ -201,11 +212,52 @@
                         </div>
                     @endif
 
-                    <div class="flex items-center gap-4">
-                        <span class="text-xs font-bold px-2 py-1 bg-gray-100 text-gray-600 rounded-lg">
-                            {{ auth()->user()->role->name ?? 'Usuario' }}
-                        </span>
-                        <span class="text-sm font-medium text-gray-500">{{ auth()->user()->name }}</span>
+                    <div class="flex items-center gap-6">
+                        <!-- Notificaciones de Salud IT (Solo Admin) -->
+                        @if(auth()->user()->role_id == 1)
+                            <div class="relative group">
+                                <button class="w-10 h-10 bg-slate-50 hover:bg-indigo-50 rounded-xl flex items-center justify-center text-slate-400 group-hover:text-indigo-600 transition-all border border-slate-100 relative">
+                                    <i class="fas fa-bell"></i>
+                                    @php
+                                        $criticalCount = \App\Models\Asset::whereNotNull('next_maintenance_at')
+                                            ->where('next_maintenance_at', '<', now())
+                                            ->count();
+                                    @endphp
+                                    @if($criticalCount > 0)
+                                        <span class="absolute -top-1 -right-1 w-5 h-5 bg-rose-500 text-white text-[0.6rem] font-black rounded-lg flex items-center justify-center border-2 border-white animate-bounce">
+                                            {{ $criticalCount }}
+                                        </span>
+                                    @endif
+                                </button>
+                                
+                                <!-- Dropdown de Alertas Mini -->
+                                <div class="absolute right-0 mt-4 w-80 bg-white rounded-3xl shadow-2xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-[100] p-6">
+                                    <h4 class="text-[0.6rem] font-black text-slate-400 uppercase tracking-widest mb-4 italic">Alertas de Gravity</h4>
+                                    @if($criticalCount > 0)
+                                        <div class="flex items-start gap-4 p-4 bg-rose-50 rounded-2xl border border-rose-100 mb-2">
+                                            <div class="text-xl">⚠️</div>
+                                            <div>
+                                                <p class="text-xs font-black text-rose-900 uppercase italic">Mantenimientos Vencidos</p>
+                                                <p class="text-[0.6rem] font-bold text-rose-600 uppercase mt-1">Hay {{ $criticalCount }} equipos que requieren atención inmediata.</p>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <p class="text-xs font-bold text-slate-400 text-center py-4 italic">Todos los sistemas están óptimos ✨</p>
+                                    @endif
+                                    <a href="{{ route('admin.inventory.index') }}" class="block text-center mt-4 text-[0.6rem] font-black text-indigo-600 uppercase tracking-widest hover:underline italic">Ver Inventario Completo →</a>
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="flex items-center gap-3 pl-6 border-l border-slate-100">
+                            <div class="text-right hidden sm:block">
+                                <p class="text-[0.65rem] font-black text-slate-900 leading-none uppercase italic">{{ auth()->user()->name }}</p>
+                                <p class="text-[0.55rem] font-bold text-slate-400 uppercase tracking-widest mt-1">{{ auth()->user()->role->name ?? 'Usuario' }}</p>
+                            </div>
+                            <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-black text-sm shadow-lg shadow-indigo-200">
+                                {{ substr(auth()->user()->name, 0, 1) }}
+                            </div>
+                        </div>
                     </div>
                 </header>
             @endif
@@ -441,15 +493,45 @@
             container.scrollTop = container.scrollHeight;
         }
 
-        // --- SISTEMA DE TOASTS ---
+        // --- SISTEMA DE TOASTS DINÁMICOS ---
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = 'toast';
-            const icon = type === 'success' ? '✅' : '⚠️';
-            toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-triangle',
+                warning: 'fa-bell',
+                info: 'fa-info-circle'
+            };
+
+            const colors = {
+                success: 'text-emerald-400',
+                error: 'text-rose-400',
+                warning: 'text-amber-400',
+                info: 'text-indigo-400'
+            };
+
+            toast.innerHTML = `
+                <div class="toast-icon ${colors[type]} bg-white/5">
+                    <i class="fas ${icons[type]}"></i>
+                </div>
+                <div class="flex-1">
+                    <p class="leading-tight">${message}</p>
+                </div>
+            `;
+            
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 5000);
+            
+            // Sonido sutil opcional (puedes comentarlo si no lo deseas)
+            // const audio = new Audio('/sounds/notify.mp3');
+            // audio.play().catch(e => {});
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-x-full');
+                setTimeout(() => toast.remove(), 500);
+            }, 5000);
         }
 
         @if(session('success'))
@@ -458,7 +540,26 @@
         @if(session('error'))
             showToast("{{ session('error') }}", 'error');
         @endif
+
+        // Notificación Inteligente de Inicio (Solo Admin)
+        @if(auth()->user()->role_id == 1 && !session('welcome_shown'))
+            @php 
+                session(['welcome_shown' => true]); 
+                $pendingMaintenances = \App\Models\Asset::whereNotNull('next_maintenance_at')->where('next_maintenance_at', '<', now())->count();
+            @endphp
+            
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    @if($pendingMaintenances > 0)
+                        showToast("Atención: Tienes {{ $pendingMaintenances }} mantenimientos vencidos esperando.", 'warning');
+                    @else
+                        showToast("Bienvenido, {{ auth()->user()->name }}. El sistema está operando al 100%.", 'info');
+                    @endif
+                }, 1500);
+            });
+        @endif
     </script>
+
 
 </body>
 </html>
