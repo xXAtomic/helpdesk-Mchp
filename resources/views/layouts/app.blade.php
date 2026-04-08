@@ -237,7 +237,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" id="bot-close" onclick="gravityBotToggle(event)" class="group cursor-pointer w-10 h-10 bg-white/5 hover:bg-rose-500/20 rounded-xl flex items-center justify-center text-slate-500 border border-white/10 transition-all duration-300">
+                <button type="button" onclick="handleGravityBot(event)" class="group cursor-pointer w-10 h-10 bg-white/5 hover:bg-rose-500/20 rounded-xl flex items-center justify-center text-slate-500 border border-white/10 transition-all duration-300 relative z-[1001] pointer-events-auto">
                     <i class="fas fa-times group-hover:rotate-90 transition-transform"></i>
                 </button>
             </div>
@@ -265,7 +265,7 @@
         </div>
 
         <!-- Botón Lanzador -->
-        <button onclick="gravityBotToggle(event)" id="bot-launcher" class="w-20 h-20 bg-slate-950 rounded-[2rem] flex items-center justify-center text-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all hover:scale-110 active:scale-90 border-4 border-indigo-600/20 group relative overflow-hidden">
+        <button onclick="handleGravityBot(event)" id="bot-launcher" class="w-20 h-20 bg-slate-950 rounded-[2rem] flex items-center justify-center text-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all hover:scale-110 active:scale-90 border-4 border-indigo-600/20 group relative overflow-hidden">
             <span class="relative z-10">🧠</span>
             <div class="absolute top-2 right-2 w-4 h-4 bg-emerald-500 rounded-full border-4 border-slate-950 animate-bounce"></div>
         </button>
@@ -362,15 +362,15 @@
             }, 300);
         }
 
-        function gravityBotToggle(e) {
-            if(e) e.preventDefault();
+        window.handleGravityBot = function(e) {
+            if(e) { e.preventDefault(); e.stopPropagation(); }
             const win = document.getElementById('bot-window');
             if(!win) return;
 
-            const isHidden = win.classList.contains('hidden') || win.style.display === 'none';
+            const isOpen = win.style.display === 'flex';
 
-            if (isHidden) {
-                win.style.display = 'flex';
+            if (!isOpen) {
+                win.style.setProperty('display', 'flex', 'important');
                 win.classList.remove('hidden');
                 setTimeout(() => {
                     win.classList.remove('opacity-0', 'scale-95');
@@ -380,8 +380,8 @@
                 win.classList.remove('opacity-100', 'scale-100');
                 win.classList.add('opacity-0', 'scale-95');
                 setTimeout(() => {
+                    win.style.setProperty('display', 'none', 'important');
                     win.classList.add('hidden');
-                    win.style.display = 'none';
                 }, 300);
             }
         }
