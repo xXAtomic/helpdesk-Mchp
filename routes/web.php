@@ -76,6 +76,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}', [\App\Http\Controllers\Admin\ComplianceController::class, 'show'])->name('admin.compliance.show');
             Route::get('/{id}/edit', [\App\Http\Controllers\Admin\ComplianceController::class, 'edit'])->name('admin.compliance.edit');
             Route::put('/{id}', [\App\Http\Controllers\Admin\ComplianceController::class, 'update'])->name('admin.compliance.update');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\ComplianceController::class, 'destroy'])->name('admin.compliance.destroy');
+            Route::delete('/signature/{id}', [\App\Http\Controllers\Admin\ComplianceController::class, 'destroySignature'])->name('admin.compliance.signature.destroy');
         });
 
         // GESTIÓN DE INSUMOS 📦

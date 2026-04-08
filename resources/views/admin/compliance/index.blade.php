@@ -32,9 +32,21 @@
                             <p class="text-[0.55rem] font-black text-slate-400 uppercase tracking-widest italic mb-1">Firmas Recabadas</p>
                             <p class="text-lg font-black text-indigo-600 italic leading-none">{{ $doc->signatures_count }}</p>
                         </div>
-                        <a href="{{ route('admin.compliance.show', $doc->id) }}" class="p-3 bg-slate-950 text-white rounded-xl hover:bg-indigo-600 transition-all">
-                            <i class="fas fa-eye"></i>
-                        </a>
+                        <div class="flex items-center gap-2">
+                            <a href="{{ route('admin.compliance.edit', $doc->id) }}" class="p-3 bg-slate-100 text-slate-400 rounded-xl hover:bg-slate-200 transition-all">
+                                <i class="fas fa-edit text-xs"></i>
+                            </a>
+                            <a href="{{ route('admin.compliance.show', $doc->id) }}" class="p-3 bg-slate-950 text-white rounded-xl hover:bg-indigo-600 transition-all">
+                                <i class="fas fa-eye text-xs"></i>
+                            </a>
+                            <form action="{{ route('admin.compliance.destroy', $doc->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta plantilla? Se borrarán todos los registros asociados.');" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="p-3 bg-rose-50 text-rose-400 rounded-xl hover:bg-rose-600 hover:text-white transition-all">
+                                    <i class="fas fa-trash text-xs"></i>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

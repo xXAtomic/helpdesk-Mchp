@@ -66,4 +66,31 @@ class ComplianceController extends Controller
 
         return redirect()->route('admin.compliance.index')->with('success', 'Documento actualizado.');
     }
+
+    /**
+     * Elimina una plantilla de documento legal.
+     */
+    public function destroy($id)
+    {
+        $document = LegalDocument::findOrFail($id);
+        
+        // Opcional: Podríamos verificar si tiene firmas antes de borrar
+        // Forzamos el borrado de firmas asociadas si se desea, o simplemente borramos
+        $document->signatures()->delete();
+        $document->delete();
+
+        return redirect()->route('admin.compliance.index')->with('success', 'Documento eliminado correctamente.');
+    }
+
+    /**
+     * Elimina una firma específica (anula un acta generada).
+     */
+    public function destroySignature($id)
+    {
+        $signature = DocumentSignature::findOrFail($id);
+        $documentId = $signature->legal_document_id;
+        $signature->delete();
+
+        return redirect()->route('admin.compliance.show', $documentId)->with('success', 'Firma eliminada. El usuario deberá firmar nuevamente si el documento sigue activo.');
+    }
 }

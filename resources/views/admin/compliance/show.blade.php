@@ -68,9 +68,18 @@
                                     </div>
                                 </td>
                                 <td class="px-8 py-6">
-                                    <span class="inline-flex items-center px-4 py-1.5 bg-emerald-50 text-emerald-600 text-[0.55rem] font-black uppercase tracking-widest rounded-full italic border border-emerald-100">
-                                        Firma Válida
-                                    </span>
+                                    <div class="flex items-center gap-3">
+                                        <span class="inline-flex items-center px-4 py-1.5 bg-emerald-50 text-emerald-600 text-[0.55rem] font-black uppercase tracking-widest rounded-full italic border border-emerald-100">
+                                            Firma Válida
+                                        </span>
+                                        <form action="{{ route('admin.compliance.signature.destroy', $signature->id) }}" method="POST" onsubmit="return confirm('¿Anular esta firma? El usuario tendrá que firmar el documento de nuevo.');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-rose-400 hover:text-rose-600 transition-colors p-2">
+                                                <i class="fas fa-trash-alt text-[0.65rem]"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
