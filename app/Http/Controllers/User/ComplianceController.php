@@ -18,17 +18,19 @@ class ComplianceController extends Controller
         $user = auth()->user();
         
         // Documentos que el usuario ya firmó
-        $signedIds = DocumentSignature::where('user_id', $user->id)
+        $signed = DocumentSignature::with('document')
+            ->where('user_id', $user->id)
             ->where('is_accepted', true)
-            ->pluck('legal_document_id')
-            ->toArray();
+            ->get();
+
+        $signedIds = $signed->pluck('legal_document_id')->toArray();
 
         // Documentos activos que no ha firmado
         $pending = LegalDocument::where('is_active', true)
             ->whereNotIn('id', $signedIds)
             ->get();
 
-        return view('user.compliance.index', compact('pending'));
+        return view('user.compliance.index', compact('pending', 'signed'));
     }
 
     /**
@@ -37,7 +39,12 @@ class ComplianceController extends Controller
     public function show($id)
     {
         $document = LegalDocument::findOrFail($id);
-        return view('user.compliance.show', compact('document'));
+        $signature = DocumentSignature::where('user_id', auth()->id())
+            ->where('legal_document_id', $document->id)
+            ->where('is_accepted', true)
+            ->first();
+
+        return view('user.compliance.show', compact('document', 'signature'));
     }
 
     /**
