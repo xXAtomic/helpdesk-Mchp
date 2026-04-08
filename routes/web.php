@@ -90,6 +90,7 @@ Route::middleware(['auth'])->group(function () {
     
     // BASE DE CONOCIMIENTO PARA USUARIOS 📚
     Route::get('/knowledge-base', [\App\Http\Controllers\User\KnowledgeController::class, 'index'])->name('knowledge.index');
+    Route::get('/knowledge-base/suggest', [\App\Http\Controllers\User\KnowledgeController::class, 'suggest'])->name('knowledge.suggest');
     Route::get('/knowledge/{id}', [\App\Http\Controllers\User\KnowledgeController::class, 'show'])->name('knowledge.show');
 
     // TICKETS PARA USUARIOS NORMALES 🎟️✨
@@ -104,6 +105,7 @@ Route::middleware(['auth'])->group(function () {
 
     // MOTOR DE INTELIGENCIA GRAVITYBOT 🧠🤖
     Route::get('/gravity-brain/search', [App\Http\Controllers\User\GravityBrainController::class, 'search'])->name('gravity.brain.search');
+    Route::post('/gravity-brain/deflect', [App\Http\Controllers\User\GravityBrainController::class, 'deflect'])->name('gravity.brain.deflect');
     Route::post('/gravity-bot/chat', [App\Http\Controllers\User\GravityBotController::class, 'chat'])->name('gravity.bot.chat');
 
     // PERFIL DE USUARIO 👤✨

@@ -151,7 +151,7 @@
                     <p class="text-[0.65rem] font-black text-indigo-200 uppercase tracking-widest italic mb-4">¿Esta solución resolvió tu duda?</p>
                     <div class="flex gap-4">
                          <button onclick="closeKnowledgeModal()" class="px-8 py-3 bg-white/10 hover:bg-white text-indigo-100 hover:text-indigo-950 rounded-xl font-black text-[0.6rem] uppercase tracking-widest transition-all">No, enviaré el ticket</button>
-                         <button onclick="alert('¡Genial! Nos alegra haberte ayudado.'); window.location.href='{{ route('dashboard') }}'" class="px-8 py-3 bg-indigo-500 hover:bg-white text-white hover:text-indigo-950 rounded-xl font-black text-[0.6rem] uppercase tracking-widest transition-all shadow-lg">Sí, cancelar ticket ✨</button>
+                         <button id="solve-button" class="px-8 py-3 bg-indigo-500 hover:bg-white text-white hover:text-indigo-950 rounded-xl font-black text-[0.6rem] uppercase tracking-widest transition-all shadow-lg">Sí, cancelar ticket ✨</button>
                     </div>
                 </div>
             </div>
@@ -167,13 +167,15 @@
         fileText.innerHTML = count > 0 ? `✅ ${count} ARCHIVOS CARGADOS` : 'ADJUNTAR ARCHIVOS DE RESPALDO';
     });
 
-    // GRAVITYBRAIN SEARCH
     let searchTimer;
     const titleInput = document.getElementById('ticket-title');
     const brainPanel = document.getElementById('gravity-brain-panel');
     const container = document.getElementById('suggestions-container');
+    const solveBtn = document.getElementById('solve-button');
+    let currentArticleId = null;
 
     function escapeJS(str) {
+        if (!str) return '';
         return str
             .replace(/\\/g, '\\\\')
             .replace(/'/g, "\\'")
@@ -181,6 +183,29 @@
             .replace(/\n/g, '\\n')
             .replace(/\r/g, '\\r');
     }
+
+    function deflectTicket(articleId, method) {
+        const title = titleInput.value;
+        fetch('{{ route('gravity.brain.deflect') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({
+                title: title,
+                article_id: articleId,
+                method: method
+            })
+        }).then(() => {
+            alert('¡Genial! Nos alegra haberte ayudado. Esta acción ahorra tiempo valioso al equipo técnico.');
+            window.location.href = '{{ route('dashboard') }}';
+        });
+    }
+
+    solveBtn.onclick = function() {
+        deflectTicket(currentArticleId, 'ARTICLE');
+    };
 
     titleInput.addEventListener('input', function() {
         clearTimeout(searchTimer);
@@ -198,17 +223,17 @@
                     if (data.length > 0) {
                         brainPanel.classList.remove('hidden');
                         container.innerHTML = data.map(article => `
-                            <button type="button" onclick="openKnowledgeModal('${escapeJS(article.title)}', '${escapeJS(article.content)}', '${escapeJS(article.category)}', '${escapeJS(article.icon || '')}', '${article.file_path ? '/storage/'+article.file_path : ''}', '${escapeJS(article.file_name || '')}')"
+                            <button type="button" onclick="openKnowledgeModal('${escapeJS(article.title)}', '${escapeJS(article.content)}', '${escapeJS(article.category)}', '${escapeJS(article.icon || '')}', '${article.file_path ? '/storage/'+article.file_path : ''}', '${escapeJS(article.file_name || '')}', ${article.id})"
                                     class="w-full p-6 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/5 transition-all group text-left">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-4">
-                                        <span class="text-2xl">${article.icon || '📖'}</span>
+                                        <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-2xl group-hover:bg-indigo-600 transition-all">${article.icon || '📖'}</div>
                                         <div>
                                             <h4 class="text-white font-black text-sm uppercase italic tracking-tight">${article.title}</h4>
-                                            <p class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest mt-1">Manual de Autogestión</p>
+                                            <p class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest mt-1">Manual de Autogestión • ${article.category || 'TI'}</p>
                                         </div>
                                     </div>
-                                    <span class="text-[0.55rem] font-black text-indigo-400 bg-indigo-400/10 px-4 py-2 rounded-xl group-hover:bg-indigo-500 group-hover:text-white transition-all uppercase tracking-widest border border-indigo-400/20">Ver Solución</span>
+                                    <span class="text-[0.55rem] font-black text-indigo-400 bg-indigo-400/10 px-4 py-2 rounded-xl group-hover:bg-indigo-500 group-hover:text-white transition-all uppercase tracking-widest border border-indigo-400/20 shadow-lg">Ver Solución</span>
                                 </div>
                             </button>
                         `).join('');
@@ -220,7 +245,8 @@
     });
 
     // FUNCIONES DEL MODAL
-    function openKnowledgeModal(title, content, category, icon, fileUrl, fileName) {
+    function openKnowledgeModal(title, content, category, icon, fileUrl, fileName, id) {
+        currentArticleId = id;
         document.getElementById('modalTitle').textContent = title;
         document.getElementById('modalDescription').textContent = content;
         document.getElementById('modalCategory').textContent = category || 'RECOMENDACIÓN';
