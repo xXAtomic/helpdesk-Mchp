@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Asset;
 use App\Models\Ticket;
+use App\Models\TicketRating;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -14,18 +16,18 @@ class ReportController extends Controller
     {
         // Métricas de Inventario
         $totalAssets = Asset::count();
-        $assetsByType = Asset::select('type', \DB::raw('count(*) as count'))->groupBy('type')->get();
-        $assetsByStatus = Asset::select('status', \DB::raw('count(*) as count'))->groupBy('status')->get();
+        $assetsByType = Asset::select('type', DB::raw('count(*) as count'))->groupBy('type')->get();
+        $assetsByStatus = Asset::select('status', DB::raw('count(*) as count'))->groupBy('status')->get();
 
         // Métricas de Tickets
         $totalTickets = Ticket::count();
         $ticketsByStatus = Ticket::join('ticket_statuses', 'tickets.status_id', '=', 'ticket_statuses.id')
-            ->select('ticket_statuses.name as status', \DB::raw('count(*) as count'))
+            ->select('ticket_statuses.name as status', DB::raw('count(*) as count'))
             ->groupBy('ticket_statuses.name')
             ->get();
 
         $resolvedLast30Days = Ticket::whereHas('status', function($q) {
-            $q->where('name', 'Resolved')->orWhere('name', 'Resuelto')->orWhere('name', 'Cerrado')->orWhere('name', 'Closed');
+            $q->where('is_closed', true);
         })->where('updated_at', '>=', now()->subDays(30))->count();
 
         // Métricas de Mantenimiento ✨
@@ -35,10 +37,19 @@ class ReportController extends Controller
             ->whereMonth('created_at', now()->month)
             ->count();
 
+        // Métricas de Satisfacción (CSAT) ✨
+        $avgRating = TicketRating::avg('rating') ?? 0;
+        $ratingsCount = TicketRating::count();
+        $ratingsDistribution = TicketRating::select('rating', DB::raw('count(*) as count'))
+            ->groupBy('rating')
+            ->orderBy('rating', 'desc')
+            ->get();
+
         return view('admin.reports.index', compact(
             'totalAssets', 'assetsByType', 'assetsByStatus',
             'totalTickets', 'ticketsByStatus', 'resolvedLast30Days',
-            'maintenanceOverdue', 'maintenanceComingSoon', 'totalMaintenanceThisMonth'
+            'maintenanceOverdue', 'maintenanceComingSoon', 'totalMaintenanceThisMonth',
+            'avgRating', 'ratingsCount', 'ratingsDistribution'
         ));
     }
 

@@ -75,12 +75,40 @@
         </div>
     </div>
 
+    <!-- ANÁLISIS DE CALIDAD Y SATISFACCIÓN (CSAT) -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
+        <div class="md:col-span-4 bg-amber-400 p-10 rounded-[4rem] shadow-2xl shadow-amber-100 relative overflow-hidden group border-4 border-white">
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-1000"></div>
+            <div class="relative z-10">
+                <div class="p-4 bg-white/20 rounded-2xl w-fit mb-6">
+                    <i class="fas fa-star text-white text-3xl"></i>
+                </div>
+                <p class="text-[0.65rem] font-black text-amber-950/60 uppercase tracking-[0.3em] mb-2 italic">Índice Institucional</p>
+                <h3 class="text-7xl font-black text-amber-950 tracking-tighter italic mb-4">{{ $avgRating }}</h3>
+                <div class="flex items-center gap-4 border-t border-amber-950/10 pt-4">
+                    <p class="text-[0.65rem] font-black text-amber-950/50 uppercase italic tracking-widest leading-none">Basado en {{ $ratingsCount }} encuestas</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="md:col-span-8 bg-white p-10 rounded-[4rem] border border-slate-100 shadow-sm overflow-hidden">
+            <div class="flex items-center justify-between mb-8">
+                <h4 class="text-xl font-black text-slate-900 uppercase italic tracking-tighter flex items-center gap-3">
+                     <span class="w-1.5 h-6 bg-amber-400 rounded-full"></span>
+                     Distribución de Satisfacción
+                </h4>
+                <span class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest italic">Análisis de Estrellas (1-5)</span>
+            </div>
+            <div id="csatDistributionChart" class="min-h-[250px]"></div>
+        </div>
+    </div>
+
     <!-- ANÁLISIS GRÁFICO AVANZADO -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
         <!-- DISTRIBUCIÓN DE HARDWARE -->
         <div class="bg-white p-10 rounded-[4rem] border border-slate-100 shadow-sm">
             <h4 class="text-xl font-black text-slate-900 uppercase italic tracking-tighter mb-10 flex items-center gap-3">
-                 <span class="w-1h h-6 bg-indigo-600 rounded-full"></span>
+                 <span class="w-1.5 h-6 bg-indigo-600 rounded-full"></span>
                  Distribución de Activos
             </h4>
             <div id="assetsByTypeChart"></div>
@@ -89,7 +117,7 @@
         <!-- ESTADO OPERATIVO -->
         <div class="bg-white p-10 rounded-[4rem] border border-slate-100 shadow-sm">
             <h4 class="text-xl font-black text-slate-900 uppercase italic tracking-tighter mb-10 flex items-center gap-3">
-                 <span class="w-1h h-6 bg-emerald-500 rounded-full"></span>
+                 <span class="w-1.5 h-6 bg-emerald-500 rounded-full"></span>
                  Capacidad Operativa
             </h4>
             <div id="assetsByStatusChart"></div>
@@ -108,6 +136,24 @@
             colors: ['#0f172a', '#4f46e5', '#10b981', '#f59e0b', '#ef4444'],
             dataLabels: { enabled: false },
             legend: { position: 'bottom', fontFamily: 'Inter', fontWeight: 700 }
+        }).render();
+
+        // Grafica CSAT Distribution
+        const ratingsDistribution = @json($ratingsDistribution);
+        new ApexCharts(document.querySelector("#csatDistributionChart"), {
+            series: [{
+                name: 'Votos',
+                data: [1,2,3,4,5].map(star => {
+                    const found = ratingsDistribution.find(r => r.rating == star);
+                    return found ? found.count : 0;
+                })
+            }],
+            chart: { type: 'bar', height: 280, toolbar: { show: false } },
+            plotOptions: { bar: { borderRadius: 8, columnWidth: '40%', distributed: true } },
+            xaxis: { categories: ['1★', '2★', '3★', '4★', '5★'] },
+            colors: ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#10b981'],
+            legend: { show: false },
+            dataLabels: { enabled: true, style: { fontSize: '10px', fontWeight: 'bold' } }
         }).render();
 
         // Grafica por Estado
