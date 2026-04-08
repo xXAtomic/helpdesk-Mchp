@@ -41,8 +41,8 @@
         <style>
             #printable-label { box-shadow: none !important; }
         </style>
-        <!-- Logo y Cabecera -->
-        <div class="flex items-center justify-between mb-6 border-b border-slate-200 pb-4">
+        <!-- Logo y Cabecera (Oculto en Impresión a pedido del usuario) -->
+        <div class="flex items-center justify-between mb-6 border-b border-slate-200 pb-4 no-print">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-black text-lg italic">G</div>
                 <div>
