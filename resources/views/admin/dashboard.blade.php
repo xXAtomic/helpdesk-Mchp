@@ -5,16 +5,12 @@
     
     <!-- CABECERA PREMIUM (GRAVITY STYLE) -->
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 border-b border-gray-100 pb-10">
-        <div class="flex items-center gap-6">
-            <div class="w-16 h-16 bg-slate-900 rounded-[1.5rem] flex items-center justify-center text-white text-3xl shadow-2xl relative overflow-hidden group">
-                <div class="absolute inset-0 bg-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <span class="relative z-10 italic">G</span>
-            </div>
+        <div class="flex items-center">
             <div>
-                <h1 class="text-4xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">Gravity Insight</h1>
-                <p class="text-[0.6rem] font-black text-slate-400 uppercase tracking-[0.4em] mt-3 flex items-center gap-2">
+                <h1 class="text-3xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">Terminal Administrativa Centralizada • MChP</h1>
+                <p class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.6em] mt-4 flex items-center gap-2 italic">
                     <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.5)]"></span>
-                    Terminal Administrativa Centralizada • MChP
+                    Gravity Insight
                 </p>
             </div>
         </div>
