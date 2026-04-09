@@ -82,7 +82,33 @@ class LegalDocumentSeeder extends Seeder
                 'entity' => 'FESDG'
             ]
         );
+
+        // NUEVOS DOCUMENTOS DE USO EXTERNO / SALVOCONDUCTO
+        LegalDocument::updateOrCreate(
+            ['slug' => 'autorizacion-uso-externo-iasd'],
+            [
+                'title' => 'Autorización Uso Externo IASD',
+                'content' => 'Salvoconducto de traslado y permiso de uso fuera de la institución IASD',
+                'version' => '1.0',
+                'is_active' => true,
+                'requires_asset' => true,
+                'entity' => 'IASD'
+            ]
+        );
+
+        LegalDocument::updateOrCreate(
+            ['slug' => 'autorizacion-uso-externo-fesdg'],
+            [
+                'title' => 'Autorización Uso Externo FESDG',
+                'content' => 'Salvoconducto de traslado y permiso de uso fuera de la institución FESDG',
+                'version' => '1.0',
+                'is_active' => true,
+                'requires_asset' => true,
+                'entity' => 'FESDG'
+            ]
+        );
     }
+
 
 
 }

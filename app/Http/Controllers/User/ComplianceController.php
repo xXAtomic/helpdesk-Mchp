@@ -122,9 +122,12 @@ class ComplianceController extends Controller
             $view = 'documents.loan_responsibility';
         } elseif (str_contains($document->slug, 'compromiso') || str_contains($document->slug, 'conciencia')) {
             $view = 'documents.responsibility_commitment';
+        } elseif (str_contains($document->slug, 'uso-externo')) {
+            $view = 'documents.external_use_authorization';
         }
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView($view, $data);
+
         
         return $pdf->download("Acta_{$document->slug}_{$user->name}.pdf");
     }
