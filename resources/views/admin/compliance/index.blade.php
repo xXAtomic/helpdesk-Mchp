@@ -4,8 +4,8 @@
 <div class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 border-b border-gray-100 pb-10">
         <div>
-            <h1 class="text-4xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">Gravity Compliance</h1>
-            <p class="text-[0.6rem] font-black text-slate-400 uppercase tracking-[0.4em] mt-3 italic">Gestión de Responsabilidad y Documentación Legal</p>
+            <h1 class="text-3xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">Gestión de Responsabilidad y Documentación Legal</h1>
+            <p class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.6em] mt-4 italic">Gravity Compliance</p>
         </div>
         <a href="{{ route('admin.compliance.create') }}" class="mt-8 md:mt-0 bg-indigo-600 text-white px-10 py-4 rounded-2xl text-[0.7rem] font-black uppercase tracking-widest hover:bg-slate-950 transition-all shadow-xl shadow-indigo-100 italic">
             Nuevo Documento +
