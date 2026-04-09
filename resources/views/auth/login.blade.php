@@ -84,7 +84,7 @@
             </div>
             <h1 class="text-4xl font-black text-slate-900 tracking-tighter uppercase italic">Gravity</h1>
             <p class="text-[0.6rem] font-black text-slate-400 uppercase tracking-[0.4em] mt-2 italic flex items-center justify-center gap-2">
-                Acceso Centralizado <span class="w-1 h-1 bg-slate-300 rounded-full"></span> by Atomic Dev
+                Acceso Centralizado
             </p>
         </div>
 

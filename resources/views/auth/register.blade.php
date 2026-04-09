@@ -82,7 +82,7 @@
             </div>
             <h1 class="text-5xl font-black text-slate-900 tracking-tighter uppercase italic leading-none mb-4">Nueva Cuenta</h1>
             <p class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-[0.5em] italic flex items-center justify-center gap-2">
-                Registro de Funcionario <span class="w-1 h-1 bg-slate-300 rounded-full"></span> by Atomic Dev
+                Registro de Funcionario
             </p>
         </div>
 
