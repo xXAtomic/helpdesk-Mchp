@@ -57,6 +57,32 @@ class LegalDocumentSeeder extends Seeder
                 'entity' => 'FESDG'
             ]
         );
+
+        // NUEVOS DOCUMENTOS DE COMPROMISO Y CONCIENCIA
+        LegalDocument::updateOrCreate(
+            ['slug' => 'compromiso-conciencia-iasd'],
+            [
+                'title' => 'Compromiso y Conciencia IASD',
+                'content' => 'Término de responsabilidad y política de seguridad IASD',
+                'version' => '1.0',
+                'is_active' => true,
+                'requires_asset' => false,
+                'entity' => 'IASD'
+            ]
+        );
+
+        LegalDocument::updateOrCreate(
+            ['slug' => 'compromiso-conciencia-fesdg'],
+            [
+                'title' => 'Compromiso y Conciencia FESDG',
+                'content' => 'Término de responsabilidad y política de seguridad FESDG',
+                'version' => '1.0',
+                'is_active' => true,
+                'requires_asset' => false,
+                'entity' => 'FESDG'
+            ]
+        );
     }
+
 
 }
