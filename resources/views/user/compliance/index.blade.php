@@ -3,8 +3,8 @@
 @section('content')
 <div class="max-w-5xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
     <div class="mb-12">
-        <h1 class="text-3xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">Mis Compromisos</h1>
-        <p class="text-[0.6rem] font-black text-slate-400 uppercase tracking-[0.4em] mt-3 italic">Gestión de Documentación y Responsabilidades de Usuario</p>
+        <h1 class="text-3xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">Gestión de Responsabilidad y Documentos Legales</h1>
+        <p class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.6em] mt-4 italic">Mis Compromisos</p>
     </div>
 
     <!-- 🚩 DOCUMENTOS PENDIENTES -->

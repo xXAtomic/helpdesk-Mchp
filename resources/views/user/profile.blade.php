@@ -5,9 +5,8 @@
     <!-- Header de Perfil ✨ -->
     <div class="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-            <span class="px-3 py-1 bg-indigo-100 text-indigo-600 text-[0.6rem] font-black uppercase tracking-[0.2em] rounded-md italic mb-4 inline-block">Gravity Passport</span>
-            <h1 class="text-5xl font-black text-slate-900 tracking-tighter italic uppercase leading-none">Mi <span class="text-indigo-600">Perfil</span></h1>
-            <p class="text-slate-500 font-medium tracking-tight mt-3 text-sm italic border-l-4 border-indigo-500 pl-4">Gestione sus credenciales y datos de contacto oficiales.</p>
+            <h1 class="text-3xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">Gestión de Identidad y Credenciales de Usuario</h1>
+            <p class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.6em] mt-4 italic">Gravity Passport</p>
         </div>
         <div class="w-20 h-20 bg-slate-950 rounded-[2rem] flex items-center justify-center text-white text-3xl shadow-2xl relative overflow-hidden group border-4 border-indigo-500/20">
              <div class="absolute inset-0 bg-indigo-600 opacity-20 group-hover:opacity-40 transition-opacity"></div>

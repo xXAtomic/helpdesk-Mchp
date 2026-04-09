@@ -5,8 +5,8 @@
     
     <!-- CABECERA DE BÚSQUEDA MINIMALISTA -->
     <div class="mb-16 text-center">
-        <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight italic uppercase mb-4">Biblioteca TI</h1>
-        <p class="text-sm font-medium text-slate-400 uppercase tracking-widest max-w-md mx-auto">Manuales operativos y soluciones de autogestión para toda la organización.</p>
+        <h1 class="text-3xl font-black text-slate-950 tracking-tighter uppercase italic leading-none text-center">Biblioteca Digital y Guías de Autogestión TI</h1>
+        <p class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.6em] mt-4 italic text-center">Recursos Técnicos de la Organización</p>
     </div>
 
     <!-- BUSCADOR TIPO NOTION -->
