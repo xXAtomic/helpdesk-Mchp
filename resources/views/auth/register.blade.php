@@ -139,6 +139,7 @@
                         <option value="" disabled selected>Seleccione...</option>
                         <option value="IASD" {{ old('entity') == 'IASD' ? 'selected' : '' }}>IASD (Iglesia)</option>
                         <option value="FESDG" {{ old('entity') == 'FESDG' ? 'selected' : '' }}>FESDG (Fundación)</option>
+                        <option value="BOTH" {{ old('entity') == 'BOTH' ? 'selected' : '' }}>Ambas Entidades</option>
                     </select>
                 </div>
             </div>
