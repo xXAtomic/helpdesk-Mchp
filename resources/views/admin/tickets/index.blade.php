@@ -6,8 +6,8 @@
     <!-- CABECERA MINIMALISTA PRO -->
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 border-b border-gray-100 pb-8">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Panel Administrativo de Tickets</h1>
-            <p class="text-xs font-medium text-gray-500 uppercase tracking-widest mt-1">Gestión Global de Incidentes de la Misión</p>
+            <h1 class="text-3xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">Gestión Global de Incidentes y Mesa de Ayuda</h1>
+            <p class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.6em] mt-4 italic">Gravity Helpdesk</p>
         </div>
         <div class="mt-6 md:mt-0 flex gap-4">
             <a href="{{ route('admin.tickets.create') }}" 
