@@ -127,7 +127,7 @@
         </form>
 
         <p class="text-center text-[0.5rem] font-bold text-slate-300 mt-10 uppercase tracking-[0.5em] italic">
-            Tecnología MChP • 2026
+            Atomic Dev • 2026
         </p>
     </div>
 </body>
