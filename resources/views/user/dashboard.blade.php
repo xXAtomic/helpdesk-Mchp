@@ -6,12 +6,12 @@
     <!-- CABECERA MINIMALISTA -->
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 border-b border-gray-100 pb-8">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">Panel de Control</h1>
-            <p class="text-xs font-medium text-gray-500 uppercase tracking-widest mt-1">Misión Chilena del Pacífico • Gestión de Recursos TI</p>
+            <h1 class="text-3xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">Misión Chilena del Pacífico • Gestión de Recursos TI</h1>
+            <p class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.6em] mt-4 italic">Gravity Dashboard</p>
         </div>
         <div class="mt-6 md:mt-0 flex gap-4">
-            <span class="inline-flex items-center px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-[0.65rem] font-bold text-slate-500 uppercase tracking-widest italic">
-                SISTEMA GRAVITY v2.0
+            <span class="inline-flex items-center px-4 py-2 bg-slate-950 text-white rounded-lg text-[0.6rem] font-black uppercase tracking-[0.2em] italic shadow-lg shadow-indigo-100">
+                Gravity v2.0
             </span>
         </div>
     </div>
