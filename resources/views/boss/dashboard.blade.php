@@ -5,10 +5,11 @@
     <!-- Header Premium -->
     <div class="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 tracking-tight">
-                Hub Estratégico IT
-            </h1>
-            <p class="text-slate-400 mt-2 text-lg">Monitoreo de rendimiento y salud de infraestructura en tiempo real.</p>
+            <h1 class="text-3xl font-black text-white tracking-tighter uppercase italic leading-none">Centro de Inteligencia Estratégica y Control Operativo</h1>
+            <p class="text-[0.65rem] font-black text-indigo-400 uppercase tracking-[0.6em] mt-4 flex items-center gap-2 italic">
+                <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.5)]"></span>
+                Gravity Insight
+            </p>
         </div>
         <div class="flex items-center gap-4">
             <div class="hidden md:flex flex-col items-end mr-4">
