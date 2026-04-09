@@ -20,7 +20,7 @@
             </div>
             
             <div class="scale-90 md:scale-100 origin-top">
-                @include('documents.receipt_devolution', [
+                @include($view, [
                     'user' => auth()->user(),
                     'assets' => $assets,
                     'entity_name' => $entityData['name'],
@@ -29,6 +29,7 @@
                     'isPreview' => true
                 ])
             </div>
+
         </div>
     </div>
 

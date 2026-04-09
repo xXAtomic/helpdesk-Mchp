@@ -57,8 +57,19 @@ class ComplianceController extends Controller
         $entityData = $this->getEntityData($user->entity);
         $assets = $user->assets;
 
-        return view('user.compliance.show', compact('document', 'signature', 'entityData', 'assets'));
+        // Decidir plantilla según slug del documento para la vista previa
+        $view = 'documents.receipt_devolution'; 
+        if (str_contains($document->slug, 'prestamo')) {
+            $view = 'documents.loan_responsibility';
+        } elseif (str_contains($document->slug, 'compromiso') || str_contains($document->slug, 'conciencia')) {
+            $view = 'documents.responsibility_commitment';
+        } elseif (str_contains($document->slug, 'uso-externo')) {
+            $view = 'documents.external_use_authorization';
+        }
+
+        return view('user.compliance.show', compact('document', 'signature', 'entityData', 'assets', 'view'));
     }
+
 
     /**
      * Procesa la firma digital (aceptación).
