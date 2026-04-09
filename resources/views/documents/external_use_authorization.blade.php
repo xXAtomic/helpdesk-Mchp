@@ -20,7 +20,7 @@
 <body>
     <div class="header">
         <h1>{{ $entity_full_name }}</h1>
-        <p>RUT: {{ $entity_rut }} | Los Plátanos 2341, Viña del Mar</p>
+        <p>RUT: {{ $entity_rut }} | Los Plátanos 2342, Viña del Mar</p>
     </div>
 
     <div class="title-box">
@@ -31,10 +31,12 @@
     <div class="content">
         <p>
             {{ $entity_full_name }}, persona jurídica privada, inscrita en el RUT <strong>{{ $entity_rut }}</strong>, 
-            y domicilio social en Los Plátanos 2341, Viña del Mar, representada por su apoderado, el Sr. <strong>Iván Morales</strong>, 
+            y domicilio social en Los Plátanos 2342, Viña del Mar, representada por su apoderado, el Sr. 
+            <strong>{{ $user->entity === 'FESDG' ? 'Iván Morales (FESDG)' : 'Iván Morales (IASD)' }}</strong>, 
             declara, a quien corresponda y especialmente para efectos de transporte y uso fuera del domicilio social, que es el legítimo propietario 
             del equipo de procesamiento electrónico de datos identificado a continuación:
         </p>
+
 
         <table class="property-table">
             <thead>
