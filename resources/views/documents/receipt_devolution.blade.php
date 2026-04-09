@@ -159,22 +159,20 @@
                 <p>Usuario / Rut: {{ $user->rut ?? '___________________' }}</p>
             </div>
             
-            <div class="signature-box">
-                <div style="height: 60px;"></div>
-                <div class="signature-line"></div>
-                <p>Responsable TI</p>
-                <p>Misión Chilena del Pacífico</p>
             </div>
         </div>
 
-        <div style="margin-top: 100px; padding: 20px; border: 1px solid #eee; background-color: #fafafa; border-radius: 10px; clear: both;">
-            <h3 style="font-size: 8pt; text-transform: uppercase; margin-bottom: 5px; color: #666; font-weight: bold; border-bottom: 1px solid #ddd; padding-bottom: 3px;">
-                🔐 Certificación de Firma Digital - Gravity Compliance v1.0
-            </h3>
-            <table style="width: 100%; font-size: 7.5pt; color: #777;">
+        @if(isset($signature) && $signature)
+        <div style="margin-top: 50px; padding: 20px; border: 1px solid #e2e8f0; background-color: #f8fafc; border-radius: 8px; clear: both;">
+            <table style="width: 100%; font-size: 9pt; color: #64748b;">
                 <tr>
-                    <td style="width: 25%; font-weight: bold; color: #444;">ID DE TRANSACCIÓN:</td>
-                    <td style="font-family: monospace;">{{ $signature->signature_token ?? 'N/A' }}</td>
+                    <td colspan="2" style="font-weight: bold; color: #1e293b; padding-bottom: 10px; border-bottom: 1px solid #e2e8f0;">
+                        🛡️ CERTIFICACIÓN DE FIRMA DIGITAL - GRAVITY COMPLIANCE
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 10px; width: 30%; font-weight: bold; color: #444;">ID TRANSACCIÓN:</td>
+                    <td style="padding-top: 10px;">{{ $signature->signature_token }}</td>
                 </tr>
                 <tr>
                     <td style="font-weight: bold; color: #444;">DIRECCIÓN IP:</td>
@@ -182,14 +180,13 @@
                 </tr>
                 <tr>
                     <td style="font-weight: bold; color: #444;">FECHA DE FIRMA:</td>
-                    <td>{{ $signature->signed_at ? $signature->signed_at->format('d/m/Y H:i:s') : 'PENDIENTE' }}</td>
-                </tr>
-                <tr>
-                    <td style="font-weight: bold; color: #444;">AUTENTICACIÓN:</td>
-                    <td>Validado mediante portal de usuario - Cuenta: {{ $user->email }}</td>
+                    <td>{{ $signature->signed_at ? $signature->signed_at->format('d/m/Y H:i:s') : 'PROCESANDO' }}</td>
                 </tr>
             </table>
-            <p style="font-size: 6pt; color: #bbb; margin-top: 10px; text-align: center; font-style: italic;">
+        </div>
+        @endif
+
+        <p style="font-size: 6pt; color: #bbb; margin-top: 10px; text-align: center; font-style: italic;">
                 Este documento constituye un registro legal de aceptación de términos y condiciones. Los metadatos adjuntos certifican la identidad y el origen de la firma digital realizada en el sistema Gravity.
             </p>
         </div>
