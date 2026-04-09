@@ -32,7 +32,7 @@
         <p>
             {{ $entity_full_name }}, persona jurídica privada, inscrita en el RUT <strong>{{ $entity_rut }}</strong>, 
             y domicilio social en Los Plátanos 2342, Viña del Mar, representada por su apoderado, el Sr. 
-            <strong>{{ $user->entity === 'FESDG' ? 'Alfonso Llanos (FESDG)' : 'Iván Morales (IASD)' }}</strong>, 
+            <strong>{{ $entity_name === 'FESDG' ? 'Alfonso Llanos (FESDG)' : 'Iván Morales (IASD)' }}</strong>, 
             declara, a quien corresponda y especialmente para efectos de transporte y uso fuera del domicilio social, que es el legítimo propietario 
             del equipo de procesamiento electrónico de datos identificado a continuación:
         </p>

@@ -53,8 +53,8 @@ class ComplianceController extends Controller
             ->where('is_accepted', true)
             ->first();
 
-        // Datos de la entidad para la vista previa
-        $entityData = $this->getEntityData($user->entity);
+        // Datos de la entidad BASADOS EN EL DOCUMENTO (Para que el encabezado sea correcto)
+        $entityData = $this->getEntityData($document->entity ?? $user->entity);
         $assets = $user->assets;
 
         // Decidir plantilla según slug del documento para la vista previa
@@ -114,7 +114,8 @@ class ComplianceController extends Controller
             ->where('is_accepted', true)
             ->first();
 
-        $entityData = $this->getEntityData($user->entity);
+        // Datos de la entidad BASADOS EN EL DOCUMENTO
+        $entityData = $this->getEntityData($document->entity ?? $user->entity);
 
         $data = [
             'document' => $document,
