@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRAVITY | ACCESO SEGURO</title>
+    <title>GRAVITY by Atomic Dev | ACCESO SEGURO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -79,11 +79,13 @@
     <div class="login-card p-10 md:p-12 shadow-2xl">
         <!-- BRANDING -->
         <div class="text-center mb-10">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-50 border border-indigo-100 mb-6 group transition-transform hover:scale-110">
-                <span class="text-3xl">🛰️</span>
+            <div class="inline-flex items-center justify-center mb-8 transform transition-transform hover:scale-105">
+                <img src="{{ asset('logo.png') }}" alt="Logo" class="w-32 h-auto drop-shadow-xl">
             </div>
             <h1 class="text-4xl font-black text-slate-900 tracking-tighter uppercase italic">Gravity</h1>
-            <p class="text-[0.6rem] font-black text-slate-400 uppercase tracking-[0.4em] mt-2">Acceso Centralizado</p>
+            <p class="text-[0.6rem] font-black text-slate-400 uppercase tracking-[0.4em] mt-2 italic flex items-center justify-center gap-2">
+                Acceso Centralizado <span class="w-1 h-1 bg-slate-300 rounded-full"></span> by Atomic Dev
+            </p>
         </div>
 
         @if ($errors->any())

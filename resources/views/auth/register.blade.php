@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRAVITY | SOLICITAR ACCESO</title>
+    <title>GRAVITY by Atomic Dev | SOLICITAR ACCESO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -77,8 +77,13 @@
     <div class="register-card p-10 md:p-16 shadow-2xl">
         <!-- HEADER -->
         <div class="text-center mb-12">
+            <div class="inline-flex items-center justify-center mb-8 transform transition-transform hover:scale-105">
+                <img src="{{ asset('logo.png') }}" alt="Logo" class="w-32 h-auto drop-shadow-xl">
+            </div>
             <h1 class="text-5xl font-black text-slate-900 tracking-tighter uppercase italic leading-none mb-4">Nueva Cuenta</h1>
-            <p class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-[0.5em] italic">Registro de Funcionario • Gravity 2.0</p>
+            <p class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-[0.5em] italic flex items-center justify-center gap-2">
+                Registro de Funcionario <span class="w-1 h-1 bg-slate-300 rounded-full"></span> by Atomic Dev
+            </p>
         </div>
 
         @if ($errors->any())
