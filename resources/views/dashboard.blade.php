@@ -6,8 +6,8 @@
     <!-- CABECERA DE BIENVENIDA MINIMALISTA -->
     <div class="mb-16 border-b border-gray-100 pb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight leading-none italic uppercase">Panel de Control</h1>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-[0.3em] mt-3">Misión Chilena del Pacífico • Gestión de Recursos TI</p>
+            <h1 class="text-3xl font-black text-slate-900 tracking-tighter uppercase italic leading-none">Misión Chilena del Pacífico • Gestión de Recursos TI</h1>
+            <p class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.6em] mt-4 italic">Gravity Dashboard</p>
         </div>
         <div class="text-right">
             <span class="text-[0.6rem] font-black text-indigo-600 bg-indigo-50 px-4 py-2 rounded-lg uppercase tracking-widest italic">Sesión de: {{ auth()->user()->name }}</span>
