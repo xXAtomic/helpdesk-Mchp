@@ -10,10 +10,8 @@
                 <span class="px-2.5 py-0.5 bg-indigo-600 text-white text-[0.6rem] font-black uppercase tracking-widest rounded italic shadow-md shadow-indigo-100">Inventario</span>
                 <span class="text-[0.65rem] font-black text-slate-300 uppercase tracking-widest">{{ now()->format('M Y') }}</span>
             </div>
-            <h1 class="text-3xl font-black text-slate-900 tracking-tighter italic uppercase leading-none">
-                Control de <span class="text-indigo-600">Hardware</span>
-            </h1>
-            <p class="text-slate-500 font-medium tracking-tight mt-2 text-xs uppercase italic">Inventario global de activos tecnológicos MChP.</p>
+            <h1 class="text-3xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">Control de Hardware e Inventario TI</h1>
+            <p class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.6em] mt-4 italic">Gravity Inventory</p>
         </div>
         
         <div class="flex items-center gap-3">
