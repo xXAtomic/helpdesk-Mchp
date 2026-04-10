@@ -224,6 +224,25 @@
                             </div>
                             @endif
                         </div>
+
+                        @if($ticket->rating)
+                        <!-- PANEL DE SATISFACCIÓN DEL USUARIO -->
+                        <div class="pt-8 border-t border-white/5 group">
+                            <p class="text-[0.6rem] font-black text-indigo-400 uppercase tracking-[0.4em] mb-6 italic leading-none group-hover:text-white transition-all">Satisfacción del Usuario</p>
+                            <div class="bg-indigo-500/5 p-6 rounded-3xl border border-indigo-500/10 shadow-inner relative overflow-hidden">
+                                <div class="absolute -right-4 -top-4 w-12 h-12 bg-indigo-500/10 rounded-full blur-xl"></div>
+                                <div class="flex items-center gap-2 mb-4">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="fas fa-star text-[10px] {{ $i <= $ticket->rating->rating ? 'text-indigo-400 drop-shadow-[0_0_8px_rgba(129,140,248,0.5)]' : 'text-slate-800' }}"></i>
+                                    @endfor
+                                    <span class="ml-auto text-[0.65rem] font-black text-indigo-400 italic">{{ $ticket->rating->rating }}.0</span>
+                                </div>
+                                <div class="text-[0.6rem] text-slate-400 font-bold uppercase italic tracking-tighter leading-relaxed">
+                                    "{!! nl2br(e($ticket->rating->comment ?? 'Sin comentarios adicionales.')) !!}"
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
