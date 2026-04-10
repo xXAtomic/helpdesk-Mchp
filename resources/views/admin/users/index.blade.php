@@ -120,10 +120,10 @@
 
 <style>
     /* Estilización Paginación */
-    .pagination { @apply flex gap-2; }
-    .page-item { @apply rounded-xl overflow-hidden border border-white/5; }
-    .page-link { @apply bg-slate-900/50 text-slate-500 border-none px-5 py-3 font-black italic uppercase tracking-widest text-[0.65rem] transition-all; }
-    .page-item.active .page-link { @apply bg-blue-600 text-white shadow-lg shadow-blue-500/20; }
-    .page-link:hover { @apply bg-slate-800 text-white; }
+    .pagination { display: flex; gap: 0.5rem; }
+    .page-item { border-radius: 0.75rem; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); }
+    .page-link { background-color: rgba(15, 23, 42, 0.5); color: #64748b; border: none; padding: 0.75rem 1.25rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.65rem; transition: all 0.3s; }
+    .page-item.active .page-link { background-color: #2563eb; color: white; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2); }
+    .page-link:hover { background-color: #1e293b; color: white; }
 </style>
 @endsection
