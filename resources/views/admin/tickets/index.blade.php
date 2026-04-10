@@ -134,10 +134,10 @@
 
 <style>
     /* Estilización Paginación Table Dark */
-    .pagination { @apply flex gap-3 justify-center; }
-    .page-item { @apply rounded-xl overflow-hidden border border-white/5; }
-    .page-link { @apply bg-slate-950 text-slate-600 border-none px-6 py-3 font-black italic uppercase tracking-widest text-[0.6rem] transition-all; }
-    .page-item.active .page-link { @apply bg-indigo-600 text-white shadow-lg; }
-    .page-item:not(.active) .page-link:hover { @apply bg-slate-900 text-white; }
+    .pagination { display: flex; gap: 0.75rem; justify-content: center; }
+    .page-item { border-radius: 0.75rem; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05); }
+    .page-link { background-color: #020617; color: #475569; border: none; padding: 0.75rem 1.5rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.6rem; transition: all 0.3s; }
+    .page-item.active .page-link { background-color: #4f46e5; color: white; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+    .page-item:not(.active) .page-link:hover { background-color: #0f172a; color: white; }
 </style>
 @endsection
