@@ -4,25 +4,31 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use App\Services\GravityAIService;
 
 class GravityBotController extends Controller
 {
+    protected $aiService;
+
+    public function __construct(GravityAIService $aiService)
+    {
+        $this->aiService = $aiService;
+    }
+
+    /**
+     * Procesa la interacción del chat con el usuario usando el motor 2.0.
+     */
     public function chat(Request $request)
     {
-        $apiKey = config('services.gemini.key');
-        // Probamos v1beta
-        $response = Http::get("https://generativelanguage.googleapis.com/v1beta/models?key={$apiKey}");
-        
-        $models = [];
-        if (isset($response->json()['models'])) {
-            foreach($response->json()['models'] as $m) {
-                $models[] = $m['name'];
-            }
-        }
+        $prompt = $request->input('prompt');
 
-        return response()->json([
-            'response' => "📡 MODELOS ENCONTRADOS:\n" . implode("\n", $models) ?: "No se encontraron modelos o la API KEY es inválida. Status: " . $response->status()
-        ]);
+        // 1. Obtener contexto relevant (RAG)
+        $context = $this->aiService->getKnowledgeContext($prompt);
+        $contextText = $context->map(fn($item) => "MANUAL: {$item->title}\nPROCEDIMIENTO: {$item->content}")->implode("\n---\n");
+
+        // 2. Generar respuesta usando el servicio AI actualizado
+        $response = $this->aiService->askAI($prompt, $contextText);
+
+        return response()->json(['response' => $response]);
     }
 }

@@ -47,7 +47,8 @@ class GravityAIService
         }
 
         try {
-            $model = 'gemini-1.5-flash'; 
+            // Usamos el modelo 2.0 detectado en la sonda
+            $model = 'gemini-2.0-flash'; 
             $response = $this->callGemini($model, $prompt, $contextText);
 
             if ($response->successful()) {
