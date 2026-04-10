@@ -91,6 +91,7 @@ Route::middleware(['auth'])->group(function () {
     // --- 👔 PANEL DEL JEFE (BOSS) ---
     Route::prefix('boss')->group(function () {
         Route::get('/dashboard', [BossDashboardController::class, 'index'])->name('boss.dashboard');
+        Route::get('/reports', [BossDashboardController::class, 'reports'])->name('boss.reports');
     });
 
     // --- 🌍 RUTAS GLOBALES (COMO LAS PIDE TU NAVEGACIÓN) ---

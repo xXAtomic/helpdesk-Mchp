@@ -134,6 +134,7 @@
                     <a href="{{ route('admin.dashboard') }}" class="nav-icon {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" title="Dashboard">📊</a>
                 @elseif($roleId == 2)
                     <a href="{{ route('boss.dashboard') }}" class="nav-icon {{ request()->routeIs('boss.dashboard') ? 'active' : '' }}" title="Mi Dashboard">📈</a>
+                    <a href="{{ route('boss.reports') }}" class="nav-icon {{ request()->routeIs('boss.reports') ? 'active' : '' }}" title="Reportes Históricos">📋</a>
                 @else
                     <a href="{{ route('dashboard') }}" class="nav-icon {{ request()->routeIs('dashboard') ? 'active' : '' }}" title="Mi Dashboard">🏠</a>
                 @endif
