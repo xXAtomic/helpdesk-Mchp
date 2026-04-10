@@ -27,7 +27,8 @@
     <!-- GRID DE MÓDULOS OPERATIVOS -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         @foreach($articles as $article)
-            <div onclick="openKnowledgeModal('{{ addslashes($article->title) }}', '{{ addslashes($article->content) }}', '{{ $article->category }}', '{{ $article->icon }}', '{{ $article->file_path ? asset('storage/' . $article->file_path) : '' }}', '{{ addslashes($article->file_name) }}')"
+            @php $p = $article->file_path ? asset('storage/' . $article->file_path) : ''; @endphp
+            <div onclick="openKnowledgeModal('{{ addslashes($article->title) }}', '{{ addslashes($article->content) }}', '{{ $article->category }}', '{{ $article->icon }}', '{{ $p }}', '{{ addslashes($article->file_name) }}')"
                  class="group bg-slate-900/40 backdrop-blur-xl p-10 rounded-[2.5rem] border border-white/5 shadow-2xl hover:border-indigo-500/30 transition-all duration-500 flex flex-col justify-between overflow-hidden relative cursor-pointer">
                 
                 <div class="absolute -right-10 -top-10 w-32 h-32 bg-indigo-600/5 rounded-full blur-2xl group-hover:bg-indigo-600/10 transition-all"></div>
