@@ -92,7 +92,7 @@
                                         $statusBase = optional($ticket->status)->color ?? '#64748b';
                                     @endphp
                                     <span class="inline-flex items-center px-4 py-1.5 rounded-xl text-[0.55rem] font-black uppercase tracking-widest border border-white/5 shadow-lg group-hover:scale-110 transition-transform"
-                                          style="background-color: {{ $statusBase }}15; color: {{ $statusBase }}; border-color: {{ $statusBase }}30;">
+                                          style="background-color: <?= $statusBase ?>15; color: <?= $statusBase ?>; border-color: <?= $statusBase ?>30;">
                                         <span class="w-1.5 h-1.5 rounded-full mr-2 shadow-[0_0_8px_currentColor] animate-pulse" style="background-color: currentColor;"></span>
                                         {{ optional($ticket->status)->name ?? 'ABIERTO' }}
                                     </span>
