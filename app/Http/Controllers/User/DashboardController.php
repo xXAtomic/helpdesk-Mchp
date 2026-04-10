@@ -22,7 +22,7 @@ class DashboardController extends Controller
 
         $resolvedTodayCount = Ticket::where('user_id', $user->id)
             ->whereHas('status', function($q) {
-                $q->where('key', 'resolved'); // O el nombre de tu estado cerrado
+                $q->where('is_closed', true);
             })
             ->where('updated_at', '>=', now()->startOfDay())
             ->count();
