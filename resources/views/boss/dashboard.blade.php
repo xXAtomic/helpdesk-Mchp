@@ -228,16 +228,33 @@
                                 <i class="fas fa-inbox text-5xl text-slate-800 mb-4 block"></i>
                                 <p class="text-[0.65rem] text-slate-600 font-black uppercase tracking-[0.4em] italic">Sin Movimientos Registrados para Auditoría</p>
                             </td>
+                    @if($recentTransactions->isEmpty())
+                        <tr>
+                            <td colspan="7" class="py-24 text-center">
+                                <i class="fas fa-inbox text-5xl text-slate-800 mb-4 block"></i>
+                                <p class="text-[0.65rem] text-slate-600 font-black uppercase tracking-[0.4em] italic">Sin Movimientos Registrados para Auditoría</p>
+                            </td>
                         </tr>
                     @endif
                 </tbody>
             </table>
         </div>
     </div>
+
+    <!-- Contenedor de Datos para Gráficos (Oculto) -->
+    <div id="chart-data" class="hidden" 
+         data-status-values='@json(array_values($statusStats))'
+         data-status-labels='@json(array_keys($statusStats))'
+         data-trend-created='@json($ticketsCreated)'
+         data-trend-days='@json($days)'>
+    </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    const dataEl = document.getElementById('chart-data');
+    if (!dataEl) return;
+
     const colors = {
         primary: '#3b82f6',
         secondary: '#6366f1',
@@ -248,8 +265,8 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // 1. Donut Chart - Ticket Status
-    const statusData = @json(array_values($statusStats));
-    const statusLabels = @json(array_keys($statusStats));
+    const statusData = JSON.parse(dataEl.getAttribute('data-status-values') || '[]');
+    const statusLabels = JSON.parse(dataEl.getAttribute('data-status-labels') || '[]');
 
     var optionsStatus = {
         series: statusData,
@@ -265,10 +282,13 @@ document.addEventListener('DOMContentLoaded', function () {
     new ApexCharts(document.querySelector("#statusDonutChart"), optionsStatus).render();
 
     // 2. Main Trend Area Chart
+    const trendCreated = JSON.parse(dataEl.getAttribute('data-trend-created') || '[]');
+    const trendLabels = JSON.parse(dataEl.getAttribute('data-trend-days') || '[]');
+
     var optionsMain = {
         series: [{
             name: 'Tickets Creados',
-            data: @json($ticketsCreated)
+            data: trendCreated
         }],
         chart: { height: 350, type: 'area', toolbar: { show: false }, background: 'transparent', fontFamily: 'Inter, sans-serif' },
         dataLabels: { enabled: false },
@@ -276,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function () {
         colors: [colors.primary],
         fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.3, opacityTo: 0.05, stops: [0, 90, 100] } },
         xaxis: { 
-            categories: @json($days), 
+            categories: trendLabels, 
             axisBorder: { show: false },
             axisTicks: { show: false },
             labels: { style: { colors: colors.muted, fontSize: '11px' } } 

@@ -13,12 +13,19 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         
-        // 1. Estadísticas simples para el usuario
-        $totalTickets = Ticket::where('user_id', $user->id)->count();
-        $openTickets = Ticket::where('user_id', $user->id)
+        // 1. Estadísticas para el Dashboard ✨
+        $ticketsCount = Ticket::where('user_id', $user->id)
             ->whereHas('status', function($q) {
                 $q->where('is_closed', false);
             })->count();
+
+        $resolvedTodayCount = Ticket::where('user_id', $user->id)
+            ->whereHas('status', function($q) {
+                $q->where('key', 'resolved'); // O el nombre de tu estado cerrado
+            })
+            ->where('updated_at', '>=', now()->startOfDay())
+            ->count();
+        
         $closedTickets = Ticket::where('user_id', $user->id)
             ->whereHas('status', function($q) {
                 $q->where('is_closed', true);
@@ -31,8 +38,8 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        // 3. Equipos asignados al usuario ✨
-        $assignedAssets = $user->assets()->with('logs')->get();
+        // 3. Equipos asignados al usuario
+        $assignedAssets = $user->assets()->get();
 
         // 4. Compliance Status ⚖️
         $signedIds = \App\Models\DocumentSignature::where('user_id', $user->id)
@@ -52,8 +59,8 @@ class DashboardController extends Controller
             ->count();
 
         return view('user.dashboard', compact(
-            'totalTickets',
-            'openTickets',
+            'ticketsCount',
+            'resolvedTodayCount',
             'closedTickets',
             'latestTickets',
             'assignedAssets',

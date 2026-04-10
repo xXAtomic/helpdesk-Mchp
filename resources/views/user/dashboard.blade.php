@@ -24,7 +24,7 @@
         <div class="bg-slate-900/40 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/5 shadow-2xl group hover:border-indigo-500/30 transition-all">
             <h4 class="text-[0.6rem] font-black text-slate-500 uppercase tracking-widest mb-4 italic leading-none">Tickets en Curso</h4>
             <p class="text-3xl font-black text-white tracking-tighter italic uppercase leading-none">
-                {{ auth()->user()->tickets()->where('status_id', '!=', 3)->count() }} <span class="text-slate-700 text-sm">Solicitudes</span>
+                {{ $ticketsCount ?? 0 }} <span class="text-slate-700 text-sm">Solicitudes</span>
             </p>
             <div class="mt-6 w-full h-1 bg-slate-950 rounded-full overflow-hidden">
                 <div class="bg-indigo-500 h-full shadow-[0_0_10px_#6366f1]" style="width: 70%"></div>
@@ -34,7 +34,7 @@
         <div class="bg-slate-900/40 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/5 shadow-2xl group hover:border-emerald-500/30 transition-all">
             <h4 class="text-[0.6rem] font-black text-slate-500 uppercase tracking-widest mb-4 italic leading-none">Resueltos Hoy</h4>
             <p class="text-3xl font-black text-emerald-500 tracking-tighter italic uppercase leading-none">
-                {{ auth()->user()->tickets()->where('status_id', 3)->where('updated_at', '>=', now()->startOfDay())->count() }} <span class="text-slate-700 text-sm underline decoration-emerald-500/30">Cerrados</span>
+                {{ $resolvedTodayCount ?? 0 }} <span class="text-slate-700 text-sm underline decoration-emerald-500/30">Cerrados</span>
             </p>
             <div class="mt-6 w-full h-1 bg-slate-950 rounded-full overflow-hidden">
                 <div class="bg-emerald-500 h-full shadow-[0_0_10px_#10b981]" style="width: 100%"></div>

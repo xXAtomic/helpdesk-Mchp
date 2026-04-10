@@ -133,10 +133,10 @@
     .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 20px; }
     
-    .pagination { @apply flex gap-2; }
-    .page-item { @apply rounded-xl overflow-hidden border border-white/5; }
-    .page-link { @apply bg-slate-950/50 text-slate-500 border-none px-5 py-3 font-black italic uppercase tracking-widest text-[0.65rem] transition-all; }
-    .page-item.active .page-link { @apply bg-indigo-600 text-white shadow-lg shadow-indigo-500/20; }
-    .page-link:hover { @apply bg-slate-800 text-white; }
+    .pagination { display: flex; gap: 0.5rem; }
+    .page-item { border-radius: 0.75rem; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+    .page-link { background: rgba(2, 6, 23, 0.5); color: #64748b; border: none; padding: 0.75rem 1.25rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.65rem; transition: all 0.3s; }
+    .page-item.active .page-link { background: #4f46e5; color: white; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2); }
+    .page-link:hover { background: #1e293b; color: white; }
 </style>
 @endsection
