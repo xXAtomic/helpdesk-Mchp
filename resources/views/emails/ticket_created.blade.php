@@ -45,7 +45,7 @@
                     <p>Puedes realizar el seguimiento dinámico de tu ticket ingresando a tu panel de usuario en Gravity.</p>
                     
                     <div style="text-align: center;">
-                        <a href="{{ config('app.url') }}/user/tickets/{{ $ticket->id }}" class="button">Ver Mi Solicitud</a>
+                        <a href="{{ config('app.url') }}/my-tickets/{{ $ticket->id }}" class="button">Ver Mi Solicitud</a>
                     </div>
                 </td>
             </tr>

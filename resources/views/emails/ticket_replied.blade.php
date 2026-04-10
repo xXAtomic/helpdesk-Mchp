@@ -42,7 +42,7 @@
                     <p>Puedes leer la conversación completa y adjuntar archivos adicionales ingresando al portal de soporte.</p>
                     
                     <div style="text-align: center;">
-                        <a href="{{ config('app.url') }}/user/tickets/{{ $ticket->id }}" class="button">Continuar Conversación</a>
+                        <a href="{{ config('app.url') }}/my-tickets/{{ $ticket->id }}" class="button">Continuar Conversación</a>
                     </div>
                 </td>
             </tr>
