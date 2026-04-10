@@ -38,7 +38,7 @@
                         <div class="w-14 h-14 bg-slate-950 rounded-2xl flex items-center justify-center text-white text-2xl border border-white/5 group-hover:bg-indigo-600 group-hover:scale-110 transition-all duration-700 shadow-2xl">
                             {{ $article->icon ?? '📖' }}
                         </div>
-                        <span class="text-[0.6rem] font-black text-slate-600 uppercase tracking-widest italic tracking-tighter">{{ $article->updated_at->format('M Y') }}</span>
+                        <span class="text-[0.6rem] font-black text-slate-600 uppercase tracking-widest italic">{{ $article->updated_at->format('M Y') }}</span>
                     </div>
                     
                     <h3 class="text-2xl font-black text-white tracking-tighter mb-4 group-hover:text-indigo-400 transition-colors uppercase italic leading-none">{{ $article->title }}</h3>
