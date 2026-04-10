@@ -52,12 +52,21 @@ class BossDashboardController extends Controller
         $avgRating = TicketRating::avg('rating') ?? 0;
         $avgRating = round($avgRating, 1);
 
-        // 7. Datos para gráficos
-        $ticketsByCategory = DB::table('tickets')
-            ->join('ticket_categories', 'tickets.category_id', '=', 'ticket_categories.id')
-            ->select('ticket_categories.name', DB::raw('count(*) as total'))
-            ->groupBy('ticket_categories.name')
-            ->get();
+        // 7. Datos para Gráfico de Dona (Estados Reales)
+        $statusStats = [
+            'Pendientes' => Ticket::whereHas('status', fn($q) => $q->where('name', 'Abierto'))->count(),
+            'En Progreso' => Ticket::whereHas('status', fn($q) => $q->where('name', 'En Progreso'))->count(),
+            'Resueltos' => Ticket::whereHas('status', fn($q) => $q->where('is_closed', true))->count(),
+        ];
+
+        // 8. Datos para Gráfico de Tendencia (Últimos 7 días)
+        $days = [];
+        $ticketsCreated = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i);
+            $days[] = $date->translatedFormat('D');
+            $ticketsCreated[] = Ticket::whereDate('created_at', $date->toDateString())->count();
+        }
 
         $ticketsByDepartment = DB::table('tickets')
             ->join('departments', 'tickets.department_id', '=', 'departments.id')
@@ -67,7 +76,7 @@ class BossDashboardController extends Controller
             ->limit(8)
             ->get();
 
-        // 8. Datos Financieros (Sugerencia #7) ✨
+        // 9. Datos Financieros ✨
         $totalHardwareInvestment = Asset::sum('purchase_cost') ?? 0;
         $monthlySuppliesExpense = \App\Models\SupplyLog::where('action', 'RESTOCK')
             ->whereMonth('created_at', now()->month)
@@ -86,7 +95,9 @@ class BossDashboardController extends Controller
             'inProcessTickets', 
             'avgResponseTime',
             'avgRating',
-            'ticketsByCategory',
+            'statusStats',
+            'days',
+            'ticketsCreated',
             'ticketsByDepartment',
             'totalHardwareInvestment',
             'monthlySuppliesExpense'

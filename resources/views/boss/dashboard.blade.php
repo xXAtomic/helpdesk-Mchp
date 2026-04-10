@@ -196,13 +196,16 @@ document.addEventListener('DOMContentLoaded', function () {
         muted: '#94a3b8'
     };
 
-    // 1. Donut Chart - Ticket Status
+    // 1. Donut Chart - Ticket Status (DATOS REALES)
+    const statusData = @json(array_values($statusStats));
+    const statusLabels = @json(array_keys($statusStats));
+
     var optionsStatus = {
-        series: [44, 25, 12],
+        series: statusData,
         chart: { type: 'donut', height: 280, background: 'transparent' },
         stroke: { show: false },
-        colors: [colors.primary, colors.success, colors.danger],
-        labels: ['Pendientes', 'Resueltos', 'Críticos'],
+        colors: [colors.warning, colors.primary, colors.success],
+        labels: statusLabels,
         legend: { position: 'bottom', labels: { colors: colors.muted }, markers: { radius: 12 } },
         dataLabels: { enabled: false },
         plotOptions: { pie: { donut: { size: '75%', background: 'transparent' } } },
@@ -210,22 +213,19 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     new ApexCharts(document.querySelector("#statusDonutChart"), optionsStatus).render();
 
-    // 2. Main Trend Area Chart
+    // 2. Main Trend Area Chart (DATOS REALES)
     var optionsMain = {
         series: [{
             name: 'Tickets Creados',
-            data: [12, 19, 15, 27, 22, 35, 30]
-        }, {
-            name: 'Equipos Reparados',
-            data: [10, 15, 13, 20, 18, 25, 22]
+            data: @json($ticketsCreated)
         }],
         chart: { height: 350, type: 'area', toolbar: { show: false }, background: 'transparent', fontFamily: 'Inter, sans-serif' },
         dataLabels: { enabled: false },
         stroke: { curve: 'smooth', width: 4 },
-        colors: [colors.primary, colors.success],
+        colors: [colors.primary],
         fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.3, opacityTo: 0.05, stops: [0, 90, 100] } },
         xaxis: { 
-            categories: ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'], 
+            categories: @json($days), 
             axisBorder: { show: false },
             axisTicks: { show: false },
             labels: { style: { colors: colors.muted, fontSize: '11px' } } 
