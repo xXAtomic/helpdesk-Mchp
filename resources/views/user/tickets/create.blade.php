@@ -195,13 +195,13 @@
     }
 
     function deflectTicket(articleId, method) {
-        fetch('{{ route('gravity.brain.deflect') }}', {
+        fetch("{{ route('gravity.brain.deflect') }}", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
             body: JSON.stringify({ title: titleInput.value, article_id: articleId, method: method })
         }).then(() => {
             alert('¡SOLUCIÓN REGISTRADA! Nos alegra haberte ayudado. Esta acción optimiza el tiempo de respuesta global del sistema.');
-            window.location.href = '{{ route('dashboard') }}';
+            window.location.href = "{{ route('dashboard') }}";
         });
     }
 
