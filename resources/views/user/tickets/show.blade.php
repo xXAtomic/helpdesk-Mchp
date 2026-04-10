@@ -7,8 +7,9 @@
     <div class="mb-12 pb-10 border-b border-white/5 flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
         <div>
             <div class="flex items-center gap-4 mb-4">
+                @php $statusCol = optional($ticket->status)->color ?? '#64748b'; @endphp
                 <span class="inline-flex items-center px-4 py-1.5 rounded-xl text-[0.6rem] font-black uppercase tracking-[0.2em] border shadow-2xl animate-in fade-in"
-                      style="background-color: {{ optional($ticket->status)->color }}15; color: {{ optional($ticket->status)->color }}; border-color: {{ optional($ticket->status)->color }}40;">
+                      style="background-color: <?= $statusCol ?>15; color: <?= $statusCol ?>; border-color: <?= $statusCol ?>40;">
                     <span class="w-2 h-2 rounded-full bg-current animate-pulse mr-2 shadow-[0_0_8px_currentColor]"></span>
                     {{ optional($ticket->status)->name ?? 'EN PROCESO' }}
                 </span>
