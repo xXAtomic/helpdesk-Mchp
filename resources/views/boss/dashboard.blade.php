@@ -76,7 +76,8 @@
     </div>
 
     <!-- Widgets Tácticos Inferiores -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 g        <!-- Inventario -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Inventario -->
         <div class="bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-500/20 p-6 rounded-2xl hover:border-blue-500/50 transition-all group">
             <div class="flex justify-between items-start mb-4">
                 <div class="p-3 bg-blue-500/20 rounded-xl text-blue-400 group-hover:scale-110 transition-transform">
@@ -138,9 +139,7 @@
                 <i class="fas fa-calendar-check mr-2 text-purple-500"></i> Reinicio en {{ Carbon\Carbon::now()->daysInMonth - Carbon\Carbon::now()->day }} días
             </div>
         </div>
-    </div>
-
-    <!-- SECCIÓN FINANCIERA DETALLADA 💵 -->
+      <!-- SECCIÓN FINANCIERA DETALLADA 💵 -->
     <div class="mt-12 mb-8">
         <div class="flex items-center gap-3 mb-8">
             <div class="w-2 h-6 bg-emerald-500 rounded-full"></div>
@@ -150,8 +149,8 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Valor Total del Patrimonio Hardware -->
-            <div class="bg-slate-900/60 border border-emerald-500/30 p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/80">
-                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+            <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/60 hover:border-emerald-500/30">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/5 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
                 <div class="relative z-10 text-center md:text-left">
                     <p class="text-slate-400 text-[0.6rem] font-bold uppercase tracking-[0.2em] mb-4 italic">Inversión Hardware (Patrimonio)</p>
                     <h4 class="text-4xl font-black text-white italic tracking-tighter hover:text-emerald-400 transition-colors">
@@ -164,8 +163,8 @@
             </div>
 
             <!-- COMPRAS: Reabastecimiento de Stock -->
-            <div class="bg-slate-900/60 border border-indigo-500/30 p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/80">
-                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+            <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/60 hover:border-indigo-500/30">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-indigo-500/5 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
                 <div class="relative z-10 text-center md:text-left">
                     <p class="text-slate-400 text-[0.6rem] font-bold uppercase tracking-[0.2em] mb-4 italic">Compras / Abastecimiento (Mes)</p>
                     <h4 class="text-4xl font-black text-white italic tracking-tighter hover:text-indigo-400 transition-colors">
@@ -178,8 +177,8 @@
             </div>
 
             <!-- GASTOS: Consumo y Entregas -->
-            <div class="bg-slate-900/60 border border-blue-500/30 p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/80">
-                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+            <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/60 hover:border-blue-500/30">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
                 <div class="relative z-10 text-center md:text-left">
                     <p class="text-slate-400 text-[0.6rem] font-bold uppercase tracking-[0.2em] mb-4 italic">Gasto Operativo (Entregas Mes)</p>
                     <h4 class="text-4xl font-black text-white italic tracking-tighter hover:text-blue-400 transition-colors">
@@ -194,7 +193,7 @@
     </div>
 
     <!-- TABLA DE AUDITORÍA DETALLADA PARA EL BOSS 🕵️‍♂️ -->
-    <div class="bg-slate-900/40 backdrop-blur-2xl border border-slate-800 p-8 rounded-[2.5rem] shadow-2xl mb-12">
+    <div class="bg-slate-900/40 backdrop-blur-2xl border border-white/5 p-8 rounded-[2.5rem] shadow-2xl mb-12">
         <div class="flex items-center justify-between mb-8 border-b border-white/5 pb-6">
             <div>
                 <h3 class="text-white text-lg font-black uppercase tracking-tighter italic">Bitácora de Control de Materiales</h3>
@@ -284,6 +283,7 @@
         </div>
     </div>
 </div>
+</div> 
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
