@@ -33,7 +33,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 @foreach($manuals as $article)
-                    <div onclick="openKnowledgeModal('{{ addslashes($article->title) }}', '{{ addslashes($article->content) }}', '{{ $article->category }}', '{{ $article->icon }}', '{{ $article->file_path ? asset('storage/' . $article->file_path) : '' }}', '{{ addslashes($article->file_name) }}')"
+                    <div onclick="openKnowledgeModal('{{ addslashes($article->title) }}', '{{ addslashes($article->content) }}', '{{ $article->category }}', '{{ $article->icon }}', '{{ $article->file_path ? asset(&quot;storage/&quot; . $article->file_path) : &quot;&quot; }}', '{{ addslashes($article->file_name) }}')"
                          class="group bg-slate-900/40 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/5 shadow-2xl hover:border-indigo-500/30 transition-all duration-500 flex flex-col justify-between overflow-hidden relative cursor-pointer">
                         
                         <div class="absolute -right-10 -top-10 w-32 h-32 bg-indigo-600/5 rounded-full blur-3xl group-hover:bg-indigo-500/10 transition-all"></div>
@@ -90,7 +90,7 @@
 
             <div class="space-y-6">
                 @foreach($tips as $tip)
-                    <div onclick="openKnowledgeModal('{{ addslashes($tip->title) }}', '{{ addslashes($tip->content) }}', '{{ $tip->category }}', '{{ $tip->icon }}', '{{ $tip->file_path ? asset('storage/' . $tip->file_path) : '' }}', '{{ addslashes($tip->file_name) }}')"
+                    <div onclick="openKnowledgeModal('{{ addslashes($tip->title) }}', '{{ addslashes($tip->content) }}', '{{ $tip->category }}', '{{ $tip->icon }}', '{{ $tip->file_path ? asset(&quot;storage/&quot; . $tip->file_path) : &quot;&quot; }}', '{{ addslashes($tip->file_name) }}')"
                          class="bg-indigo-600/5 backdrop-blur-xl p-8 rounded-[2.5rem] border border-indigo-500/10 relative overflow-hidden group cursor-pointer hover:bg-indigo-600/10 hover:border-indigo-500/30 transition-all shadow-2xl">
                         
                         <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/5 rounded-full scale-110 group-hover:scale-150 transition-transform duration-1000"></div>
