@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 class GravityAIService
 {
     private $apiKey;
-    private $baseUrl = "https://generativelanguage.googleapis.com/v1beta/models";
+    private $baseUrl = "https://generativelanguage.googleapis.com/v1/models";
 
     public function __construct()
     {
@@ -47,11 +47,11 @@ class GravityAIService
         }
 
         try {
-            // Cambiamos a 'latest' o 'pro' para mayor compatibilidad
-            $model = 'gemini-1.5-flash-latest'; 
+            // Usamos el modelo estándar de la v1
+            $model = 'gemini-1.5-flash'; 
             $response = $this->callGemini($model, $prompt, $contextText);
 
-            // Si el modelo específico falla, intentamos autodetectar uno válido
+            // Si el modelo falla (404), intentamos con el pro
             if ($response->status() === 404) {
                 $model = $this->autoDetectModel() ?: 'gemini-pro';
                 $response = $this->callGemini($model, $prompt, $contextText);
