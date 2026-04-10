@@ -91,7 +91,7 @@
                                             $statusColor = optional($ticket->status)->color ?? '#64748b';
                                         @endphp
                                         <span class="inline-flex px-4 py-1.5 rounded-xl text-[0.55rem] font-black uppercase tracking-widest border border-white/5"
-                                              style="background-color: {{ $statusColor }}15; color: {{ $statusColor }}; border-color: {{ $statusColor }}30;">
+                                              style="background-color: <?= $statusColor ?>15; color: <?= $statusColor ?>; border-color: <?= $statusColor ?>30;">
                                             {{ optional($ticket->status)->name ?? 'PROCESANDO' }}
                                         </span>
                                     </td>
