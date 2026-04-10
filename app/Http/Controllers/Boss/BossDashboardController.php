@@ -76,9 +76,9 @@ class BossDashboardController extends Controller
             ->limit(8)
             ->get();
 
-        // 9. Datos Financieros ✨
+        // 9. Datos Financieros (OpEx: Valor de lo consumido este mes) ✨
         $totalHardwareInvestment = Asset::sum('purchase_cost') ?? 0;
-        $monthlySuppliesExpense = \App\Models\SupplyLog::where('action', 'RESTOCK')
+        $monthlySuppliesExpense = \App\Models\SupplyLog::where('action', 'CONSUMPTION')
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->with('supply')
