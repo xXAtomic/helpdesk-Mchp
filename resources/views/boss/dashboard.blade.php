@@ -65,7 +65,7 @@
                 </div>
                 <span class="text-xs text-blue-500 font-bold bg-blue-500/10 px-2 py-1 rounded">Activo</span>
             </div>
-            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest tracking-widest">Equipos (Patrimonio)</p>
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Equipos (Patrimonio)</p>
             <h4 class="text-3xl font-black text-white mt-1 italic tracking-tighter">{{ number_format($equipmentCount, 0, ',', '.') }} un.</h4>
             <div class="mt-4 flex items-center text-[10px] text-slate-500 font-black italic">
                 <i class="fas fa-sync-alt fa-spin mr-2"></i> BASE GLOBAL
