@@ -151,11 +151,11 @@
 
 <style>
     /* Estilización de la paginación de Laravel para encajar con el tema oscuro */
-    .pagination { @apply flex gap-2; }
-    .page-item { @apply rounded-xl overflow-hidden border border-white/10; }
-    .page-link { @apply bg-slate-900 text-slate-400 border-none px-4 py-2 font-black italic uppercase tracking-widest text-[0.7rem] transition-colors; }
-    .page-item.active .page-link { @apply bg-indigo-600 text-white; }
-    .page-link:hover { @apply bg-slate-800 text-white; }
+    .pagination { display: flex; gap: 0.5rem; }
+    .page-item { border-radius: 0.75rem; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1); }
+    .page-link { background-color: #0f172a; color: #94a3b8; border: none; padding: 0.5rem 1rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.7rem; transition: background-color 0.3s, color 0.3s; }
+    .page-item.active .page-link { background-color: #4f46e5; color: white; }
+    .page-link:hover { background-color: #1e293b; color: white; }
 </style>
 
 @endsection
