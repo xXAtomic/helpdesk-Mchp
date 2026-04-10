@@ -11,7 +11,7 @@
                     $statusColor = optional($ticket->status)->color ?? '#64748b';
                 @endphp
                 <span class="inline-flex items-center px-4 py-1.5 rounded-xl text-[0.6rem] font-black uppercase tracking-[0.2em] border shadow-2xl animate-in fade-in zoom-in"
-                      style="background-color: {{ $statusColor }}15; color: {{ $statusColor }}; border-color: {{ $statusColor }}40;">
+                      style="background-color: <?= $statusColor ?>15; color: <?= $statusColor ?>; border-color: <?= $statusColor ?>40;">
                     <span class="w-2 h-2 rounded-full bg-current animate-pulse mr-2 shadow-[0_0_8px_currentColor]"></span>
                     {{ optional($ticket->status)->name ?? 'Abierto' }}
                 </span>
