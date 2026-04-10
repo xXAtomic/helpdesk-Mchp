@@ -260,11 +260,32 @@
     </div>
 </div>
 
+    <!-- DATA HUB FOR ANALYTICS (DECOUPLED) -->
+    <div id="dashboard-analytics-data" class="hidden"
+         data-weekly-labels='@json($stats['weekly_volume']->pluck('date'))'
+         data-weekly-totals='@json($stats['weekly_volume']->pluck('total'))'
+         data-status-labels='@json($stats['by_status']->pluck('name'))'
+         data-status-totals='@json($stats['by_status']->pluck('total'))'
+         data-status-colors='@json($stats['by_status']->pluck('color'))'
+         data-health-labels='@json($stats['equipment_health']->pluck('status'))'
+         data-health-totals='@json($stats['equipment_health']->pluck('total'))'
+         data-health-colors='@json($stats['equipment_health']->map(function($h){
+             if($h->status == 'Operativo') return '#10b981';
+             if($h->status == 'Mantenimiento') return '#f59e0b';
+             return '#ef4444';
+         }))'>
+    </div>
+
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // ENGINE ANALYTICS 4.0 - PREMIUM DARK EDITION ✨💎
-    
     document.addEventListener('DOMContentLoaded', function() {
+        const dataNode = document.getElementById('dashboard-analytics-data');
+        if (!dataNode) return;
+
+        const parseData = (attr) => JSON.parse(dataNode.getAttribute(attr) || '[]');
+
         // Configuraciones Base Dark para Chart.js
         Chart.defaults.color = '#64748b';
         Chart.defaults.font.family = "'Inter', sans-serif";
@@ -308,10 +329,10 @@
         new Chart(weeklyCtx, {
             type: 'line',
             data: {
-                labels: {!! json_encode($stats['weekly_volume']->pluck('date')) !!},
+                labels: parseData('data-weekly-labels'),
                 datasets: [{
                     label: 'SOLICITUDES',
-                    data: {!! json_encode($stats['weekly_volume']->pluck('total')) !!},
+                    data: parseData('data-weekly-totals'),
                     borderColor: '#6366f1',
                     borderWidth: 4,
                     backgroundColor: weeklyGradient,
@@ -330,10 +351,10 @@
         new Chart(document.getElementById('statusChart'), {
             type: 'doughnut',
             data: {
-                labels: {!! json_encode($stats['by_status']->pluck('name')) !!},
+                labels: parseData('data-status-labels'),
                 datasets: [{
-                    data: {!! json_encode($stats['by_status']->pluck('total')) !!},
-                    backgroundColor: {!! json_encode($stats['by_status']->pluck('color')) !!},
+                    data: parseData('data-status-totals'),
+                    backgroundColor: parseData('data-status-colors'),
                     borderWidth: 0,
                     hoverOffset: 15,
                     weight: 2
@@ -364,14 +385,10 @@
         new Chart(document.getElementById('inventoryHealthChart'), {
             type: 'doughnut',
             data: {
-                labels: {!! json_encode($stats['equipment_health']->pluck('status')) !!},
+                labels: parseData('data-health-labels'),
                 datasets: [{
-                    data: {!! json_encode($stats['equipment_health']->pluck('total')) !!},
-                    backgroundColor: {!! json_encode($stats['equipment_health']->map(function($h){
-                        if($h->status == 'Operativo') return '#10b981';
-                        if($h->status == 'Mantenimiento') return '#f59e0b';
-                        return '#ef4444';
-                    })) !!},
+                    data: parseData('data-health-totals'),
+                    backgroundColor: parseData('data-health-colors'),
                     borderWidth: 0,
                     hoverOffset: 0
                 }]
