@@ -66,6 +66,19 @@ class FetchEmailTickets extends Command
             $subject = $message->getSubject();
             $from = $message->getFrom()[0]->mail;
             $body = $message->getTextBody() ?: $message->getHTMLBody(true);
+
+            // LOGICA DE EXTRACCIÓN DE REMITENTE ORIGINAL (Para Power Automate)
+            // Si el asunto viene con el tag FROM:[correo] | ...
+            if (str_contains($subject, 'FROM:')) {
+                preg_match('/FROM:([\w\.-]+@[\w\.-]+\.\w+)/', $subject, $matches);
+                if (isset($matches[1])) {
+                    $originalFrom = $matches[1];
+                    $this->info("📧 Remitente original detectado: {$originalFrom}");
+                    $from = $originalFrom;
+                    // Limpiamos el asunto para que no quede feo
+                    $subject = trim(explode('|', $subject, 2)[1] ?? $subject);
+                }
+            }
             
             $this->line("Procesando: [{$from}] {$subject}");
 
