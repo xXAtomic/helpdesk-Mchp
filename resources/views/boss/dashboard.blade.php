@@ -138,10 +138,9 @@
             <div class="mt-4 flex items-center text-[10px] text-slate-500 uppercase tracking-widest italic">
                 <i class="fas fa-calendar-check mr-2 text-purple-500"></i> Reinicio en {{ Carbon\Carbon::now()->daysInMonth - Carbon\Carbon::now()->day }} días
             </div>
-        </div>
-      <!-- SECCIÓN FINANCIERA DETALLADA 💵 -->
-    <div class="mt-12 mb-8">
-        <div class="flex items-center gap-3 mb-8">
+        <!-- SECCIÓN FINANCIERA DETALLADA 💵 -->
+    <div class="mt-8 mb-8">
+        <div class="flex items-center gap-3 mb-6">
             <div class="w-2 h-6 bg-emerald-500 rounded-full"></div>
             <h3 class="text-white text-lg font-black uppercase tracking-tighter italic">Salud Financiera TI (CLP)</h3>
             <span class="px-3 py-1 bg-emerald-500/10 text-emerald-500 text-[0.6rem] font-black uppercase rounded-lg border border-emerald-500/20 shadow-lg shadow-emerald-500/5">Auditoría en Tiempo Real</span>
@@ -203,7 +202,7 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-left">
+            <table class="w-full text-left table-auto">
                 <thead>
                     <tr class="text-slate-500 text-[10px] font-black uppercase tracking-[0.15em] border-b border-white/5">
                         <th class="pb-4">Fecha</th>
@@ -279,11 +278,9 @@
                         </tr>
                     @endif
                 </tbody>
-            </table>
         </div>
     </div>
 </div>
-</div> 
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
