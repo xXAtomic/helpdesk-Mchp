@@ -76,9 +76,11 @@ class BossDashboardController extends Controller
             ->limit(8)
             ->get();
 
-        // 9. Datos Financieros (OpEx: Valor de lo consumido este mes) ✨
+        // 9. Datos Financieros Detallados ✨
         $totalHardwareInvestment = Asset::sum('purchase_cost') ?? 0;
-        $monthlySuppliesExpense = \App\Models\SupplyLog::where('action', 'CONSUMPTION')
+
+        // Compras de Stock (Entradas - RESTOCK)
+        $totalMonthlyPurchases = \App\Models\SupplyLog::where('action', 'RESTOCK')
             ->whereMonth('created_at', now()->month)
             ->whereYear('created_at', now()->year)
             ->with('supply')
@@ -86,6 +88,22 @@ class BossDashboardController extends Controller
             ->sum(function($log) {
                 return $log->quantity * ($log->supply->unit_cost ?? 0);
             });
+
+        // Gasto Operativo (Salidas - CONSUMPTION)
+        $totalMonthlyConsumptions = \App\Models\SupplyLog::where('action', 'CONSUMPTION')
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->with('supply')
+            ->get()
+            ->sum(function($log) {
+                return $log->quantity * ($log->supply->unit_cost ?? 0);
+            });
+
+        // 10. Listado para Auditoría (Últimos 10 movimientos)
+        $recentTransactions = \App\Models\SupplyLog::latest()
+            ->with(['supply', 'user', 'admin'])
+            ->limit(10)
+            ->get();
 
         return view('boss.dashboard', compact(
             'ticketsCount', 
@@ -100,7 +118,9 @@ class BossDashboardController extends Controller
             'ticketsCreated',
             'ticketsByDepartment',
             'totalHardwareInvestment',
-            'monthlySuppliesExpense'
+            'totalMonthlyPurchases',
+            'totalMonthlyConsumptions',
+            'recentTransactions'
         ));
     }
 

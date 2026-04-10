@@ -140,45 +140,128 @@
         </div>
     </div>
 
-    <!-- SECCIÓN FINANCIERA (Sugerencia #7) 💵 -->
-    <div class="mt-12 mb-12">
+    <!-- SECCIÓN FINANCIERA DETALLADA 💵 -->
+    <div class="mt-12 mb-8">
         <div class="flex items-center gap-3 mb-8">
             <div class="w-2 h-6 bg-emerald-500 rounded-full"></div>
             <h3 class="text-white text-lg font-black uppercase tracking-tighter italic">Salud Financiera TI (CLP)</h3>
             <span class="px-3 py-1 bg-emerald-500/10 text-emerald-500 text-[0.6rem] font-black uppercase rounded-lg border border-emerald-500/20 shadow-lg shadow-emerald-500/5">Auditoría en Tiempo Real</span>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Valor Total del Patrimonio Hardware -->
-            <div class="bg-slate-900/60 border border-emerald-500/30 p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900">
+            <div class="bg-slate-900/60 border border-emerald-500/30 p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/80">
                 <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
                 <div class="relative z-10 text-center md:text-left">
-                    <p class="text-slate-400 text-xs font-bold uppercase tracking-[0.2em] mb-4 italic">Inversión en Hardware (Patrimonio)</p>
-                    <h4 class="text-6xl font-black text-white italic tracking-tighter hover:text-emerald-400 transition-colors">
+                    <p class="text-slate-400 text-[0.6rem] font-bold uppercase tracking-[0.2em] mb-4 italic">Inversión Hardware (Patrimonio)</p>
+                    <h4 class="text-4xl font-black text-white italic tracking-tighter hover:text-emerald-400 transition-colors">
                         $ {{ number_format($totalHardwareInvestment, 0, ',', '.') }}
                     </h4>
-                    <p class="text-[0.65rem] text-slate-500 font-bold uppercase tracking-widest mt-6 flex items-center justify-center md:justify-start gap-2">
-                        <i class="fas fa-shield-alt text-emerald-500"></i> Valor CLP Total Activo en Inventario
+                    <p class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest mt-6 flex items-center justify-center md:justify-start gap-2">
+                        <i class="fas fa-shield-alt text-emerald-500"></i> Valor Total Activo
                     </p>
                 </div>
             </div>
 
-            <!-- Gasto en Insumos Mensual -->
-            <div class="bg-slate-900/60 border border-blue-500/30 p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900">
-                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+            <!-- COMPRAS: Reabastecimiento de Stock -->
+            <div class="bg-slate-900/60 border border-indigo-500/30 p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/80">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
                 <div class="relative z-10 text-center md:text-left">
-                    <p class="text-slate-400 text-xs font-bold uppercase tracking-[0.2em] mb-4 italic">Gasto en Operaciones (Este Mes)</p>
-                    <h4 class="text-6xl font-black text-white italic tracking-tighter hover:text-blue-400 transition-colors">
-                        $ {{ number_format($monthlySuppliesExpense, 0, ',', '.') }}
+                    <p class="text-slate-400 text-[0.6rem] font-bold uppercase tracking-[0.2em] mb-4 italic">Compras / Abastecimiento (Mes)</p>
+                    <h4 class="text-4xl font-black text-white italic tracking-tighter hover:text-indigo-400 transition-colors">
+                        $ {{ number_format($totalMonthlyPurchases, 0, ',', '.') }}
                     </h4>
-                    <div class="mt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-                        <p class="text-[0.65rem] text-slate-500 font-bold uppercase tracking-widest flex items-center gap-2">
-                            <i class="fas fa-shopping-cart text-blue-500"></i> Consumibles y Reposiciones CLP
-                        </p>
-                        <span class="px-3 py-1 bg-blue-500/20 text-blue-400 text-[0.6rem] font-black rounded-lg border border-blue-500/20 uppercase italic tracking-widest">{{ Carbon\Carbon::now()->translatedFormat('F Y') }}</span>
-                    </div>
+                    <p class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest mt-6 flex items-center justify-center md:justify-start gap-2">
+                        <i class="fas fa-shopping-basket text-indigo-500"></i> Adquisición de Insumos
+                    </p>
                 </div>
             </div>
+
+            <!-- GASTOS: Consumo y Entregas -->
+            <div class="bg-slate-900/60 border border-blue-500/30 p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/80">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                <div class="relative z-10 text-center md:text-left">
+                    <p class="text-slate-400 text-[0.6rem] font-bold uppercase tracking-[0.2em] mb-4 italic">Gasto Operativo (Entregas Mes)</p>
+                    <h4 class="text-4xl font-black text-white italic tracking-tighter hover:text-blue-400 transition-colors">
+                        $ {{ number_format($totalMonthlyConsumptions, 0, ',', '.') }}
+                    </h4>
+                    <p class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest mt-6 flex items-center justify-center md:justify-start gap-2">
+                        <i class="fas fa-walking text-blue-500"></i> Desembolso Material Real
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLA DE AUDITORÍA DETALLADA PARA EL BOSS 🕵️‍♂️ -->
+    <div class="bg-slate-900/40 backdrop-blur-2xl border border-slate-800 p-8 rounded-[2.5rem] shadow-2xl mb-12">
+        <div class="flex items-center justify-between mb-8 border-b border-white/5 pb-6">
+            <div>
+                <h3 class="text-white text-lg font-black uppercase tracking-tighter italic">Bitácora de Control de Materiales</h3>
+                <p class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest mt-1">Monitoreo de quién solicita y quién autoriza el flujo de insumos</p>
+            </div>
+            <i class="fas fa-fingerprint text-indigo-500 text-2xl opacity-20"></i>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="text-slate-500 text-[10px] font-black uppercase tracking-[0.15em] border-b border-white/5">
+                        <th class="pb-4">Fecha</th>
+                        <th class="pb-4">Insumo</th>
+                        <th class="pb-4 text-center">Cant.</th>
+                        <th class="pb-4 text-right">Valor Est.</th>
+                        <th class="pb-4 text-center">Tipo</th>
+                        <th class="pb-4">Responsable</th>
+                        <th class="pb-4">Solicitante / Destino</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                    @foreach($recentTransactions as $log)
+                    <tr class="group hover:bg-white/[0.02] transition-colors">
+                        <td class="py-4 text-[11px] font-mono text-slate-400">{{ $log->created_at->format('d/m H:i') }}</td>
+                        <td class="py-4">
+                            <span class="text-xs font-bold text-white tracking-tight">{{ $log->supply->name }}</span>
+                            <span class="block text-[9px] text-slate-500 uppercase font-black">{{ $log->supply->brand ?? 'S/M' }}</span>
+                        </td>
+                        <td class="py-4 text-center">
+                            <span class="px-2 py-1 bg-slate-800 rounded font-mono text-xs text-white">x{{ $log->quantity }}</span>
+                        </td>
+                        <td class="py-4 text-right">
+                            <span class="text-xs font-bold text-emerald-400 tracking-tighter italic">$ {{ number_format($log->quantity * ($log->supply->unit_cost ?? 0), 0, ',', '.') }}</span>
+                        </td>
+                        <td class="py-4 text-center">
+                            @if($log->action == 'RESTOCK')
+                                <span class="px-2 py-0.5 bg-indigo-500/10 text-indigo-400 text-[8px] font-black uppercase rounded-lg border border-indigo-500/20 italic">COMPRA</span>
+                            @else
+                                <span class="px-2 py-0.5 bg-blue-500/10 text-blue-400 text-[8px] font-black uppercase rounded-lg border border-blue-500/20 italic">G-OPERACIÓN</span>
+                            @endif
+                        </td>
+                        <td class="py-4">
+                            <div class="flex items-center gap-2">
+                                <div class="w-4 h-4 rounded-full bg-slate-800 text-[8px] flex items-center justify-center text-slate-400 uppercase font-black">
+                                    {{ substr($log->admin->name ?? '?', 0, 1) }}
+                                </div>
+                                <span class="text-[10px] font-bold text-slate-300 uppercase truncate max-w-[100px]">{{ $log->admin->name ?? 'SISTEMA' }}</span>
+                            </div>
+                        </td>
+                        <td class="py-4">
+                            @if($log->action == 'RESTOCK')
+                                <span class="text-[9px] text-slate-500 uppercase font-bold italic">Abastecimiento Almacén</span>
+                            @else
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-user-tag text-blue-500/50 text-[10px]"></i>
+                                    <span class="text-[10px] font-black text-white uppercase">{{ $log->user->name ?? 'RETIRO DIRECTO' }}</span>
+                                </div>
+                                @if($log->equipment_tag)
+                                    <span class="block text-[8px] text-indigo-400 font-bold uppercase mt-0.5">EQ: {{ $log->equipment_tag }}</span>
+                                @endif
+                            @endif
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
