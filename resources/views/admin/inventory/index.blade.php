@@ -41,7 +41,7 @@
             <h4 class="text-[0.6rem] font-black text-indigo-400 uppercase tracking-widest mb-1 italic">Desplegados</h4>
             <p class="text-3xl font-black text-white tracking-tighter italic">{{ $items->whereNotNull('user_id')->count() }} <span class="text-indigo-900">Asig.</span></p>
             <div class="mt-4 w-full h-1 bg-slate-800 rounded-full overflow-hidden">
-                <div class="bg-indigo-500 h-full shadow-[0_0_10px_#6366f1]" style="width: {{ $items->count() > 0 ? ($items->whereNotNull('user_id')->count() / $items->count()) * 100 : 0 }}%"></div>
+                <div class="bg-indigo-500 h-full shadow-[0_0_10px_#6366f1]" {!! 'style="width: ' . ($items->count() > 0 ? ($items->whereNotNull('user_id')->count() / $items->count()) * 100 : 0) . '%"' !!}></div>
             </div>
         </div>
 
@@ -50,7 +50,7 @@
             <h4 class="text-[0.6rem] font-black text-emerald-400 uppercase tracking-widest mb-1 italic">Disponibles</h4>
             <p class="text-3xl font-black text-white tracking-tighter italic">{{ $items->whereNull('user_id')->where('status', 'Operativo')->count() }} <span class="text-emerald-900 text-sm">Libres</span></p>
             <div class="mt-4 w-full h-1 bg-slate-800 rounded-full overflow-hidden">
-                <div class="bg-emerald-500 h-full shadow-[0_0_10px_#10b981]" style="width: {{ $items->count() > 0 ? ($items->whereNull('user_id')->where('status', 'Operativo')->count() / $items->count()) * 100 : 0 }}%"></div>
+                <div class="bg-emerald-500 h-full shadow-[0_0_10px_#10b981]" {!! 'style="width: ' . ($items->count() > 0 ? ($items->whereNull('user_id')->where('status', 'Operativo')->count() / $items->count()) * 100 : 0) . '%"' !!}></div>
             </div>
         </div>
 
@@ -59,7 +59,7 @@
             <h4 class="text-[0.6rem] font-black text-rose-500 uppercase tracking-widest mb-1 italic">Estado Crítico</h4>
             <p class="text-3xl font-black text-white tracking-tighter italic">{{ $items->whereIn('status', ['En Reparación', 'De Baja'])->count() }} <span class="text-rose-900 text-sm">Offline</span></p>
             <div class="mt-4 w-full h-1 bg-slate-800 rounded-full overflow-hidden">
-                <div class="bg-rose-600 h-full shadow-[0_0_10px_#e11d48]" style="width: {{ $items->count() > 0 ? ($items->whereIn('status', ['En Reparación', 'De Baja'])->count() / $items->count()) * 100 : 0 }}%"></div>
+                <div class="bg-rose-600 h-full shadow-[0_0_10px_#e11d48]" {!! 'style="width: ' . ($items->count() > 0 ? ($items->whereIn('status', ['En Reparación', 'De Baja'])->count() / $items->count()) * 100 : 0) . '%"' !!}></div>
             </div>
         </div>
     </div>
