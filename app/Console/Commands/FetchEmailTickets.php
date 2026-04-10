@@ -58,9 +58,9 @@ class FetchEmailTickets extends Command
         $this->info("Se encontraron {$messages->count()} correos nuevos. Procesando...");
 
         // Estados y prioridades por defecto
-        $statusOpen = TicketStatus::where('slug', 'abierto')->first();
         $priorityLow = TicketPriority::where('slug', 'baja')->first();
         $categoryIncidence = TicketCategory::where('slug', 'incidencia')->first();
+        $userRole = \App\Models\Role::where('slug', 'user')->first();
 
         foreach ($messages as $message) {
             $subject = $message->getSubject();
@@ -72,28 +72,32 @@ class FetchEmailTickets extends Command
             // Buscamos si el usuario existe en el sistema
             $user = User::where('email', $from)->first();
 
-            // Si el sistema es SaaS, podríamos crear un usuario temporal o rechazarlo
-            // Por ahora, si no existe, usaremos el administrador como creador 
-            // pero guardaremos los datos del solicitante original.
-            
-            $ticket = Ticket::create([
+            // Si no existe, lo creamos automáticamente para que el sistema pueda notificarle
+            if (!$user) {
+                $user = User::create([
+                    'name' => $message->getFrom()[0]->personal ?: explode('@', $from)[0],
+                    'email' => $from,
+                    'password' => \Illuminate\Support\Facades\Hash::make(\Illuminate\Support\Str::random(12)),
+                    'role_id' => $userRole->id,
+                    'is_active' => true,
+                ]);
+                $this->info("ℹ Usuario creado automáticamente para: {$from}");
+            }
+
+            // Usamos el TicketService para heredar toda la lógica de notificaciones
+            $ticketData = [
                 'title' => $subject,
                 'description' => $body,
-                'user_id' => $user ? $user->id : 1, // Fallback al Admin si no existe
-                'requester_email' => $from,
-                'requester_name' => $message->getFrom()[0]->personal ?: $from,
-                'status_id' => $statusOpen->id,
-                'priority_id' => $priorityLow->id,
                 'category_id' => $categoryIncidence->id,
-            ]);
+                'priority_id' => $priorityLow->id,
+            ];
 
-            $this->info("✓ Ticket creado: {$ticket->ticket_number}");
+            $ticket = app(\App\Services\TicketService::class)->createTicket($ticketData, $user->id);
+
+            $this->info("✓ Ticket creado: {$ticket->ticket_number} (Notificación enviada a {$from})");
 
             // Marcamos el correo como leído para no procesarlo de nuevo
             $message->setFlag('Seen');
-            
-            // Opcional: Podrías moverlo a una carpeta "PROCESADOS"
-            // $message->move('INBOX/Processed');
         }
 
         $this->info("Proceso finalizado.");
