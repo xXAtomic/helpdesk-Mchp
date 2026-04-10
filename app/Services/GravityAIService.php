@@ -57,6 +57,11 @@ class GravityAIService
                 if ($text) return $text;
             }
 
+            // Manejo de saturación técnica (429 y 5xx)
+            if ($response->status() === 429) {
+                return "📡 **LÍMITE DE PENSAMIENTO**: He respondido muchas consultas seguidas. Por favor, espera un minuto para que mi núcleo se enfríe y vuelve a preguntarme.";
+            }
+
             if ($response->status() >= 500) {
                 return "🛸 **SATURACIÓN**: El núcleo de IA está procesando muchas solicitudes. Intenta de nuevo en unos segundos.";
             }
