@@ -211,7 +211,7 @@
                         <div class="pt-8 border-t border-white/5 space-y-8">
                             <div>
                                 <p class="text-[0.55rem] font-black text-slate-700 uppercase tracking-widest italic mb-2">Prioridad</p>
-                                <p class="text-[0.7rem] font-black uppercase italic flex items-center gap-2" style="color: {{ optional($ticket->priority)->color }}">
+                                <p class="text-[0.7rem] font-black uppercase italic flex items-center gap-2" style="color: <?= optional($ticket->priority)->color ?>;">
                                     <i class="fas fa-exclamation-triangle"></i>
                                     {{ optional($ticket->priority)->name ?? 'Baja' }}
                                 </p>
