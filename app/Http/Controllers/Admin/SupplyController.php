@@ -14,8 +14,16 @@ class SupplyController extends Controller
     public function index()
     {
         $supplies = Supply::latest()->paginate(15);
+        $totalItems = Supply::sum('stock');
+        $totalValue = Supply::get()->sum(function($supply) {
+            return $supply->stock * ($supply->unit_cost ?? 0);
+        });
         $lowStock = Supply::whereColumn('stock', '<=', 'min_stock')->count();
-        return view('admin.supplies.index', compact('supplies', 'lowStock'));
+        $uniqueTypes = Supply::distinct('type')->count();
+
+        return view('admin.supplies.index', compact(
+            'supplies', 'lowStock', 'totalItems', 'totalValue', 'uniqueTypes'
+        ));
     }
 
     public function create()

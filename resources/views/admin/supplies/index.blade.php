@@ -1,47 +1,100 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="px-8 py-10 max-w-7xl mx-auto">
+<div class="px-6 py-8 bg-slate-950 min-h-screen text-slate-200">
     
-    <!-- HEADER NIVEL CIENCIA FICCIÓN 🚀 -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 border-b border-slate-100 pb-10 gap-8">
+    <!-- HEADER PREMIUM 🚀 -->
+    <div class="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-            <div class="flex items-center gap-3 mb-2">
-                <span class="px-3 py-1 bg-indigo-600 text-white text-[0.6rem] font-black uppercase tracking-[0.3em] rounded-md italic shadow-lg shadow-indigo-200">Inventory Hub</span>
-                @if($lowStock > 0)
-                    <span class="px-3 py-1 bg-rose-500 text-white text-[0.6rem] font-black uppercase tracking-[0.3em] rounded-md italic animate-pulse shadow-lg shadow-rose-200">Stock Crítico: {{ $lowStock }}</span>
-                @endif
-            </div>
-            <h1 class="text-5xl font-black text-slate-950 tracking-tighter italic uppercase leading-none">
-                Gestión de <span class="text-indigo-600">Insumos</span>
-            </h1>
-            <p class="text-slate-500 font-bold tracking-tight mt-4 text-[0.7rem] uppercase italic leading-relaxed max-w-lg">
-                Control táctico de periféricos, consumibles y repuestos críticos para la continuidad operativa de la misión.
+            <h1 class="text-3xl font-black text-white tracking-tighter uppercase italic leading-none">Gestión de Insumos y Suministros</h1>
+            <p class="text-[0.65rem] font-black text-indigo-400 uppercase tracking-[0.6em] mt-4 flex items-center gap-2 italic">
+                <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.5)]"></span>
+                Control de Almacén TI
             </p>
         </div>
         
-        <a href="{{ route('admin.supplies.create') }}" class="bg-slate-950 hover:bg-indigo-700 text-white px-10 py-5 rounded-[2rem] font-black italic uppercase tracking-widest text-[0.75rem] transition-all shadow-2xl hover:shadow-indigo-200 flex items-center gap-4 group">
-            <div class="w-8 h-8 bg-white/10 rounded-xl flex items-center justify-center group-hover:rotate-90 transition-transform">
-                <i class="fas fa-plus text-indigo-400"></i>
-            </div>
-            Registrar Nuevo Insumo
-        </a>
+        <div class="flex items-center gap-4">
+            <a href="{{ route('admin.supplies.create') }}" class="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl font-black italic uppercase tracking-widest text-[0.7rem] transition-all shadow-lg shadow-indigo-500/20 flex items-center gap-3 group">
+                <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i>
+                Nuevo Registro
+            </a>
+        </div>
     </div>
 
-    <!-- LISTADO DE INSUMOS -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <!-- DASHBOARD DE MÉTRICAS RÁPIDAS 📊 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <!-- Valor Total -->
+        <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-6 rounded-3xl shadow-xl relative overflow-hidden group hover:border-emerald-500/30 transition-all">
+            <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <i class="fas fa-money-bill-wave text-6xl text-white"></i>
+            </div>
+            <p class="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1 italic">Valor en Inventario</p>
+            <h3 class="text-3xl font-black text-white italic tracking-tighter hover:text-emerald-400 transition-colors">
+                $ {{ number_format($totalValue, 0, ',', '.') }}
+            </h3>
+            <div class="mt-4 flex items-center text-[8px] text-emerald-500 font-black uppercase tracking-widest italic">
+                <i class="fas fa-chart-line mr-2"></i> Actualizado hoy
+            </div>
+        </div>
+
+        <!-- Total Unidades -->
+        <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-6 rounded-3xl shadow-xl relative overflow-hidden group hover:border-blue-500/30 transition-all">
+            <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <i class="fas fa-boxes text-6xl text-white"></i>
+            </div>
+            <p class="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1 italic">Unidades Totales</p>
+            <h3 class="text-3xl font-black text-white italic tracking-tighter hover:text-blue-400 transition-colors">
+                {{ number_format($totalItems, 0, ',', '.') }} un.
+            </h3>
+            <div class="mt-4 flex items-center text-[8px] text-blue-500 font-black uppercase tracking-widest italic">
+                <i class="fas fa-warehouse mr-2"></i> Stock Físico Global
+            </div>
+        </div>
+
+        <!-- Alertas Stock -->
+        <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-6 rounded-3xl shadow-xl relative overflow-hidden group hover:border-rose-500/30 transition-all">
+            <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <i class="fas fa-exclamation-triangle text-6xl text-white"></i>
+            </div>
+            <p class="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1 italic">Alertas de Stock</p>
+            <h3 class="text-3xl font-black {{ $lowStock > 0 ? 'text-rose-500' : 'text-white' }} italic tracking-tighter">
+                {{ $lowStock }} Críticos
+            </h3>
+            <div class="mt-4 flex items-center text-[8px] {{ $lowStock > 0 ? 'text-rose-500 animate-pulse' : 'text-slate-500' }} font-black uppercase tracking-widest italic text-rose-500">
+                <i class="fas fa-bell mr-2"></i> Requieren Atención
+            </div>
+        </div>
+
+        <!-- Categorías -->
+        <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-6 rounded-3xl shadow-xl relative overflow-hidden group hover:border-indigo-500/30 transition-all">
+            <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <i class="fas fa-tags text-6xl text-white"></i>
+            </div>
+            <p class="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1 italic">Categorías Únicas</p>
+            <h3 class="text-3xl font-black text-white italic tracking-tighter hover:text-indigo-400 transition-colors">
+                {{ $uniqueTypes }} Clases
+            </h3>
+            <div class="mt-4 flex items-center text-[8px] text-indigo-500 font-black uppercase tracking-widest italic">
+                <i class="fas fa-layer-group mr-2"></i> Diversidad de Insumos
+            </div>
+        </div>
+    </div>
+
+    <!-- LISTADO DE INSUMOS (GRID) ✨ -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         @foreach($supplies as $supply)
-            <div class="bg-white rounded-[3rem] border border-slate-100 p-8 shadow-sm hover:shadow-2xl hover:shadow-slate-200/50 transition-all group relative overflow-hidden">
+            <div class="bg-slate-900/40 border border-white/5 p-8 rounded-[2.5rem] shadow-2xl hover:bg-slate-900/60 transition-all group relative overflow-hidden hover:border-white/10">
+                
                 @if($supply->isLowStock())
                     <div class="absolute top-0 right-0 p-4">
-                        <div class="bg-rose-500 text-white p-2 rounded-2xl shadow-lg animate-bounce">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
+                        <span class="px-3 py-1 bg-rose-500 text-[8px] text-white font-black uppercase rounded-full shadow-lg shadow-rose-500/20 italic animate-bounce">
+                            ⚠️ Stock Bajo
+                        </span>
                     </div>
                 @endif
 
                 <div class="flex items-start justify-between mb-8">
-                    <div class="w-16 h-16 bg-slate-50 rounded-3xl flex items-center justify-center text-3xl group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-inner border border-slate-100">
+                    <div class="w-14 h-14 bg-gradient-to-tr from-slate-800 to-slate-700 rounded-2xl flex items-center justify-center text-2xl text-indigo-400 shadow-inner group-hover:text-white group-hover:from-indigo-600 group-hover:to-blue-500 transition-all">
                         @switch($supply->type)
                             @case('TONER') <i class="fas fa-print"></i> @break
                             @case('PERIPHERAL') <i class="fas fa-mouse"></i> @break
@@ -50,41 +103,59 @@
                         @endswitch
                     </div>
                     <div class="text-right">
-                        <span class="text-[0.6rem] font-black text-slate-300 uppercase tracking-widest block mb-1 italic">Stock Actual</span>
-                        <h3 class="text-4xl font-black {{ $supply->isLowStock() ? 'text-rose-600' : 'text-slate-950' }} tracking-tighter">{{ $supply->stock }}</h3>
+                        <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest block mb-1 italic">Stock Actual</span>
+                        <h4 class="text-3xl font-black {{ $supply->isLowStock() ? 'text-rose-500' : 'text-white' }} italic tracking-tighter">
+                            {{ $supply->stock }}
+                        </h4>
                     </div>
                 </div>
 
                 <div class="mb-8">
-                    <h4 class="text-xl font-black text-slate-900 uppercase tracking-tighter italic leading-none truncate group-hover:text-indigo-600 transition-colors">{{ $supply->name }}</h4>
-                    <p class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-widest mt-2">MARCA: {{ $supply->brand ?? 'N/A' }} • {{ $supply->type }}</p>
+                    <h3 class="text-lg font-black text-white uppercase tracking-tighter italic leading-none truncate group-hover:text-indigo-400 transition-colors">
+                        {{ $supply->name }}
+                    </h3>
+                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-2 flex items-center gap-2 italic">
+                        <span class="w-1 h-3 bg-indigo-500 rounded-full"></span>
+                        MARCA: {{ $supply->brand ?? 'S/MARCA' }}
+                    </p>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mb-8">
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                        <p class="text-[0.55rem] font-black text-slate-400 uppercase tracking-widest mb-1 italic">Ubicación</p>
-                        <p class="text-[0.7rem] font-bold text-slate-900 truncate">{{ $supply->location ?? 'Bodega TI' }}</p>
+                <div class="grid grid-cols-2 gap-3 mb-8">
+                    <div class="bg-white/5 p-3 rounded-2xl border border-white/5">
+                        <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1 italic">Ubicación</p>
+                        <p class="text-[10px] font-bold text-slate-200 truncate">{{ $supply->location ?? 'BODEGA TI' }}</p>
                     </div>
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                        <p class="text-[0.55rem] font-black text-slate-400 uppercase tracking-widest mb-1 italic">Min. Alert</p>
-                        <p class="text-[0.7rem] font-bold text-slate-900">{{ $supply->min_stock }} Unidades</p>
+                    <div class="bg-white/5 p-3 rounded-2xl border border-white/5">
+                        <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1 italic">Valor Un.</p>
+                        <p class="text-[10px] font-bold text-emerald-400 italic font-mono">$ {{ number_format($supply->unit_cost ?? 0, 0, ',', '.') }}</p>
                     </div>
                 </div>
 
-                <div class="flex gap-3 pt-6 border-t border-slate-50">
-                    <a href="{{ route('admin.supplies.show', $supply) }}" class="flex-1 bg-slate-950 hover:bg-indigo-600 text-white text-center py-4 rounded-2xl font-black uppercase tracking-widest text-[0.65rem] transition-all shadow-xl shadow-slate-100 italic flex items-center justify-center gap-2">
-                        <i class="fas fa-search"></i> Gestionar
+                <div class="flex gap-3 pt-6 border-t border-white/5">
+                    <a href="{{ route('admin.supplies.show', $supply) }}" class="flex-1 bg-white text-slate-900 text-center py-4 rounded-2xl font-black uppercase tracking-widest text-[0.65rem] transition-all hover:bg-slate-200 italic shadow-xl shadow-white/5">
+                        <i class="fas fa-tasks mr-2"></i> Gestionar
                     </a>
-                    <a href="{{ route('admin.supplies.edit', $supply) }}" class="w-14 h-14 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:border-indigo-600 transition-all">
-                        <i class="fas fa-edit"></i>
+                    <a href="{{ route('admin.supplies.edit', $supply) }}" class="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all">
+                        <i class="fas fa-pen text-xs"></i>
                     </a>
                 </div>
             </div>
         @endforeach
     </div>
 
-    <div class="mt-12">
+    <!-- PAGINACIÓN PREMIUM -->
+    <div class="mt-16">
         {{ $supplies->links() }}
     </div>
 </div>
+
+<style>
+    /* Estilización de la paginación de Laravel para encajar con el tema oscuro */
+    .pagination { @apply flex gap-2; }
+    .page-item { @apply rounded-xl overflow-hidden border border-white/10; }
+    .page-link { @apply bg-slate-900 text-slate-400 border-none px-4 py-2 font-black italic uppercase tracking-widest text-[0.7rem] transition-colors; }
+    .page-item.active .page-link { @apply bg-indigo-600 text-white; }
+    .page-link:hover { @apply bg-slate-800 text-white; }
+</style>
+
 @endsection
