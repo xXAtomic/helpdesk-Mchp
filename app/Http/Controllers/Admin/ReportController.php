@@ -14,42 +14,88 @@ class ReportController extends Controller
 {
     public function index()
     {
-        // Métricas de Inventario
-        $totalAssets = Asset::count();
-        $assetsByType = Asset::select('type', DB::raw('count(*) as count'))->groupBy('type')->get();
-        $assetsByStatus = Asset::select('status', DB::raw('count(*) as count'))->groupBy('status')->get();
+        // 1. Total de tickets
+        $ticketsCount = Ticket::count();
 
-        // Métricas de Tickets
-        $totalTickets = Ticket::count();
-        $ticketsByStatus = Ticket::join('ticket_statuses', 'tickets.status_id', '=', 'ticket_statuses.id')
-            ->select('ticket_statuses.name as status', DB::raw('count(*) as count'))
-            ->groupBy('ticket_statuses.name')
-            ->get();
-
-        $resolvedLast30Days = Ticket::whereHas('status', function($q) {
+        // 2. Número de tickets cerrados TOTAL
+        $resolvedCount = Ticket::whereHas('status', function($q) {
             $q->where('is_closed', true);
-        })->where('updated_at', '>=', now()->subDays(30))->count();
+        })->count();
 
-        // Métricas de Mantenimiento ✨
-        $maintenanceOverdue = Asset::where('next_maintenance_at', '<', now())->count();
-        $maintenanceComingSoon = Asset::whereBetween('next_maintenance_at', [now(), now()->addDays(30)])->count();
-        $totalMaintenanceThisMonth = \App\Models\AssetLog::where('action', 'MAINTENANCE')
-            ->whereMonth('created_at', now()->month)
+        // 2b. Tickets resueltos este mes
+        $monthlyResolvedCount = Ticket::whereHas('status', function($q) {
+                $q->where('is_closed', true);
+            })
+            ->whereBetween('resolved_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])
             ->count();
 
-        // Métricas de Satisfacción (CSAT) ✨
-        $avgRating = TicketRating::avg('rating') ?? 0;
-        $ratingsCount = TicketRating::count();
-        $ratingsDistribution = TicketRating::select('rating', DB::raw('count(*) as count'))
-            ->groupBy('rating')
-            ->orderBy('rating', 'desc')
+        // 3. Número de equipos registrados
+        $equipmentCount = Asset::count();
+
+        // 4. Tiempo de respuesta promedio
+        $ticketsWithResolution = Ticket::whereNotNull('resolved_at')->get();
+        if ($ticketsWithResolution->count() > 0) {
+            $totalHours = $ticketsWithResolution->sum(function($ticket) {
+                return $ticket->created_at->diffInHours($ticket->resolved_at);
+            });
+            $avgResponseTime = round($totalHours / $ticketsWithResolution->count(), 1) . ' h';
+        } else {
+            $avgResponseTime = '0 h';
+        }
+
+        // 5. Calificación promedio CSAT
+        $avgRating = \App\Models\TicketRating::avg('rating') ?? 0;
+        $avgRating = round($avgRating, 1);
+
+        // 6. Datos para Gráfico de Dona
+        $statusStats = [
+            'Pendientes' => Ticket::whereHas('status', fn($q) => $q->where('name', 'Abierto'))->count(),
+            'En Progreso' => Ticket::whereHas('status', fn($q) => $q->where('name', 'En Progreso'))->count(),
+            'Resueltos' => Ticket::whereHas('status', fn($q) => $q->where('is_closed', true))->count(),
+        ];
+
+        // 7. Datos para Gráfico de Tendencia (7 días)
+        $days = [];
+        $ticketsCreated = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i);
+            $days[] = $date->translatedFormat('D');
+            $ticketsCreated[] = Ticket::whereDate('created_at', $date->toDateString())->count();
+        }
+
+        // 8. Datos Financieros ✨
+        $totalHardwareInvestment = Asset::sum('purchase_cost') ?? 0;
+
+        $totalMonthlyPurchases = \App\Models\SupplyLog::where('action', 'RESTOCK')
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->with('supply')
+            ->get()
+            ->sum(function($log) {
+                return $log->quantity * ($log->supply->unit_cost ?? 0);
+            });
+
+        $totalMonthlyConsumptions = \App\Models\SupplyLog::where('action', 'CONSUMPTION')
+            ->whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->with('supply')
+            ->get()
+            ->sum(function($log) {
+                return $log->quantity * ($log->supply->unit_cost ?? 0);
+            });
+
+        // 9. Auditoría Reciente
+        $recentTransactions = \App\Models\SupplyLog::latest()
+            ->with(['supply', 'user', 'admin'])
+            ->limit(10)
             ->get();
 
         return view('admin.reports.index', compact(
-            'totalAssets', 'assetsByType', 'assetsByStatus',
-            'totalTickets', 'ticketsByStatus', 'resolvedLast30Days',
-            'maintenanceOverdue', 'maintenanceComingSoon', 'totalMaintenanceThisMonth',
-            'avgRating', 'ratingsCount', 'ratingsDistribution'
+            'ticketsCount', 'resolvedCount', 'monthlyResolvedCount',
+            'equipmentCount', 'avgResponseTime', 'avgRating',
+            'statusStats', 'days', 'ticketsCreated',
+            'totalHardwareInvestment', 'totalMonthlyPurchases',
+            'totalMonthlyConsumptions', 'recentTransactions'
         ));
     }
 

@@ -1,185 +1,283 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="px-8 py-10 max-w-7xl mx-auto">
-    
-    <!-- HEADER EJECUTIVO -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 border-b border-slate-100 pb-10 gap-8">
+<div class="px-6 py-8 bg-slate-950 min-h-screen text-slate-200">
+    <!-- Header Premium -->
+    <div class="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <div class="flex items-center gap-3 mb-2">
-                <span class="px-3 py-1 bg-slate-950 text-white text-[0.65rem] font-black uppercase tracking-[0.3em] rounded-md italic shadow-2xl shadow-indigo-200">Intelligence Unit</span>
-            </div>
-            <h1 class="text-5xl font-black text-slate-950 tracking-tighter italic uppercase leading-none">
-                Reportes <span class="text-indigo-600">Estratégicos</span>
-            </h1>
-            <p class="text-slate-500 font-bold tracking-tight mt-4 text-[0.7rem] uppercase italic leading-relaxed max-w-lg">
-                Métricas de rendimiento en tiempo real y análisis de capacidad operativa para la toma de decisiones gerenciales.
+            <h1 class="text-3xl font-black text-white tracking-tighter uppercase italic leading-none">Reportes Estratégicos y Auditoría TI</h1>
+            <p class="text-[0.65rem] font-black text-indigo-400 uppercase tracking-[0.6em] mt-4 flex items-center gap-2 italic">
+                <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.5)]"></span>
+                Panel de Control de Gestión
             </p>
         </div>
-        
         <div class="flex items-center gap-4">
-            <a href="{{ route('admin.reports.csv') }}" class="bg-white border-2 border-slate-100 text-slate-950 px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[0.7rem] hover:bg-slate-50 transition-all flex items-center gap-3 shadow-sm group">
-                <i class="fas fa-file-excel text-emerald-500 group-hover:scale-110 transition-transform"></i>
-                Exportar CSV
-            </a>
-            <button onclick="window.print()" class="bg-slate-950 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-black italic uppercase tracking-widest text-[0.7rem] transition-all shadow-xl hover:shadow-indigo-200 flex items-center gap-3 group">
-                <i class="fas fa-file-pdf text-indigo-400 group-hover:rotate-12 transition-transform"></i>
-                Generar PDF
-            </button>
+            <div class="hidden md:flex flex-col items-end mr-4">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Estado del Sistema</span>
+                <span class="text-emerald-400 text-sm font-mono tracking-tighter">DATA_SYNC_ACTIVE_OK</span>
+            </div>
+            <div class="p-4 bg-slate-900/80 border border-blue-500/30 rounded-2xl shadow-lg shadow-blue-500/10 backdrop-blur-md">
+                <i class="fas fa-file-invoice-dollar text-blue-400"></i>
+            </div>
         </div>
     </div>
 
-    <!-- KPI'S DE ALTA VISIBILIDAD -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-        <div class="bg-indigo-600 p-10 rounded-[3rem] shadow-2xl shadow-indigo-100 relative overflow-hidden group">
-            <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-1000"></div>
-            <div class="relative z-10">
-                <p class="text-[0.65rem] font-black text-white/60 uppercase tracking-[0.3em] mb-4 italic">Activos Totales</p>
-                <h3 class="text-6xl font-black text-white tracking-tighter italic mb-4">{{ $totalAssets }}</h3>
-                <div class="flex items-center gap-2">
-                    <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
-                    <p class="text-[0.6rem] font-black text-white/50 uppercase italic tracking-widest leading-none">Inventario Actualizado</p>
+    <!-- Fila 1: Gráficos de Control Superior (Tickets) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+        <!-- Salud Global (Donut) -->
+        <div class="lg:col-span-4 bg-slate-900/40 backdrop-blur-2xl border border-slate-800 p-8 rounded-3xl shadow-2xl relative overflow-hidden group">
+            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <i class="fas fa-chart-pie text-6xl text-white"></i>
+            </div>
+            <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest mb-6">Estado de Tickets</h3>
+            <div id="statusDonutChart" class="min-h-[250px]"></div>
+            <div class="flex justify-around mt-6 border-t border-slate-800 pt-6">
+                <div class="text-center">
+                    <p class="text-2xl font-bold text-white">{{ $ticketsCount }}</p>
+                    <p class="text-[10px] text-slate-500 uppercase">Total</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-2xl font-bold text-blue-400">{{ $resolvedCount }}</p>
+                    <p class="text-[10px] text-slate-500 uppercase">Resueltos</p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm relative overflow-hidden group">
-            <div class="relative z-10">
-                <p class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.3em] mb-4 italic">Tickets Totales</p>
-                <h3 class="text-6xl font-black text-slate-950 tracking-tighter italic mb-4">{{ $totalTickets }}</h3>
-                <div class="flex items-center gap-3">
-                   <p class="text-[0.65rem] font-bold text-emerald-500 uppercase italic">↑ Eficiencia Operativa</p>
+        <div class="lg:col-span-8 bg-slate-900/40 backdrop-blur-2xl border border-slate-800 p-8 rounded-3xl shadow-2xl">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest">Flujo Operativo (Semanales)</h3>
+                <div class="flex gap-2">
+                    <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                    <span class="text-[10px] text-slate-400 uppercase tracking-tighter">Tickets Entrantes</span>
                 </div>
             </div>
-        </div>
-
-        <div class="bg-rose-500 p-10 rounded-[3rem] shadow-2xl shadow-rose-100 relative overflow-hidden group">
-             <div class="relative z-10">
-                <p class="text-[0.65rem] font-black text-white/60 uppercase tracking-[0.3em] mb-4 italic">Mantenimiento Vencido</p>
-                <h3 class="text-6xl font-black text-white tracking-tighter italic mb-4">{{ $maintenanceOverdue }}</h3>
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-exclamation-triangle text-white/50 text-[0.6rem]"></i>
-                    <p class="text-[0.6rem] font-black text-white/50 uppercase italic tracking-widest leading-none">Requieren Atención</p>
-                </div>
-             </div>
-        </div>
-
-        <div class="bg-slate-950 p-10 rounded-[3rem] shadow-2xl relative overflow-hidden group">
-             <div class="relative z-10 text-center">
-                <p class="text-[0.65rem] font-black text-indigo-400 uppercase tracking-[0.3em] mb-4 italic">Próximos 30 Días</p>
-                <div class="text-5xl font-black text-white tracking-tighter italic mb-4">
-                    {{ $maintenanceComingSoon }}
-                </div>
-                <p class="text-[0.6rem] text-slate-500 font-black uppercase italic tracking-widest">En Agenda Preventiva</p>
-             </div>
+            <div id="mainTrendChart" class="min-h-[300px]"></div>
         </div>
     </div>
 
-    <!-- ANÁLISIS DE CALIDAD Y SATISFACCIÓN (CSAT) -->
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
-        <div class="md:col-span-4 bg-amber-400 p-10 rounded-[4rem] shadow-2xl shadow-amber-100 relative overflow-hidden group border-4 border-white">
-            <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-1000"></div>
-            <div class="relative z-10">
-                <div class="p-4 bg-white/20 rounded-2xl w-fit mb-6">
-                    <i class="fas fa-star text-white text-3xl"></i>
+    <!-- Fila 2: Métricas Rápidas (Puntos de Control) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <!-- Inventario -->
+        <div class="bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-500/20 p-6 rounded-2xl hover:border-blue-500/50 transition-all group shadow-xl">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-blue-500/20 rounded-xl text-blue-400 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-desktop text-xl"></i>
                 </div>
-                <p class="text-[0.65rem] font-black text-amber-950/60 uppercase tracking-[0.3em] mb-2 italic">Índice Institucional</p>
-                <h3 class="text-7xl font-black text-amber-950 tracking-tighter italic mb-4">{{ $avgRating }}</h3>
-                <div class="flex items-center gap-4 border-t border-amber-950/10 pt-4">
-                    <p class="text-[0.65rem] font-black text-amber-950/50 uppercase italic tracking-widest leading-none">Basado en {{ $ratingsCount }} encuestas</p>
-                </div>
+                <span class="text-xs text-blue-500 font-bold bg-blue-500/10 px-2 py-1 rounded">Activo</span>
+            </div>
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Equipos (Patrimonio)</p>
+            <h4 class="text-3xl font-black text-white mt-1 italic tracking-tighter">{{ number_format($equipmentCount, 0, ',', '.') }} un.</h4>
+            <div class="mt-4 flex items-center text-[10px] text-slate-500 font-black italic">
+                <i class="fas fa-sync-alt fa-spin mr-2"></i> BASE GLOBAL
             </div>
         </div>
 
-        <div class="md:col-span-8 bg-white p-10 rounded-[4rem] border border-slate-100 shadow-sm overflow-hidden">
-            <div class="flex items-center justify-between mb-8">
-                <h4 class="text-xl font-black text-slate-900 uppercase italic tracking-tighter flex items-center gap-3">
-                     <span class="w-1.5 h-6 bg-amber-400 rounded-full"></span>
-                     Distribución de Satisfacción
-                </h4>
-                <span class="text-[0.65rem] font-black text-slate-400 uppercase tracking-widest italic">Análisis de Estrellas (1-5)</span>
+        <!-- Satisfaction CSAT -->
+        <div class="bg-gradient-to-br from-indigo-600/10 to-transparent border border-indigo-500/20 p-6 rounded-2xl hover:border-indigo-500/50 transition-all group shadow-xl">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-indigo-500/20 rounded-xl text-indigo-400 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-smile text-xl"></i>
+                </div>
+                <span class="text-xs text-indigo-500 font-bold bg-indigo-500/10 px-2 py-1 rounded">CSAT</span>
             </div>
-            <div id="csatDistributionChart" class="min-h-[250px]"></div>
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Satisfacción</p>
+            <h4 class="text-3xl font-black text-white mt-1 italic tracking-tighter">{{ $avgRating }} / 5.0</h4>
+            <div class="mt-4 flex gap-1 items-center">
+                @for($i=1; $i<=5; $i++)
+                    <div class="h-1 flex-1 {{ $i <= $avgRating ? 'bg-indigo-400' : 'bg-slate-700' }} rounded-full transition-all"></div>
+                @endfor
+            </div>
+        </div>
+
+        <!-- Tiempo de Respuesta -->
+        <div class="bg-gradient-to-br from-amber-600/10 to-transparent border border-amber-500/20 p-6 rounded-2xl hover:border-amber-500/50 transition-all group shadow-xl">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-amber-500/20 rounded-xl text-amber-400 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-history text-xl"></i>
+                </div>
+                <span class="text-xs text-amber-500 font-bold bg-amber-500/10 px-2 py-1 rounded">SLA</span>
+            </div>
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Respuesta Prom.</p>
+            <h4 class="text-3xl font-black text-white mt-1 italic tracking-tighter">{{ $avgResponseTime }}</h4>
+            <div class="mt-4 text-[10px] italic text-slate-500 font-bold uppercase tracking-[0.2em]">
+                Rendimiento Optimo
+            </div>
+        </div>
+
+        <!-- Tickets Atendidos Mes -->
+        <div class="bg-gradient-to-br from-purple-600/10 to-transparent border border-purple-500/20 p-6 rounded-2xl hover:border-purple-500/50 transition-all group shadow-xl">
+            <div class="flex justify-between items-start mb-4">
+                <div class="p-3 bg-purple-500/20 rounded-xl text-purple-400 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-check-double text-xl"></i>
+                </div>
+                <span class="text-[10px] text-purple-400 font-bold bg-purple-500/10 px-2 py-1 rounded italic uppercase tracking-tighter">{{ Carbon\Carbon::now()->format('F') }}</span>
+            </div>
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Tickets Mes</p>
+            <h4 class="text-3xl font-black text-white mt-1 italic tracking-tighter">{{ str_pad($monthlyResolvedCount, 2, '0', STR_PAD_LEFT) }}</h4>
+            <div class="mt-4 flex items-center text-[9px] text-slate-500 uppercase tracking-widest font-black italic">
+                <i class="fas fa-calendar mr-2 text-purple-500"></i> RESET EN {{ Carbon\Carbon::now()->daysInMonth - Carbon\Carbon::now()->day }} DÍAS
+            </div>
         </div>
     </div>
 
-    <!-- ANÁLISIS GRÁFICO AVANZADO -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
-        <!-- DISTRIBUCIÓN DE HARDWARE -->
-        <div class="bg-white p-10 rounded-[4rem] border border-slate-100 shadow-sm">
-            <h4 class="text-xl font-black text-slate-900 uppercase italic tracking-tighter mb-10 flex items-center gap-3">
-                 <span class="w-1.5 h-6 bg-indigo-600 rounded-full"></span>
-                 Distribución de Activos
-            </h4>
-            <div id="assetsByTypeChart"></div>
+    <!-- Fila 3: Salud Financiera (Contenedor Independiente) -->
+    <div class="mt-12 mb-8">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-2 h-6 bg-emerald-500 rounded-full"></div>
+            <h3 class="text-white text-lg font-black uppercase tracking-tighter italic leading-none">Salud Financiera TI (CLP)</h3>
+            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-500 text-[0.6rem] font-black uppercase rounded-lg border border-emerald-500/20">Auditoría Real</span>
         </div>
 
-        <!-- ESTADO OPERATIVO -->
-        <div class="bg-white p-10 rounded-[4rem] border border-slate-100 shadow-sm">
-            <h4 class="text-xl font-black text-slate-900 uppercase italic tracking-tighter mb-10 flex items-center gap-3">
-                 <span class="w-1.5 h-6 bg-emerald-500 rounded-full"></span>
-                 Capacidad Operativa
-            </h4>
-            <div id="assetsByStatusChart"></div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Patrimonio -->
+            <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/60 hover:border-emerald-500/30">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/5 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                <p class="text-slate-400 text-[0.6rem] font-black uppercase tracking-[0.2em] mb-4 italic">Inversión Hardware</p>
+                <h4 class="text-4xl font-black text-white italic tracking-tighter">$ {{ number_format($totalHardwareInvestment, 0, ',', '.') }}</h4>
+                <p class="text-[9px] text-emerald-500 font-black uppercase tracking-widest mt-6">VALORIZACIÓN PATRIMONIAL</p>
+            </div>
+
+            <!-- Compras -->
+            <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/60 hover:border-indigo-500/30">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-indigo-500/5 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                <p class="text-slate-400 text-[0.6rem] font-black uppercase tracking-[0.2em] mb-4 italic">Compras / Abastecimiento</p>
+                <h4 class="text-4xl font-black text-white italic tracking-tighter">$ {{ number_format($totalMonthlyPurchases, 0, ',', '.') }}</h4>
+                <p class="text-[9px] text-indigo-500 font-black uppercase tracking-widest mt-6">INGRESO STOCK ({{ Carbon\Carbon::now()->format('M Y') }})</p>
+            </div>
+
+            <!-- Gastos -->
+            <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/60 hover:border-blue-500/30">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                <p class="text-slate-400 text-[0.6rem] font-black uppercase tracking-[0.2em] mb-4 italic">Gasto Operativo</p>
+                <h4 class="text-4xl font-black text-white italic tracking-tighter">$ {{ number_format($totalMonthlyConsumptions, 0, ',', '.') }}</h4>
+                <p class="text-[9px] text-blue-500 font-black uppercase tracking-widest mt-6">RETIRO MATERIAL ({{ Carbon\Carbon::now()->format('M Y') }})</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fila 4: Bitácora de Auditoría (Ancho Completo) -->
+    <div class="bg-slate-900/40 backdrop-blur-2xl border border-white/5 p-8 rounded-[2.5rem] shadow-2xl mb-12 overflow-hidden">
+        <div class="flex items-center justify-between mb-8 border-b border-white/5 pb-6">
+            <div>
+                <h3 class="text-white text-lg font-black uppercase tracking-tighter italic">Bitácora de Control de Movimientos</h3>
+                <p class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest mt-2 tracking-[0.2em]">Registro Histórico de Inversión y Consumo</p>
+            </div>
+            <i class="fas fa-fingerprint text-indigo-500 text-3xl opacity-20"></i>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left table-auto">
+                <thead class="border-b border-white/10 uppercase italic">
+                    <tr class="text-slate-500 text-[10px] font-black tracking-widest">
+                        <th class="pb-5 pr-4">Fecha</th>
+                        <th class="pb-5 pr-4">Insumo / Marca</th>
+                        <th class="pb-5 text-center">Cant.</th>
+                        <th class="pb-5 text-right">Monto CLP</th>
+                        <th class="pb-5 text-center">Tipo</th>
+                        <th class="pb-5 px-6">Responsable</th>
+                        <th class="pb-5">Destino / Solicitante</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/10">
+                    @foreach($recentTransactions as $log)
+                    <tr class="group hover:bg-white/[0.03] transition-colors border-b border-white/5 italic">
+                        <td class="py-5 whitespace-nowrap">
+                            <span class="text-[11px] font-black text-white italic tracking-tighter">{{ $log->created_at->format('d/m/Y') }}</span>
+                            <span class="block text-[9px] text-indigo-400 font-mono italic uppercase">{{ $log->created_at->format('H:i') }} hrs</span>
+                        </td>
+                        <td class="py-5">
+                            <span class="text-xs font-black text-white uppercase tracking-tight italic">{{ $log->supply->name }}</span>
+                            <span class="block text-[9px] text-slate-500 uppercase font-bold italic tracking-tighter">{{ $log->supply->brand ?? 'S/Marca' }}</span>
+                        </td>
+                        <td class="py-5 text-center">
+                            <span class="px-3 py-1 bg-slate-800 text-white border border-white/10 rounded-lg font-mono text-xs shadow-lg uppercase">x{{ $log->quantity }}</span>
+                        </td>
+                        <td class="py-5 text-right">
+                            @php $value = $log->quantity * ($log->supply->unit_cost ?? 0); @endphp
+                            <span class="text-[11px] font-black {{ $value > 0 ? 'text-emerald-300' : 'text-rose-400' }} tracking-tighter italic">$ {{ number_format($value, 0, ',', '.') }}</span>
+                        </td>
+                        <td class="py-5 text-center">
+                            @if($log->action == 'RESTOCK')
+                                <span class="px-3 py-1 bg-indigo-500 text-white text-[8px] font-black uppercase rounded-full shadow-lg italic">COMPRA</span>
+                            @else
+                                <span class="px-3 py-1 bg-blue-600 text-white text-[8px] font-black uppercase rounded-full shadow-lg italic">GASTO</span>
+                            @endif
+                        </td>
+                        <td class="py-5 px-6">
+                            <div class="flex items-center gap-3">
+                                <span class="text-[10px] font-black text-slate-200 uppercase tracking-tight italic shadow-white/5">{{ $log->admin->name ?? 'SISTEMA' }}</span>
+                            </div>
+                        </td>
+                        <td class="py-5">
+                            @if($log->action == 'RESTOCK')
+                                <span class="text-[9px] text-indigo-400 font-black uppercase italic tracking-tighter">📦 Abastecimiento Almacén</span>
+                            @else
+                                <div class="flex flex-col gap-0.5">
+                                    <span class="text-[10px] font-black text-white uppercase italic tracking-tight">{{ $log->user->name ?? 'RETIRO' }}</span>
+                                    @if($log->equipment_tag)
+                                        <span class="text-[8px] text-blue-400 font-black uppercase italic">Equip: {{ $log->equipment_tag }}</span>
+                                    @endif
+                                </div>
+                            @endif
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Grafica por Tipo
-        const assetsByType = @json($assetsByType);
-        new ApexCharts(document.querySelector("#assetsByTypeChart"), {
-            series: assetsByType.map(i => i.count),
-            chart: { type: 'donut', height: 350 },
-            labels: assetsByType.map(i => i.type),
-            colors: ['#0f172a', '#4f46e5', '#10b981', '#f59e0b', '#ef4444'],
-            dataLabels: { enabled: false },
-            legend: { position: 'bottom', fontFamily: 'Inter', fontWeight: 700 }
-        }).render();
+document.addEventListener('DOMContentLoaded', function () {
+    const colors = {
+        primary: '#3b82f6',
+        secondary: '#6366f1',
+        success: '#10b981',
+        danger: '#ef4444',
+        warning: '#f59e0b',
+        muted: '#94a3b8'
+    };
 
-        // Grafica CSAT Distribution
-        const ratingsDistribution = @json($ratingsDistribution);
-        new ApexCharts(document.querySelector("#csatDistributionChart"), {
-            series: [{
-                name: 'Votos',
-                data: [1,2,3,4,5].map(star => {
-                    const found = ratingsDistribution.find(r => r.rating == star);
-                    return found ? found.count : 0;
-                })
-            }],
-            chart: { type: 'bar', height: 280, toolbar: { show: false } },
-            plotOptions: { bar: { borderRadius: 8, columnWidth: '40%', distributed: true } },
-            xaxis: { categories: ['1★', '2★', '3★', '4★', '5★'] },
-            colors: ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#10b981'],
-            legend: { show: false },
-            dataLabels: { enabled: true, style: { fontSize: '10px', fontWeight: 'bold' } }
-        }).render();
+    // 1. Donut Chart - Ticket Status
+    const statusData = @json(array_values($statusStats));
+    const statusLabels = @json(array_keys($statusStats));
 
-        // Grafica por Estado
-        const assetsByStatus = @json($assetsByStatus);
-        new ApexCharts(document.querySelector("#assetsByStatusChart"), {
-            series: [{
-                name: 'Equipos',
-                data: assetsByStatus.map(i => i.count)
-            }],
-            chart: { type: 'bar', height: 350, toolbar: { show: false } },
-            plotOptions: { bar: { borderRadius: 15, columnWidth: '50%', distributed: true } },
-            xaxis: { categories: assetsByStatus.map(i => i.status) },
-            colors: ['#10b981', '#f59e0b', '#ef4444', '#64748b'],
-            legend: { show: false }
-        }).render();
-    });
+    var optionsStatus = {
+        series: statusData,
+        chart: { type: 'donut', height: 280, background: 'transparent' },
+        stroke: { show: false },
+        colors: [colors.warning, colors.primary, colors.success],
+        labels: statusLabels,
+        legend: { position: 'bottom', labels: { colors: colors.muted }, markers: { radius: 12 } },
+        dataLabels: { enabled: false },
+        plotOptions: { pie: { donut: { size: '75%', background: 'transparent' } } },
+        tooltip: { theme: 'dark' }
+    };
+    new ApexCharts(document.querySelector("#statusDonutChart"), optionsStatus).render();
+
+    // 2. Main Trend Area Chart
+    var optionsMain = {
+        series: [{
+            name: 'Tickets Creados',
+            data: @json($ticketsCreated)
+        }],
+        chart: { height: 350, type: 'area', toolbar: { show: false }, background: 'transparent', fontFamily: 'Inter, sans-serif' },
+        dataLabels: { enabled: false },
+        stroke: { curve: 'smooth', width: 4 },
+        colors: [colors.primary],
+        fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.3, opacityTo: 0.05, stops: [0, 90, 100] } },
+        xaxis: { 
+            categories: @json($days), 
+            axisBorder: { show: false },
+            axisTicks: { show: false },
+            labels: { style: { colors: colors.muted, fontSize: '11px' } } 
+        },
+        yaxis: { labels: { style: { colors: colors.muted, fontSize: '11px' } } },
+        grid: { borderColor: '#1e293b', strokeDashArray: 4 },
+        tooltip: { theme: 'dark' }
+    };
+    new ApexCharts(document.querySelector("#mainTrendChart"), optionsMain).render();
+});
 </script>
-
-<style>
-    @media print {
-        .sidebar, #gravity-bot, .bg-white.border-b, button, .group.bg-white, .btn-print { display: none !important; }
-        .main-wrapper { display: block !important; padding: 0 !important; }
-        body { background: white !important; -webkit-print-color-adjust: exact !important; }
-        .content-area { margin: 0 !important; width: 100% !important; overflow: visible !important; }
-        .bg-indigo-600 { background: #4f46e5 !important; color: white !important; }
-        .bg-slate-950 { background: #0f172a !important; color: white !important; }
-    }
-</style>
 @endsection
