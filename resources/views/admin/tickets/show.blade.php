@@ -174,7 +174,7 @@
 
         <!-- COLUMNA DERECHA: PANELES DE CONTROL TÉCNICO -->
         <div class="space-y-10">
-            <div class="bg-slate-900/40 backdrop-blur-xl p-10 rounded-[3rem] border border-white/5 shadow-3xl sticky top-8 relative overflow-hidden group">
+            <div class="bg-slate-900/40 backdrop-blur-xl p-10 rounded-[3rem] border border-white/5 shadow-3xl sticky top-8 overflow-hidden group">
                 <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-indigo-600/5 rounded-full blur-2xl group-hover:scale-150 transition-all duration-1000"></div>
                 <div class="relative z-10">
                     <h5 class="text-[0.6rem] font-black text-slate-500 uppercase tracking-[0.5em] mb-12 italic leading-none border-b border-white/5 pb-4">Gestión de Estatus</h5>
