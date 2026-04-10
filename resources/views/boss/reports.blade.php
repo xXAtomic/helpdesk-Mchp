@@ -51,7 +51,7 @@
                                 <span class="text-indigo-400">★ {{ $month['csat'] }}</span>
                             </div>
                             <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                                <div class="h-full bg-indigo-500" style="width: {{ ($month['csat'] / 5) * 100 }}%"></div>
+                                <div class="h-full bg-indigo-500" style="width: <?= ($month['csat'] / 5) * 100 ?>%;"></div>
                             </div>
                         </div>
                     </div>
