@@ -50,7 +50,7 @@ class GravityAIService
             $model = 'gemini-1.5-flash';
             $response = $this->callGemini($model, $prompt, $contextText);
 
-            // Reintento inteligente si el modelo falla o no existe
+            // Reintento inteligente si el modelo falla o no existe (404)
             if ($response->status() === 404) {
                 $model = $this->autoDetectModel() ?: $model;
                 $response = $this->callGemini($model, $prompt, $contextText);
@@ -61,8 +61,13 @@ class GravityAIService
                 return $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Lo siento, no pude procesar una respuesta coherente.';
             }
 
+            // Manejo de errores de servidor (503, 500, etc)
+            if ($response->status() >= 500) {
+                return "🛸 **ESTADO DE SATURACIÓN**: El núcleo de IA está procesando muchas solicitudes en este segundo. Por favor, reintenta tu pregunta en un momento.";
+            }
+
             Log::error("Gemini API Error: " . $response->body());
-            return "El núcleo de IA reportó un problema (Código: " . $response->status() . ").";
+            return "El núcleo reportó una anomalía (Código: " . $response->status() . ").";
 
         } catch (\Exception $e) {
             Log::critical("GravityAIService Exception: " . $e->getMessage());
@@ -97,7 +102,8 @@ class GravityAIService
 
         $fullPrompt = "{$systemInstructions}\n\nCONTEXTO:\n{$contextText}\n\nPREGUNTA DEL USUARIO:\n{$prompt}";
 
-        return Http::withHeaders(['x-goog-api-key' => $this->apiKey])
+        return Http::retry(3, 200) // Reintenta 3 veces con 200ms entre cada intento
+            ->withHeaders(['x-goog-api-key' => $this->apiKey])
             ->post("{$this->baseUrl}/{$model}:generateContent", [
                 'contents' => [['parts' => [['text' => $fullPrompt]]]]
             ]);
