@@ -162,9 +162,14 @@
                         </td>
 
                         <td class="px-8 py-6 text-center">
+                            @php
+                                $hColor = $item->health_color ?? 'slate';
+                                $hStatus = $item->health_status ?? 'Desconocido';
+                            @endphp
                             <div class="flex flex-col items-center gap-1.5">
-                                <span class="px-3 py-1.5 rounded-xl text-[0.55rem] font-black uppercase tracking-widest border italic bg-{{ $item->health_color }}-500/10 text-{{ $item->health_color }}-400 border-{{ $item->health_color }}-500/20 shadow-lg">
-                                    {{ $item->health_status }}
+                                <span class="px-3 py-1.5 rounded-xl text-[0.55rem] font-black uppercase tracking-widest border italic"
+                                      style="background-color: rgba(var(--health-{{ $hColor }}), 0.1); color: var(--health-text-{{ $hColor }}); border-color: rgba(var(--health-{{ $hColor }}), 0.2);">
+                                    {{ $hStatus }}
                                 </span>
                             </div>
                         </td>
@@ -231,11 +236,19 @@
 
 <style>
     /* Estilización Paginación */
-    .pagination { @apply flex gap-2; }
-    .page-item { @apply rounded-xl overflow-hidden border border-white/5; }
-    .page-link { @apply bg-slate-900/50 text-slate-500 border-none px-5 py-3 font-black italic uppercase tracking-widest text-[0.65rem] transition-all; }
-    .page-item.active .page-link { @apply bg-indigo-600 text-white shadow-lg shadow-indigo-500/20; }
-    .page-link:hover { @apply bg-slate-800 text-white; }
+    .pagination { display: flex; gap: 0.5rem; }
+    .page-item { border-radius: 0.75rem; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+    .page-link { background: rgba(15, 23, 42, 0.5); color: #64748b; border: none; padding: 0.75rem 1.25rem; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.65rem; transition: all 0.3s; }
+    .page-item.active .page-link { background: #4f46e5; color: white; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.2); }
+    .page-link:hover { background: #1e293b; color: white; }
+
+    /* Variables de Salud TI para evitar clases dinámicas conflictivas */
+    :root {
+        --health-emerald: 16, 185, 129; --health-text-emerald: #10b981;
+        --health-amber: 245, 158, 11; --health-text-amber: #f59e0b;
+        --health-rose: 225, 29, 72; --health-text-rose: #e11d48;
+        --health-slate: 71, 85, 105; --health-text-slate: #94a3b8;
+    }
 </style>
 
 @endsection
