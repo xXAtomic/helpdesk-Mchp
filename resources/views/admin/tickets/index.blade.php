@@ -81,7 +81,7 @@
                                 </td>
                                 <td class="px-8 py-6 text-center">
                                     <span class="inline-flex items-center px-4 py-1.5 rounded-full text-[0.55rem] font-black uppercase tracking-widest italic border shadow-lg"
-                                          style="background-color: {{ optional($ticket->status)->color }}15; color: {{ optional($ticket->status)->color }}; border-color: {{ optional($ticket->status)->color }}30;">
+                                          style="background-color: <?= optional($ticket->status)->color ?>15; color: <?= optional($ticket->status)->color ?>; border-color: <?= optional($ticket->status)->color ?>30;">
                                         ● {{ $ticket->status->name ?? 'ABIERTO' }}
                                     </span>
                                 </td>
