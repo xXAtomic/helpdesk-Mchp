@@ -216,50 +216,69 @@
                         <th class="pb-4">Solicitante / Destino</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-white/5">
+                <tbody class="divide-y divide-white/10">
                     @foreach($recentTransactions as $log)
-                    <tr class="group hover:bg-white/[0.02] transition-colors">
-                        <td class="py-4 text-[11px] font-mono text-slate-400">{{ $log->created_at->format('d/m H:i') }}</td>
-                        <td class="py-4">
-                            <span class="text-xs font-bold text-white tracking-tight">{{ $log->supply->name }}</span>
-                            <span class="block text-[9px] text-slate-500 uppercase font-black">{{ $log->supply->brand ?? 'S/M' }}</span>
+                    <tr class="group hover:bg-white/[0.03] transition-colors border-b border-white/5">
+                        <td class="py-5">
+                            <span class="text-[11px] font-black text-white italic tracking-tighter">{{ $log->created_at->format('d/m/Y') }}</span>
+                            <span class="block text-[9px] text-indigo-400 font-mono">{{ $log->created_at->format('H:i') }} hrs</span>
                         </td>
-                        <td class="py-4 text-center">
-                            <span class="px-2 py-1 bg-slate-800 rounded font-mono text-xs text-white">x{{ $log->quantity }}</span>
+                        <td class="py-5">
+                            <span class="text-xs font-black text-white uppercase tracking-tight">{{ $log->supply->name }}</span>
+                            <span class="block text-[9px] text-slate-500 uppercase font-black">{{ $log->supply->brand ?? 'GENÉRICO' }}</span>
                         </td>
-                        <td class="py-4 text-right">
-                            <span class="text-xs font-bold text-emerald-400 tracking-tighter italic">$ {{ number_format($log->quantity * ($log->supply->unit_cost ?? 0), 0, ',', '.') }}</span>
+                        <td class="py-5 text-center">
+                            <span class="px-3 py-1 bg-slate-800 text-white border border-white/10 rounded-lg font-mono text-xs shadow-lg">x{{ $log->quantity }}</span>
                         </td>
-                        <td class="py-4 text-center">
-                            @if($log->action == 'RESTOCK')
-                                <span class="px-2 py-0.5 bg-indigo-500/10 text-indigo-400 text-[8px] font-black uppercase rounded-lg border border-indigo-500/20 italic">COMPRA</span>
+                        <td class="py-5 text-right">
+                            @php $value = $log->quantity * ($log->supply->unit_cost ?? 0); @endphp
+                            @if($value > 0)
+                                <span class="text-[11px] font-black text-emerald-300 tracking-tighter italic shadow-emerald-500/10">$ {{ number_format($value, 0, ',', '.') }}</span>
                             @else
-                                <span class="px-2 py-0.5 bg-blue-500/10 text-blue-400 text-[8px] font-black uppercase rounded-lg border border-blue-500/20 italic">G-OPERACIÓN</span>
+                                <span class="text-[10px] text-rose-500/80 font-black uppercase italic">VALOR $0</span>
                             @endif
                         </td>
-                        <td class="py-4">
-                            <div class="flex items-center gap-2">
-                                <div class="w-4 h-4 rounded-full bg-slate-800 text-[8px] flex items-center justify-center text-slate-400 uppercase font-black">
-                                    {{ substr($log->admin->name ?? '?', 0, 1) }}
+                        <td class="py-5 text-center">
+                            @if($log->action == 'RESTOCK')
+                                <span class="px-3 py-1 bg-indigo-500 text-white text-[8px] font-black uppercase rounded-full shadow-lg shadow-indigo-500/20 italic">COMPRA</span>
+                            @else
+                                <span class="px-3 py-1 bg-blue-600 text-white text-[8px] font-black uppercase rounded-full shadow-lg shadow-blue-500/20 italic">ENTREGA</span>
+                            @endif
+                        </td>
+                        <td class="py-5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-600 to-blue-500 text-[9px] flex items-center justify-center text-white uppercase font-black shadow-lg">
+                                    {{ substr($log->admin->name ?? 'S', 0, 1) }}
                                 </div>
-                                <span class="text-[10px] font-bold text-slate-300 uppercase truncate max-w-[100px]">{{ $log->admin->name ?? 'SISTEMA' }}</span>
+                                <span class="text-[10px] font-black text-slate-200 uppercase tracking-tight">{{ explode(' ', $log->admin->name ?? 'SISTEMA')[0] }}</span>
                             </div>
                         </td>
-                        <td class="py-4">
+                        <td class="py-5">
                             @if($log->action == 'RESTOCK')
-                                <span class="text-[9px] text-slate-500 uppercase font-bold italic">Abastecimiento Almacén</span>
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-warehouse text-indigo-400 text-[10px]"></i>
+                                    <span class="text-[10px] text-slate-400 uppercase font-black italic tracking-tighter">Stock Inventario</span>
+                                </div>
                             @else
                                 <div class="flex items-center gap-2">
-                                    <i class="fas fa-user-tag text-blue-500/50 text-[10px]"></i>
-                                    <span class="text-[10px] font-black text-white uppercase">{{ $log->user->name ?? 'RETIRO DIRECTO' }}</span>
+                                    <i class="fas fa-user-check text-blue-400 text-[10px]"></i>
+                                    <span class="text-[10px] font-black text-white uppercase truncate max-w-[120px]">{{ $log->user->name ?? 'RETIRO' }}</span>
                                 </div>
                                 @if($log->equipment_tag)
-                                    <span class="block text-[8px] text-indigo-400 font-bold uppercase mt-0.5">EQ: {{ $log->equipment_tag }}</span>
+                                    <span class="block text-[8px] text-indigo-400 font-black uppercase mt-1">🏷️ {{ $log->equipment_tag }}</span>
                                 @endif
                             @endif
                         </td>
                     </tr>
                     @endforeach
+                    @if($recentTransactions->isEmpty())
+                        <tr>
+                            <td colspan="7" class="py-20 text-center">
+                                <i class="fas fa-inbox text-4xl text-slate-800 mb-4 block"></i>
+                                <p class="text-[0.65rem] text-slate-600 font-black uppercase tracking-[0.3em] italic">No hay movimientos registrados para auditoría</p>
+                            </td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
