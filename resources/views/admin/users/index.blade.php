@@ -104,11 +104,26 @@
         </div>
     </div>
     
+    
+    <!-- PAGINACIÓN -->
+    <div class="mt-12">
+        {{ $users->links() }}
+    </div>
+
     <!-- FOOTER INFO -->
     <div class="mt-8 flex justify-center">
-        <p class="text-[0.5rem] font-black text-slate-700 uppercase tracking-[0.6em] italic">
-            Atomic Identity Protocol • Total Registros: {{ $users->count() }}
+        <p class="text-[0.5rem] font-black text-slate-700 uppercase tracking-[0.6em] italic leading-none">
+            Atomic Identity Protocol • Total Registros: {{ $users->total() }}
         </p>
     </div>
 </div>
+
+<style>
+    /* Estilización Paginación */
+    .pagination { @apply flex gap-2; }
+    .page-item { @apply rounded-xl overflow-hidden border border-white/5; }
+    .page-link { @apply bg-slate-900/50 text-slate-500 border-none px-5 py-3 font-black italic uppercase tracking-widest text-[0.65rem] transition-all; }
+    .page-item.active .page-link { @apply bg-blue-600 text-white shadow-lg shadow-blue-500/20; }
+    .page-link:hover { @apply bg-slate-800 text-white; }
+</style>
 @endsection

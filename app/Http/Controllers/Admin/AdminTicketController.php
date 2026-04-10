@@ -29,7 +29,7 @@ class AdminTicketController extends Controller
         ];
 
         // Listado de tickets
-        $tickets = Ticket::with('user')->orderBy('created_at', 'desc')->get();
+        $tickets = Ticket::with('user')->orderBy('created_at', 'desc')->paginate(10);
 
         return view('admin.tickets.index', compact('tickets', 'stats'));
     }

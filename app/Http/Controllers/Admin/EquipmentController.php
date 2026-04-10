@@ -32,7 +32,7 @@ class EquipmentController extends Controller
             $query->where('status', $request->status);
         }
 
-        $items = $query->with('user')->orderBy('created_at', 'desc')->get();
+        $items = $query->with('user')->orderBy('created_at', 'desc')->paginate(15);
         return view('admin.inventory.index', compact('items'));
     }
 
