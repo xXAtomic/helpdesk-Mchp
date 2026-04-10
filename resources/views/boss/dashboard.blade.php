@@ -160,7 +160,7 @@
         <div class="flex items-center justify-between mb-8 border-b border-white/5 pb-6">
             <div>
                 <h3 class="text-white text-lg font-black uppercase tracking-tighter italic">Bitácora de Control de Movimientos</h3>
-                <p class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest mt-2 tracking-[0.2em]">Auditoría detallada de Inversión y Gasto</p>
+                <p class="text-[0.6rem] text-slate-500 font-bold uppercase mt-2 tracking-[0.2em]">Auditoría detallada de Inversión y Gasto</p>
             </div>
             <i class="fas fa-fingerprint text-indigo-500 text-3xl opacity-20"></i>
         </div>
