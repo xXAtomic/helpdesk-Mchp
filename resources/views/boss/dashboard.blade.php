@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    <!-- Panel de Control Principal (ApexCharts) -->
+    <!-- Fila 1: Gráficos de Control Superior (Tickets) -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
         <!-- Salud Global (Donut) -->
         <div class="lg:col-span-4 bg-slate-900/40 backdrop-blur-2xl border border-slate-800 p-8 rounded-3xl shadow-2xl relative overflow-hidden group">
@@ -55,236 +55,189 @@
         </div>
     </div>
 
-    <!-- SECCIÓN DE ANALÍTICA PREDICTIVA -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
-        <div class="lg:col-span-12 bg-slate-900/40 backdrop-blur-2xl border border-slate-800 p-8 rounded-3xl shadow-2xl overflow-hidden group">
-            <div class="flex items-center justify-between mb-8 border-b border-slate-800 pb-6">
-                <div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-2 h-6 bg-indigo-500 rounded-full"></div>
-                        <h3 class="text-white text-lg font-black uppercase tracking-tighter italic">Mapa de Calor: Presión por Departamento</h3>
-                    </div>
-                    <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold mt-2 ml-5 italic">Identificación de áreas con mayor demanda de soporte técnico</p>
-                </div>
-                <div class="flex items-center gap-2 px-4 py-2 bg-slate-950 rounded-xl border border-slate-800">
-                    <span class="w-2 h-2 bg-rose-500 rounded-full animate-pulse shadow-[0_0_10px_#f43f5e]"></span>
-                    <span class="text-[10px] text-slate-300 font-black uppercase tracking-widest">En Tiempo Real</span>
-                </div>
-            </div>
-            <div id="departmentHeatChart" class="min-h-[350px]"></div>
-        </div>
-    </div>
-
-    <!-- Widgets Tácticos Inferiores -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Fila 2: Métricas Rápidas (Puntos de Control) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         <!-- Inventario -->
-        <div class="bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-500/20 p-6 rounded-2xl hover:border-blue-500/50 transition-all group">
+        <div class="bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-500/20 p-6 rounded-2xl hover:border-blue-500/50 transition-all group shadow-xl">
             <div class="flex justify-between items-start mb-4">
                 <div class="p-3 bg-blue-500/20 rounded-xl text-blue-400 group-hover:scale-110 transition-transform">
                     <i class="fas fa-desktop text-xl"></i>
                 </div>
                 <span class="text-xs text-blue-500 font-bold bg-blue-500/10 px-2 py-1 rounded">Activo</span>
             </div>
-            <p class="text-slate-400 text-sm">Equipos Registrados (Patrimonio)</p>
-            <h4 class="text-3xl font-black text-white mt-1">{{ number_format($equipmentCount, 0, ',', '.') }} un.</h4>
-            <div class="mt-4 flex items-center text-xs text-slate-500">
-                <i class="fas fa-sync-alt fa-spin mr-2"></i> Base de Datos Global
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest tracking-widest">Equipos (Patrimonio)</p>
+            <h4 class="text-3xl font-black text-white mt-1 italic tracking-tighter">{{ number_format($equipmentCount, 0, ',', '.') }} un.</h4>
+            <div class="mt-4 flex items-center text-[10px] text-slate-500 font-black italic">
+                <i class="fas fa-sync-alt fa-spin mr-2"></i> BASE GLOBAL
             </div>
         </div>
 
         <!-- Satisfaction CSAT -->
-        <div class="bg-gradient-to-br from-indigo-600/10 to-transparent border border-indigo-500/20 p-6 rounded-2xl hover:border-indigo-500/50 transition-all group">
+        <div class="bg-gradient-to-br from-indigo-600/10 to-transparent border border-indigo-500/20 p-6 rounded-2xl hover:border-indigo-500/50 transition-all group shadow-xl">
             <div class="flex justify-between items-start mb-4">
                 <div class="p-3 bg-indigo-500/20 rounded-xl text-indigo-400 group-hover:scale-110 transition-transform">
                     <i class="fas fa-smile text-xl"></i>
                 </div>
                 <span class="text-xs text-indigo-500 font-bold bg-indigo-500/10 px-2 py-1 rounded">CSAT</span>
             </div>
-            <p class="text-slate-400 text-sm">Satisfacción Promedio</p>
-            <h4 class="text-3xl font-black text-white mt-1">{{ $avgRating }} / 5.0</h4>
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Satisfacción</p>
+            <h4 class="text-3xl font-black text-white mt-1 italic tracking-tighter">{{ $avgRating }} / 5.0</h4>
             <div class="mt-4 flex gap-1 items-center">
                 @for($i=1; $i<=5; $i++)
-                    <div class="h-1 flex-1 {{ $i <= $avgRating ? 'bg-yellow-400' : 'bg-slate-700' }} rounded-full transition-all"></div>
+                    <div class="h-1 flex-1 {{ $i <= $avgRating ? 'bg-indigo-400' : 'bg-slate-700' }} rounded-full transition-all"></div>
                 @endfor
-                <span class="text-[10px] text-yellow-400 ml-2 font-black italic">★ SCORE</span>
             </div>
         </div>
 
         <!-- Tiempo de Respuesta -->
-        <div class="bg-gradient-to-br from-amber-600/10 to-transparent border border-amber-500/20 p-6 rounded-2xl hover:border-amber-500/50 transition-all group">
+        <div class="bg-gradient-to-br from-amber-600/10 to-transparent border border-amber-500/20 p-6 rounded-2xl hover:border-amber-500/50 transition-all group shadow-xl">
             <div class="flex justify-between items-start mb-4">
                 <div class="p-3 bg-amber-500/20 rounded-xl text-amber-400 group-hover:scale-110 transition-transform">
                     <i class="fas fa-history text-xl"></i>
                 </div>
-                <span class="text-xs text-amber-500 font-bold bg-amber-500/10 px-2 py-1 rounded">-12% vs ayer</span>
+                <span class="text-xs text-amber-500 font-bold bg-amber-500/10 px-2 py-1 rounded">SLA</span>
             </div>
-            <p class="text-slate-400 text-sm">Tiempo Prom. Respuesta</p>
-            <h4 class="text-3xl font-black text-white mt-1">{{ $avgResponseTime }}</h4>
-            <div class="mt-4 text-xs italic text-slate-500">
-                "Excelente rendimiento del equipo"
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Respuesta Prom.</p>
+            <h4 class="text-3xl font-black text-white mt-1 italic tracking-tighter">{{ $avgResponseTime }}</h4>
+            <div class="mt-4 text-[10px] italic text-slate-500 font-bold uppercase tracking-[0.2em]">
+                Rendimiento Optimo
             </div>
         </div>
 
         <!-- Tickets Atendidos Mes -->
-        <div class="bg-gradient-to-br from-purple-600/10 to-transparent border border-purple-500/20 p-6 rounded-2xl hover:border-purple-500/50 transition-all group">
+        <div class="bg-gradient-to-br from-purple-600/10 to-transparent border border-purple-500/20 p-6 rounded-2xl hover:border-purple-500/50 transition-all group shadow-xl">
             <div class="flex justify-between items-start mb-4">
                 <div class="p-3 bg-purple-500/20 rounded-xl text-purple-400 group-hover:scale-110 transition-transform">
                     <i class="fas fa-check-double text-xl"></i>
                 </div>
-                <span class="text-[10px] text-purple-400 font-bold bg-purple-500/10 px-2 py-1 rounded uppercase tracking-tighter">{{ Carbon\Carbon::now()->translatedFormat('M Y') }}</span>
+                <span class="text-[10px] text-purple-400 font-bold bg-purple-500/10 px-2 py-1 rounded italic uppercase tracking-tighter">{{ Carbon\Carbon::now()->format('F') }}</span>
             </div>
-            <p class="text-slate-400 text-sm">Tickets Resueltos Mes</p>
-            <h4 class="text-3xl font-black text-white mt-1">{{ str_pad($monthlyResolvedCount, 2, '0', STR_PAD_LEFT) }}</h4>
-            <div class="mt-4 flex items-center text-[10px] text-slate-500 uppercase tracking-widest italic">
-                <i class="fas fa-calendar-check mr-2 text-purple-500"></i> Reinicio en {{ Carbon\Carbon::now()->daysInMonth - Carbon\Carbon::now()->day }} días
-            </div>
-        <!-- SECCIÓN FINANCIERA DETALLADA 💵 -->
-    <div class="mt-8 mb-8">
-        <div class="flex items-center gap-3 mb-6">
-            <div class="w-2 h-6 bg-emerald-500 rounded-full"></div>
-            <h3 class="text-white text-lg font-black uppercase tracking-tighter italic">Salud Financiera TI (CLP)</h3>
-            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-500 text-[0.6rem] font-black uppercase rounded-lg border border-emerald-500/20 shadow-lg shadow-emerald-500/5">Auditoría en Tiempo Real</span>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Valor Total del Patrimonio Hardware -->
-            <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/60 hover:border-emerald-500/30">
-                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/5 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
-                <div class="relative z-10 text-center md:text-left">
-                    <p class="text-slate-400 text-[0.6rem] font-bold uppercase tracking-[0.2em] mb-4 italic">Inversión Hardware (Patrimonio)</p>
-                    <h4 class="text-4xl font-black text-white italic tracking-tighter hover:text-emerald-400 transition-colors">
-                        $ {{ number_format($totalHardwareInvestment, 0, ',', '.') }}
-                    </h4>
-                    <p class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest mt-6 flex items-center justify-center md:justify-start gap-2">
-                        <i class="fas fa-shield-alt text-emerald-500"></i> Valor Total Activo
-                    </p>
-                </div>
-            </div>
-
-            <!-- COMPRAS: Reabastecimiento de Stock -->
-            <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/60 hover:border-indigo-500/30">
-                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-indigo-500/5 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
-                <div class="relative z-10 text-center md:text-left">
-                    <p class="text-slate-400 text-[0.6rem] font-bold uppercase tracking-[0.2em] mb-4 italic">Compras / Abastecimiento (Mes)</p>
-                    <h4 class="text-4xl font-black text-white italic tracking-tighter hover:text-indigo-400 transition-colors">
-                        $ {{ number_format($totalMonthlyPurchases, 0, ',', '.') }}
-                    </h4>
-                    <p class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest mt-6 flex items-center justify-center md:justify-start gap-2">
-                        <i class="fas fa-shopping-basket text-indigo-500"></i> Adquisición de Insumos
-                    </p>
-                </div>
-            </div>
-
-            <!-- GASTOS: Consumo y Entregas -->
-            <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/60 hover:border-blue-500/30">
-                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
-                <div class="relative z-10 text-center md:text-left">
-                    <p class="text-slate-400 text-[0.6rem] font-bold uppercase tracking-[0.2em] mb-4 italic">Gasto Operativo (Entregas Mes)</p>
-                    <h4 class="text-4xl font-black text-white italic tracking-tighter hover:text-blue-400 transition-colors">
-                        $ {{ number_format($totalMonthlyConsumptions, 0, ',', '.') }}
-                    </h4>
-                    <p class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest mt-6 flex items-center justify-center md:justify-start gap-2">
-                        <i class="fas fa-walking text-blue-500"></i> Desembolso Material Real
-                    </p>
-                </div>
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Tickets Mes</p>
+            <h4 class="text-3xl font-black text-white mt-1 italic tracking-tighter">{{ str_pad($monthlyResolvedCount, 2, '0', STR_PAD_LEFT) }}</h4>
+            <div class="mt-4 flex items-center text-[9px] text-slate-500 uppercase tracking-widest font-black italic">
+                <i class="fas fa-calendar mr-2 text-purple-500"></i> RESET EN {{ Carbon\Carbon::now()->daysInMonth - Carbon\Carbon::now()->day }} DÍAS
             </div>
         </div>
     </div>
 
-    <!-- TABLA DE AUDITORÍA DETALLADA PARA EL BOSS 🕵️‍♂️ -->
-    <div class="bg-slate-900/40 backdrop-blur-2xl border border-white/5 p-8 rounded-[2.5rem] shadow-2xl mb-12">
+    <!-- Fila 3: Salud Financiera (Contenedor Independiente) -->
+    <div class="mt-12 mb-8">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-2 h-6 bg-emerald-500 rounded-full"></div>
+            <h3 class="text-white text-lg font-black uppercase tracking-tighter italic leading-none">Salud Financiera TI (CLP)</h3>
+            <span class="px-3 py-1 bg-emerald-500/10 text-emerald-500 text-[0.6rem] font-black uppercase rounded-lg border border-emerald-500/20">Control Real</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Patrimonio -->
+            <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/60 hover:border-emerald-500/30">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/5 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                <p class="text-slate-400 text-[0.6rem] font-black uppercase tracking-[0.2em] mb-4 italic">Inversión Hardware</p>
+                <h4 class="text-4xl font-black text-white italic tracking-tighter">$ {{ number_format($totalHardwareInvestment, 0, ',', '.') }}</h4>
+                <p class="text-[9px] text-emerald-500 font-black uppercase tracking-widest mt-6">PATRIMONIO TOTAL ACTIVO</p>
+            </div>
+
+            <!-- Compras -->
+            <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/60 hover:border-indigo-500/30">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-indigo-500/5 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                <p class="text-slate-400 text-[0.6rem] font-black uppercase tracking-[0.2em] mb-4 italic">Compras / Abastecimiento</p>
+                <h4 class="text-4xl font-black text-white italic tracking-tighter">$ {{ number_format($totalMonthlyPurchases, 0, ',', '.') }}</h4>
+                <p class="text-[9px] text-indigo-500 font-black uppercase tracking-widest mt-6">ENTRADA STOCK (MES)</p>
+            </div>
+
+            <!-- Gastos -->
+            <div class="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden group transition-all hover:bg-slate-900/60 hover:border-blue-500/30">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-blue-500/5 rounded-full blur-3xl group-hover:scale-150 transition-transform"></div>
+                <p class="text-slate-400 text-[0.6rem] font-black uppercase tracking-[0.2em] mb-4 italic">Gasto Operativo</p>
+                <h4 class="text-4xl font-black text-white italic tracking-tighter">$ {{ number_format($totalMonthlyConsumptions, 0, ',', '.') }}</h4>
+                <p class="text-[9px] text-blue-500 font-black uppercase tracking-widest mt-6">SALIDA / CONSUMO (MES)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fila 4: Bitácora de Auditoría (Ancho Completo) -->
+    <div class="bg-slate-900/40 backdrop-blur-2xl border border-white/5 p-8 rounded-[2.5rem] shadow-2xl mb-12 overflow-hidden">
         <div class="flex items-center justify-between mb-8 border-b border-white/5 pb-6">
             <div>
-                <h3 class="text-white text-lg font-black uppercase tracking-tighter italic">Bitácora de Control de Materiales</h3>
-                <p class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest mt-1">Monitoreo de quién solicita y quién autoriza el flujo de insumos</p>
+                <h3 class="text-white text-lg font-black uppercase tracking-tighter italic">Bitácora de Control de Movimientos</h3>
+                <p class="text-[0.6rem] text-slate-500 font-bold uppercase tracking-widest mt-2 tracking-[0.2em]">Auditoría detallada de Inversión y Gasto</p>
             </div>
-            <i class="fas fa-fingerprint text-indigo-500 text-2xl opacity-20"></i>
+            <i class="fas fa-fingerprint text-indigo-500 text-3xl opacity-20"></i>
         </div>
 
         <div class="overflow-x-auto">
             <table class="w-full text-left table-auto">
-                <thead>
-                    <tr class="text-slate-500 text-[10px] font-black uppercase tracking-[0.15em] border-b border-white/5">
-                        <th class="pb-4">Fecha</th>
-                        <th class="pb-4">Insumo</th>
-                        <th class="pb-4 text-center">Cant.</th>
-                        <th class="pb-4 text-right">Valor Est.</th>
-                        <th class="pb-4 text-center">Tipo</th>
-                        <th class="pb-4">Responsable</th>
-                        <th class="pb-4">Solicitante / Destino</th>
+                <thead class="border-b border-white/10 uppercase italic">
+                    <tr class="text-slate-500 text-[10px] font-black tracking-widest">
+                        <th class="pb-5 pr-4">Fecha</th>
+                        <th class="pb-5 pr-4">Insumo / Marca</th>
+                        <th class="pb-5 text-center">Cant.</th>
+                        <th class="pb-5 text-right">Monto CLP</th>
+                        <th class="pb-5 text-center">Tipo</th>
+                        <th class="pb-5 px-6">Responsable</th>
+                        <th class="pb-5">Destino / Solicitante</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-white/10">
                     @foreach($recentTransactions as $log)
-                    <tr class="group hover:bg-white/[0.03] transition-colors border-b border-white/5">
-                        <td class="py-5">
+                    <tr class="group hover:bg-white/[0.03] transition-colors border-b border-white/5 italic">
+                        <td class="py-5 whitespace-nowrap">
                             <span class="text-[11px] font-black text-white italic tracking-tighter">{{ $log->created_at->format('d/m/Y') }}</span>
-                            <span class="block text-[9px] text-indigo-400 font-mono">{{ $log->created_at->format('H:i') }} hrs</span>
+                            <span class="block text-[9px] text-indigo-400 font-mono italic uppercase">{{ $log->created_at->format('H:i') }} hrs</span>
                         </td>
                         <td class="py-5">
-                            <span class="text-xs font-black text-white uppercase tracking-tight">{{ $log->supply->name }}</span>
-                            <span class="block text-[9px] text-slate-500 uppercase font-black">{{ $log->supply->brand ?? 'GENÉRICO' }}</span>
+                            <span class="text-xs font-black text-white uppercase tracking-tight italic">{{ $log->supply->name }}</span>
+                            <span class="block text-[9px] text-slate-500 uppercase font-bold italic tracking-tighter">{{ $log->supply->brand ?? 'S/Marca' }}</span>
                         </td>
                         <td class="py-5 text-center">
-                            <span class="px-3 py-1 bg-slate-800 text-white border border-white/10 rounded-lg font-mono text-xs shadow-lg">x{{ $log->quantity }}</span>
+                            <span class="px-3 py-1 bg-slate-800 text-white border border-white/10 rounded-lg font-mono text-xs shadow-lg uppercase">x{{ $log->quantity }}</span>
                         </td>
                         <td class="py-5 text-right">
                             @php $value = $log->quantity * ($log->supply->unit_cost ?? 0); @endphp
-                            @if($value > 0)
-                                <span class="text-[11px] font-black text-emerald-300 tracking-tighter italic shadow-emerald-500/10">$ {{ number_format($value, 0, ',', '.') }}</span>
-                            @else
-                                <span class="text-[10px] text-rose-500/80 font-black uppercase italic">VALOR $0</span>
-                            @endif
+                            <span class="text-[11px] font-black {{ $value > 0 ? 'text-emerald-300' : 'text-rose-400' }} tracking-tighter italic">$ {{ number_format($value, 0, ',', '.') }}</span>
                         </td>
                         <td class="py-5 text-center">
                             @if($log->action == 'RESTOCK')
-                                <span class="px-3 py-1 bg-indigo-500 text-white text-[8px] font-black uppercase rounded-full shadow-lg shadow-indigo-500/20 italic">COMPRA</span>
+                                <span class="px-3 py-1 bg-indigo-500 text-white text-[8px] font-black uppercase rounded-full shadow-lg italic">COMPRA</span>
                             @else
-                                <span class="px-3 py-1 bg-blue-600 text-white text-[8px] font-black uppercase rounded-full shadow-lg shadow-blue-500/20 italic">ENTREGA</span>
+                                <span class="px-3 py-1 bg-blue-600 text-white text-[8px] font-black uppercase rounded-full shadow-lg italic">GASTO</span>
                             @endif
                         </td>
-                        <td class="py-5">
+                        <td class="py-5 px-6">
                             <div class="flex items-center gap-3">
-                                <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-600 to-blue-500 text-[9px] flex items-center justify-center text-white uppercase font-black shadow-lg">
-                                    {{ substr($log->admin->name ?? 'S', 0, 1) }}
-                                </div>
-                                <span class="text-[10px] font-black text-slate-200 uppercase tracking-tight">{{ explode(' ', $log->admin->name ?? 'SISTEMA')[0] }}</span>
+                                <span class="text-[10px] font-black text-slate-200 uppercase tracking-tight italic shadow-white/5">{{ $log->admin->name ?? 'SISTEMA' }}</span>
                             </div>
                         </td>
                         <td class="py-5">
                             @if($log->action == 'RESTOCK')
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-warehouse text-indigo-400 text-[10px]"></i>
-                                    <span class="text-[10px] text-slate-400 uppercase font-black italic tracking-tighter">Stock Inventario</span>
-                                </div>
+                                <span class="text-[9px] text-indigo-400 font-black uppercase italic tracking-tighter">📦 Abastecimiento Almacén</span>
                             @else
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-user-check text-blue-400 text-[10px]"></i>
-                                    <span class="text-[10px] font-black text-white uppercase truncate max-w-[120px]">{{ $log->user->name ?? 'RETIRO' }}</span>
+                                <div class="flex flex-col gap-0.5">
+                                    <span class="text-[10px] font-black text-white uppercase italic tracking-tight">{{ $log->user->name ?? 'RETIRO' }}</span>
+                                    @if($log->equipment_tag)
+                                        <span class="text-[8px] text-blue-400 font-black uppercase italic">Equip: {{ $log->equipment_tag }}</span>
+                                    @endif
                                 </div>
-                                @if($log->equipment_tag)
-                                    <span class="block text-[8px] text-indigo-400 font-black uppercase mt-1">🏷️ {{ $log->equipment_tag }}</span>
-                                @endif
                             @endif
                         </td>
                     </tr>
                     @endforeach
                     @if($recentTransactions->isEmpty())
                         <tr>
-                            <td colspan="7" class="py-20 text-center">
-                                <i class="fas fa-inbox text-4xl text-slate-800 mb-4 block"></i>
-                                <p class="text-[0.65rem] text-slate-600 font-black uppercase tracking-[0.3em] italic">No hay movimientos registrados para auditoría</p>
+                            <td colspan="7" class="py-24 text-center">
+                                <i class="fas fa-inbox text-5xl text-slate-800 mb-4 block"></i>
+                                <p class="text-[0.65rem] text-slate-600 font-black uppercase tracking-[0.4em] italic">Sin Movimientos Registrados para Auditoría</p>
                             </td>
                         </tr>
                     @endif
                 </tbody>
+            </table>
         </div>
     </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Definición de Colores Premium
     const colors = {
         primary: '#3b82f6',
         secondary: '#6366f1',
@@ -294,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
         muted: '#94a3b8'
     };
 
-    // 1. Donut Chart - Ticket Status (DATOS REALES)
+    // 1. Donut Chart - Ticket Status
     const statusData = @json(array_values($statusStats));
     const statusLabels = @json(array_keys($statusStats));
 
@@ -311,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     new ApexCharts(document.querySelector("#statusDonutChart"), optionsStatus).render();
 
-    // 2. Main Trend Area Chart (DATOS REALES)
+    // 2. Main Trend Area Chart
     var optionsMain = {
         series: [{
             name: 'Tickets Creados',
@@ -333,58 +286,6 @@ document.addEventListener('DOMContentLoaded', function () {
         tooltip: { theme: 'dark' }
     };
     new ApexCharts(document.querySelector("#mainTrendChart"), optionsMain).render();
-
-    // 3. Department Heatmap (Análisis Predictivo)
-    const deptStats = @json($ticketsByDepartment);
-    const deptLabels = deptStats.map(d => d.name);
-    const deptData = deptStats.map(d => d.total);
-
-    var optionsHeat = {
-        series: [{
-            name: 'Total Tickets',
-            data: deptData
-        }],
-        chart: {
-            height: 350,
-            type: 'bar',
-            toolbar: { show: false },
-            background: 'transparent',
-            fontFamily: 'Inter, sans-serif'
-        },
-        plotOptions: {
-            bar: {
-                borderRadius: 15,
-                horizontal: true,
-                distributed: true,
-                barHeight: '70%',
-                dataLabels: { position: 'top' }
-            }
-        },
-        colors: deptData.map((val, idx) => {
-            // El primero es la "zona caliente"
-            if (val > 10) return '#f43f5e'; // Rojo intenso
-            if (val > 5) return '#fb923c';  // Naranja
-            return '#3b82f6';               // Azul estable
-        }),
-        xaxis: {
-            categories: deptLabels,
-            labels: { style: { colors: '#94a3b8', fontSize: '11px', fontWeight: 700 } }
-        },
-        yaxis: {
-            labels: { style: { colors: '#fff', fontSize: '12px', fontWeight: 800 } }
-        },
-        grid: { borderColor: '#1e293b', strokeDashArray: 4 },
-        dataLabels: {
-            enabled: true,
-            formatter: (val) => val + " INCIDENTES",
-            style: { colors: ['#fff'], fontSize: '10px', fontWeight: 900 }
-        },
-        tooltip: {
-            theme: 'dark',
-            y: { title: { formatter: (q) => "Demanda de Soporte: " } }
-        }
-    };
-    new ApexCharts(document.querySelector("#departmentHeatChart"), optionsHeat).render();
 });
 </script>
 @endsection
