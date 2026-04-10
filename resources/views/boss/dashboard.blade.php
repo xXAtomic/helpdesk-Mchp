@@ -228,12 +228,6 @@
                                 <i class="fas fa-inbox text-5xl text-slate-800 mb-4 block"></i>
                                 <p class="text-[0.65rem] text-slate-600 font-black uppercase tracking-[0.4em] italic">Sin Movimientos Registrados para Auditoría</p>
                             </td>
-                    @if($recentTransactions->isEmpty())
-                        <tr>
-                            <td colspan="7" class="py-24 text-center">
-                                <i class="fas fa-inbox text-5xl text-slate-800 mb-4 block"></i>
-                                <p class="text-[0.65rem] text-slate-600 font-black uppercase tracking-[0.4em] italic">Sin Movimientos Registrados para Auditoría</p>
-                            </td>
                         </tr>
                     @endif
                 </tbody>
