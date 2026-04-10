@@ -3,45 +3,41 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\Knowledge;
-use App\Models\TicketDeflection;
 use Illuminate\Http\Request;
+use App\Services\GravityAIService;
 
 class GravityBrainController extends Controller
 {
+    protected $aiService;
+
+    public function __construct(GravityAIService $aiService)
+    {
+        $this->aiService = $aiService;
+    }
+
+    /**
+     * Motor de búsqueda instantánea para sugerencias mientras el usuario escribe.
+     */
     public function search(Request $request)
     {
         $query = $request->get('q');
-        
-        if (strlen($query) < 3) {
-            return response()->json([]);
-        }
-
-        $suggestions = Knowledge::where('is_published', true)
-            ->where(function ($q) use ($query) {
-                $q->where('title', 'like', "%{$query}%")
-                  ->orWhere('content', 'like', "%{$query}%");
-            })
-            ->limit(5)
-            ->get(['id', 'title', 'content', 'category', 'icon', 'file_path', 'file_name']);
+        $suggestions = $this->aiService->getKnowledgeContext($query, 5);
 
         return response()->json($suggestions);
     }
 
+    /**
+     * Registra cuando un usuario evita crear un ticket gracias a la IA o Manuales.
+     */
     public function deflect(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'nullable|string|max:255',
             'article_id' => 'nullable|integer',
             'method' => 'required|in:ARTICLE,AI_BOT'
         ]);
 
-        TicketDeflection::create([
-            'user_id' => auth()->id(),
-            'title' => $request->title,
-            'article_id' => $request->article_id,
-            'method' => $request->input('method')
-        ]);
+        $this->aiService->recordDeflection($validated);
 
         return response()->json(['status' => 'success', 'message' => 'Deflection recorded.']);
     }
