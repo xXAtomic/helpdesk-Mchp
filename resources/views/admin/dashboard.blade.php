@@ -154,7 +154,7 @@
                                 </div>
                             </div>
                             <div class="mt-4 md:mt-0 flex items-center gap-6">
-                                <span class="px-4 py-1.5 rounded-full text-[0.55rem] font-black text-white uppercase tracking-widest italic shadow-lg border border-white/10" style="background-color: {{ $ticket->status->color }}">
+                                <span class="px-4 py-1.5 rounded-full text-[0.55rem] font-black text-white uppercase tracking-widest italic shadow-lg border border-white/10" style="background-color: <?= $ticket->status->color ?>;">
                                     {{ $ticket->status->name }}
                                 </span>
                                 <a href="{{ route('admin.tickets.show', $ticket->id) }}" class="p-2 text-slate-600 hover:text-indigo-400 transition-all">
@@ -207,7 +207,7 @@
                                 @php 
                                     $percent = $stats['open_tickets'] > 0 ? ($tech->assigned_tickets_count / $stats['open_tickets']) * 100 : 0;
                                 @endphp
-                                <div class="h-full bg-indigo-500 rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(99,102,241,0.5)]" style="width: {{ $percent }}%"></div>
+                                <div class="h-full bg-indigo-500 rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(99,102,241,0.5)]" style="width: <?= $percent ?>%;"></div>
                             </div>
                         </div>
                     @endforeach
