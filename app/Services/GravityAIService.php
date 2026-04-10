@@ -47,18 +47,26 @@ class GravityAIService
         }
 
         try {
-            $model = 'gemini-1.5-flash';
+            // Cambiamos a 'latest' o 'pro' para mayor compatibilidad
+            $model = 'gemini-1.5-flash-latest'; 
             $response = $this->callGemini($model, $prompt, $contextText);
 
-            // Reintento inteligente si el modelo falla o no existe (404)
+            // Si el modelo específico falla, intentamos autodetectar uno válido
             if ($response->status() === 404) {
-                $model = $this->autoDetectModel() ?: $model;
+                $model = $this->autoDetectModel() ?: 'gemini-pro';
                 $response = $this->callGemini($model, $prompt, $contextText);
             }
 
             if ($response->successful()) {
                 $data = $response->json();
-                return $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Lo siento, no pude procesar una respuesta coherente.';
+                
+                // Validación robusta de la estructura de respuesta
+                $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
+                
+                if ($text) return $text;
+
+                Log::warning("Gemini structure unexpected: " . json_encode($data));
+                return "Gravity Bot ha procesado tu consulta pero la respuesta fue filtrada por seguridad o vino vacía.";
             }
 
             // Manejo de errores de servidor (503, 500, etc)
