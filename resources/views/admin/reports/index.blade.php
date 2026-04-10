@@ -226,10 +226,21 @@
             </table>
         </div>
     </div>
+
+    <!-- Contenedor de Datos Oculto para Gráficos -->
+    <div id="chart-data" class="hidden" 
+         data-status-values='<?= json_encode(array_values($statusStats)) ?>'
+         data-status-labels='<?= json_encode(array_keys($statusStats)) ?>'
+         data-trend-created='<?= json_encode($ticketsCreated) ?>'
+         data-trend-days='<?= json_encode($days) ?>'>
+    </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    const dataEl = document.getElementById('chart-data');
+    if (!dataEl) return;
+
     const colors = {
         primary: '#3b82f6',
         secondary: '#6366f1',
@@ -240,8 +251,8 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // 1. Donut Chart - Ticket Status
-    const statusData = @json(array_values($statusStats));
-    const statusLabels = @json(array_keys($statusStats));
+    const statusData = JSON.parse(dataEl.getAttribute('data-status-values') || '[]');
+    const statusLabels = JSON.parse(dataEl.getAttribute('data-status-labels') || '[]');
 
     var optionsStatus = {
         series: statusData,
@@ -257,10 +268,13 @@ document.addEventListener('DOMContentLoaded', function () {
     new ApexCharts(document.querySelector("#statusDonutChart"), optionsStatus).render();
 
     // 2. Main Trend Area Chart
+    const trendCreated = JSON.parse(dataEl.getAttribute('data-trend-created') || '[]');
+    const trendLabels = JSON.parse(dataEl.getAttribute('data-trend-days') || '[]');
+
     var optionsMain = {
         series: [{
             name: 'Tickets Creados',
-            data: @json($ticketsCreated)
+            data: trendCreated
         }],
         chart: { height: 350, type: 'area', toolbar: { show: false }, background: 'transparent', fontFamily: 'Inter, sans-serif' },
         dataLabels: { enabled: false },
@@ -268,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function () {
         colors: [colors.primary],
         fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.3, opacityTo: 0.05, stops: [0, 90, 100] } },
         xaxis: { 
-            categories: @json($days), 
+            categories: trendLabels, 
             axisBorder: { show: false },
             axisTicks: { show: false },
             labels: { style: { colors: colors.muted, fontSize: '11px' } } 
