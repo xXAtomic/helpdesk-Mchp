@@ -76,8 +76,7 @@
     </div>
 
     <!-- Widgets Tácticos Inferiores -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Inventario -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 g        <!-- Inventario -->
         <div class="bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-500/20 p-6 rounded-2xl hover:border-blue-500/50 transition-all group">
             <div class="flex justify-between items-start mb-4">
                 <div class="p-3 bg-blue-500/20 rounded-xl text-blue-400 group-hover:scale-110 transition-transform">
@@ -85,10 +84,10 @@
                 </div>
                 <span class="text-xs text-blue-500 font-bold bg-blue-500/10 px-2 py-1 rounded">Activo</span>
             </div>
-            <p class="text-slate-400 text-sm">Equipos Monitoreados</p>
-            <h4 class="text-3xl font-black text-white mt-1">{{ $equipmentCount }}</h4>
+            <p class="text-slate-400 text-sm">Equipos Registrados (Patrimonio)</p>
+            <h4 class="text-3xl font-black text-white mt-1">{{ number_format($equipmentCount, 0, ',', '.') }} un.</h4>
             <div class="mt-4 flex items-center text-xs text-slate-500">
-                <i class="fas fa-sync-alt fa-spin mr-2"></i> Actualizado hace 2 min
+                <i class="fas fa-sync-alt fa-spin mr-2"></i> Base de Datos Global
             </div>
         </div>
 
@@ -145,7 +144,7 @@
     <div class="mt-12 mb-12">
         <div class="flex items-center gap-3 mb-8">
             <div class="w-2 h-6 bg-emerald-500 rounded-full"></div>
-            <h3 class="text-white text-lg font-black uppercase tracking-tighter italic">Salud Financiera TI</h3>
+            <h3 class="text-white text-lg font-black uppercase tracking-tighter italic">Salud Financiera TI (CLP)</h3>
             <span class="px-3 py-1 bg-emerald-500/10 text-emerald-500 text-[0.6rem] font-black uppercase rounded-lg border border-emerald-500/20 shadow-lg shadow-emerald-500/5">Auditoría en Tiempo Real</span>
         </div>
 
@@ -156,10 +155,10 @@
                 <div class="relative z-10 text-center md:text-left">
                     <p class="text-slate-400 text-xs font-bold uppercase tracking-[0.2em] mb-4 italic">Inversión en Hardware (Patrimonio)</p>
                     <h4 class="text-6xl font-black text-white italic tracking-tighter hover:text-emerald-400 transition-colors">
-                        ${{ number_format($totalHardwareInvestment, 0, ',', '.') }}
+                        $ {{ number_format($totalHardwareInvestment, 0, ',', '.') }}
                     </h4>
                     <p class="text-[0.65rem] text-slate-500 font-bold uppercase tracking-widest mt-6 flex items-center justify-center md:justify-start gap-2">
-                        <i class="fas fa-shield-alt text-emerald-500"></i> Valor Total Activo en Inventario
+                        <i class="fas fa-shield-alt text-emerald-500"></i> Valor CLP Total Activo en Inventario
                     </p>
                 </div>
             </div>
@@ -170,11 +169,11 @@
                 <div class="relative z-10 text-center md:text-left">
                     <p class="text-slate-400 text-xs font-bold uppercase tracking-[0.2em] mb-4 italic">Gasto en Operaciones (Este Mes)</p>
                     <h4 class="text-6xl font-black text-white italic tracking-tighter hover:text-blue-400 transition-colors">
-                        ${{ number_format($monthlySuppliesExpense, 0, ',', '.') }}
+                        $ {{ number_format($monthlySuppliesExpense, 0, ',', '.') }}
                     </h4>
                     <div class="mt-6 flex flex-col md:flex-row items-center justify-between gap-4">
                         <p class="text-[0.65rem] text-slate-500 font-bold uppercase tracking-widest flex items-center gap-2">
-                            <i class="fas fa-shopping-cart text-blue-500"></i> Consumibles y Reposiciones
+                            <i class="fas fa-shopping-cart text-blue-500"></i> Consumibles y Reposiciones CLP
                         </p>
                         <span class="px-3 py-1 bg-blue-500/20 text-blue-400 text-[0.6rem] font-black rounded-lg border border-blue-500/20 uppercase italic tracking-widest">{{ Carbon\Carbon::now()->translatedFormat('F Y') }}</span>
                     </div>
