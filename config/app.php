@@ -13,7 +13,11 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Gravity'),
+
+    'institution' => env('APP_INSTITUTION_NAME', 'Misión Chilena del Pacífico'),
+
+    'institution_abbr' => env('APP_INSTITUTION_ABBR', 'MChP'),
 
     /*
     |--------------------------------------------------------------------------

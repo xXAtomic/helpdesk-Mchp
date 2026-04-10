@@ -6,7 +6,7 @@
     <!-- CABECERA MINIMALISTA -->
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 border-b border-gray-100 pb-8">
         <div>
-            <h1 class="text-3xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">Misión Chilena del Pacífico • Gestión de Recursos TI</h1>
+            <h1 class="text-3xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">{{ config('app.institution') }} • Gestión de Recursos TI</h1>
             <p class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.6em] mt-4 italic">Gravity Dashboard</p>
         </div>
         <div class="mt-6 md:mt-0 flex gap-4">
@@ -155,7 +155,7 @@
             </div>
             <div class="hidden sm:flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-xl border border-slate-100">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span class="text-[0.6rem] font-black text-slate-500 uppercase italic">Registro Oficial MChP</span>
+                <span class="text-[0.6rem] font-black text-slate-500 uppercase italic">Registro Oficial {{ config('app.institution_abbr') }}</span>
             </div>
         </div>
         
@@ -190,7 +190,7 @@
                         <div class="space-y-1">
                             <h4 class="text-xs font-black text-slate-400 uppercase italic tracking-tighter group-hover:text-indigo-600 transition-colors">{{ $item->brand }}</h4>
                             <p class="text-lg font-black text-slate-900 uppercase italic leading-none truncate">{{ $item->model }}</p>
-                            <p class="text-[0.6rem] font-bold text-indigo-400 uppercase italic tracking-widest mt-3 pt-3 border-t border-slate-50">{{ $item->entity ?? 'Misión Chilena del Pacífico' }}</p>
+                            <p class="text-[0.6rem] font-bold text-indigo-400 uppercase italic tracking-widest mt-3 pt-3 border-t border-slate-50">{{ $item->entity ?? config('app.institution') }}</p>
                         </div>
 
                         <div class="mt-6 flex items-center justify-between">
@@ -291,7 +291,7 @@
         document.getElementById('modal-model').innerText = asset.model;
         document.getElementById('modal-serial').innerText = asset.serial_number;
         document.getElementById('modal-location').innerText = asset.location || 'Oficina Central';
-        document.getElementById('modal-entity').innerText = asset.entity || 'MISIÓN CHILENA DEL PACÍFICO';
+        document.getElementById('modal-entity').innerText = asset.entity || "{{ strtoupper(config('app.institution')) }}";
         
         const icons = {
             'Laptop': '💻',

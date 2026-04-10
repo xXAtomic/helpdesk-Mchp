@@ -36,7 +36,7 @@
         </p>
 
         <ol>
-            <li>Que, en esta fecha, se me entregó copia del REGLAMENTO DE USO DE RECURSOS INFORMÁTICOS y de la POLÍTICA DE SEGURIDAD DE LA INFORMACIÓN adoptados por la Misión Chilena del Pacífico y, además, la dirección de correo electrónico corporativa para uso profesional hasta la fecha de mi salida de la organización.</li>
+            <li>Que, en esta fecha, se me entregó copia del REGLAMENTO DE USO DE RECURSOS INFORMÁTICOS y de la POLÍTICA DE SEGURIDAD DE LA INFORMACIÓN adoptados por la {{ config('app.institution') }} y, además, la dirección de correo electrónico corporativa para uso profesional hasta la fecha de mi salida de la organización.</li>
             <li>Que, habiéndolas leído, tengo pleno y completo conocimiento de todo su contenido.</li>
             <li>Que, al suscribirme a las mismas, las acepto en todos sus términos y me obligo y comprometo a cumplirlas y observarlas sin reserva ni limitación alguna.</li>
             <li>Que acepto y me someto expresamente a las sanciones penales, económicas, administrativas, laborales o eclesiásticas previstas y aplicables a cada caso, incluyendo obligarme a pagar cualquier indemnización que pueda determinarse y/o exigirse, incluso por terceros, derivada de cualquier acto u omisión de mi parte.</li>

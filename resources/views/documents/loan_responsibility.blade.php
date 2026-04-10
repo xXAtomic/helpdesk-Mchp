@@ -91,7 +91,7 @@
                 <div style="height: 50px;"></div>
                 <div class="signature-line"></div>
                 <p>Responsable TI</p>
-                <p>Misión Chilena del Pacífico</p>
+                <p>{{ config('app.institution') }}</p>
             </div>
         </div>
 

@@ -46,7 +46,7 @@
             </tr>
             <tr>
                 <td class="footer">
-                    MChP • SISTEMA DE GESTIÓN TI GRAVITY v2.5<br>
+                    {{ config('app.institution_abbr') }} • SISTEMA DE GESTIÓN TI GRAVITY v2.5<br>
                     No responder a este correo automático.
                 </td>
             </tr>

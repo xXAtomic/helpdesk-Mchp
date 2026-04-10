@@ -7,7 +7,7 @@
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 border-b border-gray-100 pb-10">
         <div class="flex items-center">
             <div>
-                <h1 class="text-3xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">Terminal Administrativa Centralizada • MChP</h1>
+                <h1 class="text-3xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">Terminal Administrativa Centralizada • {{ config('app.institution_abbr') }}</h1>
                 <p class="text-[0.65rem] font-black text-slate-400 uppercase tracking-[0.6em] mt-4 flex items-center gap-2 italic">
                     <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.5)]"></span>
                     Gravity Insight

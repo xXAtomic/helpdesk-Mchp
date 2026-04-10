@@ -176,7 +176,7 @@
         </form>
 
         <p class="text-center text-[0.5rem] font-bold text-slate-300 mt-12 uppercase tracking-[0.6em] italic">
-            Misión Chilena del Pacífico • Atomic Dev
+            {{ config('app.institution') }} • Atomic Dev
         </p>
     </div>
 </body>

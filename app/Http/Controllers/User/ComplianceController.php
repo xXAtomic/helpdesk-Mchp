@@ -161,8 +161,8 @@ class ComplianceController extends Controller
         }
 
         return [
-            'name' => 'IASD',
-            'full_name' => 'Misión Chilena del Pacífico',
+            'name' => config('app.institution_abbr'),
+            'full_name' => config('app.institution'),
             'rut' => '65.002.737-K'
         ];
     }
