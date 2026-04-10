@@ -8,5 +8,5 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote')->hourly();
 
-// Automatización de lectura de correos de soporte cada 5 minutos
-Schedule::command('gravity:fetch-emails')->everyFiveMinutes();
+// Automatización de lectura de correos de soporte cada 3 minutos
+Schedule::command('gravity:fetch-emails')->everyThreeMinutes();
