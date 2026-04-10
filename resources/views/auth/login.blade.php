@@ -16,8 +16,7 @@
             align-items: center;
             justify-content: center;
             margin: 0;
-            padding: 20px;
-            overflow: hidden;
+            padding: 40px 20px; /* Incrementado el padding vertical para el scroll */
             position: relative;
         }
 
@@ -31,6 +30,7 @@
             filter: blur(120px);
             z-index: 0;
             animation: nebula-float 20s infinite alternate ease-in-out;
+            pointer-events: none;
         }
 
         @keyframes nebula-float {
@@ -43,9 +43,9 @@
             backdrop-filter: blur(40px);
             -webkit-backdrop-filter: blur(40px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 4rem;
+            border-radius: 3.5rem;
             width: 100%;
-            max-width: 480px;
+            max-width: 460px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             animation: card-reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
@@ -62,7 +62,7 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             color: white;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 1.5rem;
+            border-radius: 1.25rem;
         }
 
         .input-gravity:focus {
@@ -76,7 +76,7 @@
             background: white;
             color: #020617;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border-radius: 1.5rem;
+            border-radius: 1.25rem;
         }
 
         .btn-gravity:hover {
@@ -115,63 +115,63 @@
     <div class="nebula" style="top: -200px; left: -200px;"></div>
     <div class="nebula" style="bottom: -200px; right: -200px; background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);"></div>
 
-    <div class="login-card p-12 md:p-16">
+    <div class="login-card p-10 md:p-12">
         <!-- BRANDING -->
-        <div class="text-center mb-12">
-            <div class="logo-container inline-flex items-center justify-center mb-10 transform scale-125 transition-all hover:scale-150 duration-700">
-                <img src="{{ asset('logo.png') }}" alt="Logo" class="w-24 h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] grayscale brightness-200">
+        <div class="text-center mb-10">
+            <div class="logo-container inline-flex items-center justify-center mb-8 transform transition-all hover:scale-110 duration-700">
+                <img src="{{ asset('logo.png') }}" alt="Logo" class="w-20 h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] grayscale brightness-200">
             </div>
-            <h1 class="text-5xl font-black text-white tracking-widest uppercase italic leading-none drop-shadow-2xl">Gravity <span class="text-indigo-500">2.0</span></h1>
-            <p class="text-[0.6rem] font-black text-slate-500 uppercase tracking-[0.8em] mt-6 italic flex items-center justify-center gap-3">
+            <h1 class="text-4xl font-black text-white tracking-widest uppercase italic leading-none drop-shadow-2xl">Gravity <span class="text-indigo-500">2.0</span></h1>
+            <p class="text-[0.6rem] font-black text-slate-500 uppercase tracking-[0.8em] mt-5 italic flex items-center justify-center gap-3 leading-none pt-1">
                 <i class="fas fa-shield-alt text-indigo-400"></i>
-                Protocolo de Acceso Seguro
+                Protocolo de Acceso
             </p>
         </div>
 
         @if ($errors->any())
-            <div class="mb-10 p-6 bg-rose-500/10 border border-rose-500/20 rounded-3xl text-center backdrop-blur-md animate-pulse">
-                <ul class="text-[0.65rem] font-black text-rose-500 uppercase tracking-[0.3em] list-none m-0 p-0 italic">
+            <div class="mb-8 p-6 bg-rose-500/10 border border-rose-500/20 rounded-3xl text-center backdrop-blur-md">
+                <ul class="text-[0.65rem] font-black text-rose-500 uppercase tracking-[0.3em] list-none m-0 p-0 italic leading-tight">
                     @foreach ($errors->all() as $error)
-                        <li>ACCESO DENEGADO: IDENTIDAD INVÁLIDA</li>
+                        <li>ACCESO DENEGADO: CREDENCIALES INVÁLIDAS</li>
                     @endforeach
                 </ul>
             </div>
         @endif
 
         <!-- FORM TÁCTICO -->
-        <form method="POST" action="{{ route('login') }}" class="space-y-8">
+        <form method="POST" action="{{ route('login') }}" class="space-y-6">
             @csrf
             
-            <div class="space-y-4 group">
+            <div class="space-y-3 group">
                 <label class="block text-[0.6rem] font-black text-slate-500 uppercase tracking-[0.4em] ml-2 italic group-focus-within:text-white transition-colors">Identificador (Email)</label>
                 <div class="relative">
-                    <input type="email" name="email" required autofocus placeholder="TERMINAL_ID@MCHP.CL"
-                           class="w-full px-8 py-6 rounded-2xl input-gravity outline-none font-black text-[0.8rem] placeholder:text-slate-800 uppercase italic tracking-widest">
-                    <i class="fas fa-user-circle absolute right-8 top-1/2 -translate-y-1/2 text-slate-800"></i>
+                    <input type="email" name="email" required autofocus placeholder="ID_AGENTE@MCHP.CL"
+                           class="w-full px-6 py-5 rounded-2xl input-gravity outline-none font-black text-[0.75rem] placeholder:text-slate-900 uppercase italic tracking-widest">
+                    <i class="fas fa-user-circle absolute right-6 top-1/2 -translate-y-1/2 text-slate-900"></i>
                 </div>
             </div>
 
-            <div class="space-y-4 group">
+            <div class="space-y-3 group">
                 <label class="block text-[0.6rem] font-black text-slate-500 uppercase tracking-[0.4em] ml-2 italic group-focus-within:text-white transition-colors">Cifrado de Acceso</label>
                 <div class="relative">
                     <input type="password" name="password" required placeholder="••••••••"
-                           class="w-full px-8 py-6 rounded-2xl input-gravity outline-none font-black text-lg placeholder:text-slate-800 tracking-[0.5em]">
-                    <i class="fas fa-lock absolute right-8 top-1/2 -translate-y-1/2 text-slate-800"></i>
+                           class="w-full px-6 py-5 rounded-2xl input-gravity outline-none font-black text-lg placeholder:text-slate-900 tracking-[0.5em]">
+                    <i class="fas fa-lock absolute right-6 top-1/2 -translate-y-1/2 text-slate-900"></i>
                 </div>
             </div>
 
-            <div class="pt-6">
-                <button type="submit" class="w-full py-8 rounded-2xl btn-gravity font-black text-[0.85rem] uppercase tracking-[0.5em] italic shadow-2xl flex items-center justify-center gap-6 group">
+            <div class="pt-4">
+                <button type="submit" class="w-full py-6 rounded-2xl btn-gravity font-black text-[0.8rem] uppercase tracking-[0.4em] italic shadow-2xl flex items-center justify-center gap-6 group">
                     EJECUTAR ENTRADA
                     <i class="fas fa-chevron-right text-[10px] group-hover:translate-x-2 transition-transform"></i>
                 </button>
             </div>
 
-            <div class="text-center pt-10 border-t border-white/5">
-                <p class="text-[0.6rem] font-black text-slate-500 uppercase tracking-[0.4em] italic mb-4">
+            <div class="text-center pt-8 border-t border-white/5">
+                <p class="text-[0.6rem] font-black text-slate-600 uppercase tracking-[0.3em] italic mb-3">
                     ¿Sin credenciales de acceso?
                 </p>
-                <a href="{{ route('register') }}" class="register-link text-[0.7rem] font-black uppercase tracking-[0.3em] italic hover:scale-105 inline-block transition-transform">
+                <a href="{{ route('register') }}" class="register-link text-[0.65rem] font-black uppercase tracking-[0.3em] italic hover:scale-105 inline-block transition-transform">
                     SOLICITAR REGISTRO DE AGENTE
                 </a>
             </div>
