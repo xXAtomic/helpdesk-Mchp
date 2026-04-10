@@ -358,22 +358,23 @@
         // --- MOTOR DE BÚSQUEDA NEURAL ---
         function toggleGlobalSearch() {
             const modal = document.getElementById('global-search-modal');
-            if(modal.classList.contains('hidden')) {
+            if(modal && modal.classList.contains('hidden')) {
                 modal.classList.remove('hidden');
                 document.getElementById('global-search-input').focus();
-            } else {
+            } else if(modal) {
                 modal.classList.add('hidden');
             }
         }
 
         // Shortcut Ctrl+K
         document.addEventListener('keydown', e => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            if ((e.ctrlKey || e.key === 'Control') && e.key === 'k') {
                 e.preventDefault();
                 toggleGlobalSearch();
             }
             if (e.key === 'Escape') {
-                document.getElementById('global-search-modal').classList.add('hidden');
+                const modal = document.getElementById('global-search-modal');
+                if(modal) modal.classList.add('hidden');
             }
         });
 
@@ -421,15 +422,15 @@
         }
 
         window.handleGravityBot = function(e) {
-            if(e) { e.preventDefault(); e.stopPropagation(); }
+            if(e) { e.preventDefault(); }
             const win = document.getElementById('bot-window');
             if(!win) return;
 
-            const isOpen = win.style.display === 'flex';
+            const isHidden = win.classList.contains('hidden');
 
-            if (!isOpen) {
-                win.style.setProperty('display', 'flex', 'important');
+            if (isHidden) {
                 win.classList.remove('hidden');
+                win.style.display = 'flex';
                 setTimeout(() => {
                     win.classList.remove('opacity-0', 'scale-95');
                     win.classList.add('opacity-100', 'scale-100');
@@ -438,8 +439,8 @@
                 win.classList.remove('opacity-100', 'scale-100');
                 win.classList.add('opacity-0', 'scale-95');
                 setTimeout(() => {
-                    win.style.setProperty('display', 'none', 'important');
                     win.classList.add('hidden');
+                    win.style.display = 'none';
                 }, 300);
             }
         }
@@ -461,20 +462,17 @@
             try {
                 const response = await fetch('/gravity-bot/chat', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
                     body: JSON.stringify({ prompt: query })
                 });
                 const data = await response.json();
-                document.getElementById(loadingId).remove();
+                const loadingEl = document.getElementById(loadingId);
+                if(loadingEl) loadingEl.remove();
                 
-                if (data.debug) {
-                    console.error('GravityBot Debug:', data.debug);
-                    appendMessage('bot', data.response + '<br><small class="opacity-50">Debug: ' + data.debug + '</small>');
-                } else {
-                    appendMessage('bot', data.response);
-                }
+                appendMessage('bot', data.response);
             } catch (error) {
-                document.getElementById(loadingId).remove();
+                const loadingEl = document.getElementById(loadingId);
+                if(loadingEl) loadingEl.remove();
                 appendMessage('bot', 'Error al conectar con la IA.');
             } finally {
                 input.disabled = false;
@@ -502,68 +500,34 @@
         // --- SISTEMA DE TOASTS DINÁMICOS ---
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            
-            const icons = {
-                success: 'fa-check-circle',
-                error: 'fa-exclamation-triangle',
-                warning: 'fa-bell',
-                info: 'fa-info-circle'
-            };
+            if(!container) return;
 
-            const colors = {
-                success: 'text-emerald-400',
-                error: 'text-rose-400',
-                warning: 'text-amber-400',
-                info: 'text-indigo-400'
-            };
+            const toast = document.createElement('div');
+            toast.className = `toast \${type}`;
+            
+            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-triangle', warning: 'fa-bell', info: 'fa-info-circle' };
+            const colors = { success: 'text-emerald-400', error: 'text-rose-400', warning: 'text-amber-400', info: 'text-indigo-400' };
 
             toast.innerHTML = `
-                <div class="toast-icon ${colors[type]} bg-white/5">
-                    <i class="fas ${icons[type]}"></i>
+                <div class="toast-icon \${colors[type]} bg-white/5">
+                    <i class="fas \${icons[type]}"></i>
                 </div>
                 <div class="flex-1">
-                    <p class="leading-tight">${message}</p>
+                    <p class="leading-tight">\${message}</p>
                 </div>
             `;
             
             container.appendChild(toast);
-            
-            // Sonido sutil opcional (puedes comentarlo si no lo deseas)
-            // const audio = new Audio('/sounds/notify.mp3');
-            // audio.play().catch(e => {});
-
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-x-full');
                 setTimeout(() => toast.remove(), 500);
             }, 5000);
         }
 
-        @if(session('success'))
-            showToast("{{ session('success') }}");
-        @endif
-        @if(session('error'))
-            showToast("{{ session('error') }}", 'error');
-        @endif
-
-        // Notificación Inteligente de Inicio (Solo Admin)
-        @if(auth()->user()->role_id == 1 && !session('welcome_shown'))
-            @php 
-                session(['welcome_shown' => true]); 
-                $pendingMaintenances = \App\Models\Asset::whereNotNull('next_maintenance_at')->where('next_maintenance_at', '<', now())->count();
-            @endphp
-            
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    @if($pendingMaintenances > 0)
-                        showToast("Atención: Tienes {{ $pendingMaintenances }} mantenimientos vencidos esperando.", 'warning');
-                    @else
-                        showToast("Bienvenido, {{ auth()->user()->name }}. El sistema está operando al 100%.", 'info');
-                    @endif
-                }, 1500);
-            });
-        @endif
+        window.addEventListener('load', () => {
+            @if(session('success')) showToast("{{ session('success') }}"); @endif
+            @if(session('error')) showToast("{{ session('error') }}", 'error'); @endif
+        });
     </script>
 
 

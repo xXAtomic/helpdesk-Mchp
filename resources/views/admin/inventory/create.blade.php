@@ -186,10 +186,10 @@
                         </div>
                         
                         <div class="space-y-4 mb-12">
-                            <select name="user_id"
+                            <select name="user_id" id="user_id"
                                 class="w-full px-6 py-5 bg-white/10 border border-white/20 rounded-2xl text-white font-black text-[0.75rem] focus:ring-2 focus:ring-white transition-all appearance-none uppercase italic tracking-tighter">
                                 <option value="" class="bg-indigo-950">SIN ASIGNAR (STORAGE)</option>
-                                @foreach(\App\Models\User::all() as $user)
+                                @foreach(\App\Models\User::orderBy('name')->get() as $user)
                                     <option value="{{ $user->id }}" class="bg-indigo-950">{{ $user->name }}</option>
                                 @endforeach
                             </select>
