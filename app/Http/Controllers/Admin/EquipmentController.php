@@ -5,43 +5,31 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Asset;
+use App\Services\AssetService;
 
 class EquipmentController extends Controller
 {
-    public function index(Request $request) {
-        $query = Asset::query();
+    protected $assetService;
 
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('asset_tag', 'like', "%{$search}%")
-                  ->orWhere('brand', 'like', "%{$search}%")
-                  ->orWhere('model', 'like', "%{$search}%")
-                  ->orWhere('serial_number', 'like', "%{$search}%")
-                  ->orWhereHas('user', function($qu) use ($search) {
-                      $qu->where('name', 'like', "%{$search}%");
-                  });
-            });
-        }
+    public function __construct(AssetService $assetService)
+    {
+        $this->assetService = $assetService;
+    }
 
-        if ($request->has('type') && !empty($request->type)) {
-            $query->where('type', $request->type);
-        }
-
-        if ($request->has('status') && !empty($request->status)) {
-            $query->where('status', $request->status);
-        }
-
-        $items = $query->with('user')->orderBy('created_at', 'desc')->paginate(15);
+    public function index(Request $request) 
+    {
+        $items = $this->assetService->getFilteredAssets($request->only(['search', 'type', 'status']));
         return view('admin.inventory.index', compact('items'));
     }
 
-    public function create() {
+    public function create() 
+    {
         return view('admin.inventory.create');
     }
 
-    public function store(Request $request) {
-        $request->validate([
+    public function store(Request $request) 
+    {
+        $validated = $request->validate([
             'asset_tag'           => 'required|unique:assets',
             'type'                => 'required',
             'brand'               => 'required',
@@ -53,38 +41,30 @@ class EquipmentController extends Controller
             'last_maintenance_at' => 'nullable|date',
             'next_maintenance_at' => 'nullable|date|after_or_equal:last_maintenance_at',
             'entity'              => 'required|in:IASD,FESDG',
+            'status'              => 'nullable|string'
         ]);
 
-        $data = $request->all();
-        if (!isset($data['status'])) {
-            $data['status'] = 'Operativo';
-        }
+        $this->assetService->createAsset($validated);
 
-        $asset = Asset::create($data);
-
-        // Registro de Auditoría ✨
-        \App\Models\AssetLog::create([
-            'asset_id' => $asset->id,
-            'user_id'  => auth()->id(),
-            'action'   => 'CREATE',
-            'new_data' => $asset->toArray(),
-            'details'  => 'Activo registrado por primera vez.'
-        ]);
-
-        return redirect()->route('admin.inventory.index')->with('success', 'Activo registrado correctamente en el sistema.');
+        return redirect()->route('admin.inventory.index')->with('success', '✅ ACTIVO REGISTRADO CORRECTAMENTE.');
     }
 
-    public function show($id) {
+    public function show($id) 
+    {
         $item = Asset::with(['user', 'logs.user'])->findOrFail($id);
         return view('admin.inventory.show', compact('item'));
     }
 
-    public function edit($id) {
-        $item = Asset::with('logs.user')->findOrFail($id);
+    public function edit($id) 
+    {
+        $item = Asset::findOrFail($id);
         return view('admin.inventory.edit', compact('item'));
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id) 
+    {
+        $asset = Asset::findOrFail($id);
+        
         $request->validate([
             'purchase_cost'       => 'nullable|numeric|min:0',
             'purchased_at'        => 'nullable|date',
@@ -92,68 +72,34 @@ class EquipmentController extends Controller
             'next_maintenance_at' => 'nullable|date',
         ]);
 
-        $item = Asset::findOrFail($id);
-        $oldData = $item->toArray();
-        
-        $item->update($request->all());
-        
-        // Registro de Auditoría ✨
-        \App\Models\AssetLog::create([
-            'asset_id' => $item->id,
-            'user_id'  => auth()->id(),
-            'action'   => 'UPDATE',
-            'old_data' => $oldData,
-            'new_data' => $item->toArray(),
-            'details'  => 'Actualización de datos del equipo.'
-        ]);
+        $this->assetService->updateAsset($asset, $request->all());
 
-        return redirect()->route('admin.inventory.index')->with('success', 'Equipo actualizado.');
-
+        return redirect()->route('admin.inventory.index')->with('success', '✅ EQUIPO ACTUALIZADO.');
     }
 
-    public function destroy($id) {
-        $item = Asset::findOrFail($id);
-        $item->delete();
-        return redirect()->route('admin.inventory.index')->with('success', 'Equipo eliminado.');
+    public function destroy($id) 
+    {
+        Asset::findOrFail($id)->delete();
+        return redirect()->route('admin.inventory.index')->with('success', '🗑️ EQUIPO ELIMINADO.');
     }
 
-    /**
-     * Genera una etiqueta imprimible con Código QR para el activo. ✨
-     */
-    public function generateLabel($id) {
+    public function generateLabel($id) 
+    {
         $item = Asset::findOrFail($id);
         return view('admin.inventory.label', compact('item'));
     }
 
-    /**
-     * Registra un mantenimiento preventivo para el equipo. ✨
-     */
-    public function storeMaintenance(Request $request, $id) {
-        $request->validate([
+    public function storeMaintenance(Request $request, $id) 
+    {
+        $validated = $request->validate([
             'details'             => 'required|string|min:10',
             'next_maintenance_at' => 'required|date|after:today',
+            'status'              => 'nullable|string'
         ]);
 
         $asset = Asset::findOrFail($id);
-        $oldData = $asset->toArray();
+        $this->assetService->recordMaintenance($asset, $validated);
 
-        // Actualizamos las fechas del activo
-        $asset->update([
-            'last_maintenance_at' => now(),
-            'next_maintenance_at' => $request->next_maintenance_at,
-            'status'              => $request->status ?? $asset->status,
-        ]);
-
-        // Generamos el registro en el historial (AssetLog)
-        \App\Models\AssetLog::create([
-            'asset_id' => $asset->id,
-            'user_id'  => auth()->id(),
-            'action'   => 'MAINTENANCE',
-            'old_data' => $oldData,
-            'new_data' => $asset->toArray(),
-            'details'  => "MANTENIMIENTO REALIZADO: " . $request->details
-        ]);
-
-        return redirect()->back()->with('success', 'Mantenimiento registrado con éxito. El ciclo de vida del equipo ha sido actualizado.');
+        return redirect()->back()->with('success', '🔧 MANTENIMIENTO REGISTRADO CON ÉXITO.');
     }
 }
