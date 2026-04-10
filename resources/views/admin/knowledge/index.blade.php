@@ -1,19 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-6xl mx-auto py-12 px-6 lg:px-8">
+<div class="px-6 py-8 bg-slate-950 min-h-screen text-slate-200">
     
     <!-- ACCIONES DE CABECERA -->
-    <div class="mb-8 flex justify-between items-center">
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-12 border-b border-white/5 pb-10 gap-6">
         <div>
-            <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight italic uppercase mb-2">Biblioteca TI</h1>
-            <p class="text-sm font-medium text-slate-400 uppercase tracking-widest">Gestión de manuales operativos y recomendaciones.</p>
+            <h1 class="text-3xl font-black text-white tracking-tighter uppercase italic leading-none">Repositorio de Inteligencia TI</h1>
+            <p class="text-[0.65rem] font-black text-indigo-400 uppercase tracking-[0.6em] mt-4 flex items-center gap-2 italic">
+                <span class="w-2 h-2 bg-indigo-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(99,102,241,0.5)]"></span>
+                GravityBrain • Centralized Knowledge
+            </p>
         </div>
-        <a href="{{ route('admin.knowledge.create') }}" 
-           class="bg-indigo-600 hover:bg-slate-900 text-white font-black px-8 py-4 rounded-xl transition-all shadow-lg hover:shadow-indigo-200 uppercase tracking-widest italic text-[0.7rem] flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            Nueva Recomendación
-        </a>
+        <div class="flex gap-4">
+            <a href="{{ route('admin.knowledge.create') }}" 
+               class="bg-indigo-600 hover:bg-white hover:text-slate-950 text-white px-8 py-3 rounded-2xl font-black italic uppercase tracking-widest text-[0.65rem] transition-all shadow-lg shadow-indigo-500/20 flex items-center gap-3 group">
+                <i class="fas fa-plus group-hover:rotate-90 transition-transform"></i>
+                Nueva Entrada
+            </a>
+        </div>
     </div>
 
     <!-- LAYOUT DE DOS COLUMNAS -->
@@ -21,54 +26,56 @@
         
         <!-- COLUMNA PRINCIPAL: MANUALES (2/3) -->
         <div class="lg:w-2/3">
-            <div class="mb-6 flex items-center gap-3">
-                <div class="w-2 h-8 bg-indigo-600 rounded-full"></div>
-                <h2 class="text-xl font-black text-slate-800 uppercase italic tracking-tighter">Manuales Operativos</h2>
+            <div class="mb-8 flex items-center gap-4">
+                <div class="w-1 h-6 bg-indigo-500 rounded-full shadow-[0_0_8px_#6366f1]"></div>
+                <h2 class="text-xl font-black text-white uppercase italic tracking-tighter">Manuales Operativos</h2>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 @foreach($manuals as $article)
                     <div onclick="openKnowledgeModal('{{ addslashes($article->title) }}', '{{ addslashes($article->content) }}', '{{ $article->category }}', '{{ $article->icon }}', '{{ $article->file_path ? asset('storage/' . $article->file_path) : '' }}', '{{ addslashes($article->file_name) }}')"
-                         class="group bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-2xl hover:border-indigo-500/20 transition-all duration-500 flex flex-col justify-between overflow-hidden relative cursor-pointer">
-                        <div class="absolute -right-6 -top-6 w-16 h-16 bg-gray-50 rounded-full group-hover:bg-indigo-50 transition-colors"></div>
+                         class="group bg-slate-900/40 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/5 shadow-2xl hover:border-indigo-500/30 transition-all duration-500 flex flex-col justify-between overflow-hidden relative cursor-pointer">
+                        
+                        <div class="absolute -right-10 -top-10 w-32 h-32 bg-indigo-600/5 rounded-full blur-3xl group-hover:bg-indigo-500/10 transition-all"></div>
                         
                         <div class="relative z-10">
-                            <div class="flex items-center justify-between mb-6">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 bg-slate-50 rounded-lg flex items-center justify-center text-slate-400 border group-hover:bg-indigo-600 group-hover:text-white transition-colors text-xl">
+                            <div class="flex items-center justify-between mb-8">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-slate-950 rounded-2xl flex items-center justify-center text-2xl border border-white/5 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-xl">
                                         {{ $article->icon ?? '📖' }}
                                     </div>
-                                    <span class="text-[0.6rem] font-black text-gray-300 uppercase tracking-widest">{{ $article->updated_at->format('d M, Y') }}</span>
+                                    <span class="text-[0.6rem] font-black text-slate-500 uppercase tracking-widest italic">{{ $article->updated_at->format('d M, Y') }}</span>
                                 </div>
-                                <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity" onclick="event.stopPropagation()">
-                                    <a href="{{ route('admin.knowledge.edit', $article->id) }}" class="p-2 text-slate-400 hover:text-indigo-600">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                <div class="flex gap-3 opacity-0 group-hover:opacity-100 transition-all" onclick="event.stopPropagation()">
+                                    <a href="{{ route('admin.knowledge.edit', $article->id) }}" class="text-slate-500 hover:text-white transition-colors">
+                                        <i class="fas fa-edit text-xs"></i>
                                     </a>
-                                    <form action="{{ route('admin.knowledge.destroy', $article->id) }}" method="POST" onsubmit="return confirm('¿Eliminar?')">
+                                    <form action="{{ route('admin.knowledge.destroy', $article->id) }}" method="POST" onsubmit="return confirm('¿Eyectar este manual?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="p-2 text-slate-400 hover:text-red-600">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                        <button type="submit" class="text-slate-500 hover:text-rose-500">
+                                            <i class="fas fa-trash-alt text-xs"></i>
                                         </button>
                                     </form>
                                 </div>
                             </div>
-                            <h3 class="text-xl font-bold text-slate-900 tracking-tight mb-3 group-hover:text-indigo-600 transition-colors uppercase italic leading-tight">{{ $article->title }}</h3>
-                            <p class="text-[0.7rem] font-medium text-slate-400 leading-relaxed mb-6">
-                                {{ Str::limit(strip_tags($article->content), 80) }}
+                            <h3 class="text-xl font-black text-white tracking-tighter mb-4 group-hover:text-indigo-400 transition-colors uppercase italic leading-tight">{{ $article->title }}</h3>
+                            <p class="text-[0.7rem] font-black text-slate-500 leading-relaxed mb-8 uppercase italic tracking-wide">
+                                {{ Str::limit(strip_tags($article->content), 90) }}
                             </p>
                             
-                            <div class="flex items-center gap-2 text-[0.6rem] font-black text-indigo-500 uppercase tracking-widest italic group-hover:gap-4 transition-all">
-                                Leer Manual completo
-                                <span>→</span>
+                            <div class="flex items-center gap-3 text-[0.65rem] font-black text-indigo-400 uppercase tracking-widest italic group-hover:gap-5 transition-all">
+                                ACCEDER AL PROTOCOLO
+                                <i class="fas fa-arrow-right text-[8px]"></i>
                             </div>
                         </div>
                     </div>
                 @endforeach
                 
                 @if($manuals->isEmpty())
-                    <div class="col-span-full py-20 text-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-                        <p class="text-slate-400 font-bold uppercase tracking-widest text-[0.6rem]">Sin manuales operativos todavía.</p>
+                    <div class="col-span-full py-24 text-center bg-slate-900/40 rounded-[3rem] border border-dashed border-white/5">
+                        <i class="fas fa-file-signature text-slate-800 text-4xl mb-4 opacity-30"></i>
+                        <p class="text-slate-600 font-black uppercase tracking-[0.3em] italic text-[0.65rem]">Protocolo Vacío: Sin documentación activa.</p>
                     </div>
                 @endif
             </div>
@@ -76,41 +83,42 @@
 
         <!-- SIDEBAR: RECOMENDACIONES (1/3) -->
         <div class="lg:w-1/3">
-            <div class="mb-6 flex items-center gap-3">
-                <div class="w-2 h-8 bg-amber-500 rounded-full"></div>
-                <h2 class="text-xl font-black text-slate-800 uppercase italic tracking-tighter">Tips de la Semana</h2>
+            <div class="mb-8 flex items-center gap-4">
+                <div class="w-1 h-6 bg-amber-500 rounded-full shadow-[0_0_8px_#f59e0b]"></div>
+                <h2 class="text-xl font-black text-white uppercase italic tracking-tighter">Tips de Mantenimiento</h2>
             </div>
 
             <div class="space-y-6">
                 @foreach($tips as $tip)
                     <div onclick="openKnowledgeModal('{{ addslashes($tip->title) }}', '{{ addslashes($tip->content) }}', '{{ $tip->category }}', '{{ $tip->icon }}', '{{ $tip->file_path ? asset('storage/' . $tip->file_path) : '' }}', '{{ addslashes($tip->file_name) }}')"
-                         class="bg-gradient-to-br from-slate-900 to-indigo-950 p-6 rounded-2xl shadow-xl border border-white/5 relative overflow-hidden group cursor-pointer">
-                        <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-white/5 rounded-full scale-150 group-hover:scale-[2] transition-transform duration-700"></div>
+                         class="bg-indigo-600/5 backdrop-blur-xl p-8 rounded-[2.5rem] border border-indigo-500/10 relative overflow-hidden group cursor-pointer hover:bg-indigo-600/10 hover:border-indigo-500/30 transition-all shadow-2xl">
+                        
+                        <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/5 rounded-full scale-110 group-hover:scale-150 transition-transform duration-1000"></div>
                         
                         <div class="relative z-10">
-                            <div class="flex justify-between items-start mb-4">
-                                <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-xl shadow-inner text-white">
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl shadow-inner text-white backdrop-blur-md">
                                     {{ $tip->icon ?? '💡' }}
                                 </div>
-                                <div class="flex gap-1" onclick="event.stopPropagation()">
-                                    <a href="{{ route('admin.knowledge.edit', $tip->id) }}" class="text-white/30 hover:text-white transition-colors">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 113.536 3.536L12 20.122l-3.586-3.586L20.586 7.414z"></path></svg>
+                                <div onclick="event.stopPropagation()">
+                                    <a href="{{ route('admin.knowledge.edit', $tip->id) }}" class="text-white/20 hover:text-white transition-colors">
+                                        <i class="fas fa-pen-nib text-xs"></i>
                                     </a>
                                 </div>
                             </div>
-                            <h4 class="text-indigo-400 font-black text-[0.65rem] uppercase tracking-widest mb-1 italic">Recomendación TI</h4>
-                            <p class="text-white font-bold leading-snug mb-2">{{ $tip->title }}</p>
-                            <p class="text-slate-400 text-[0.7rem] font-medium leading-relaxed italic border-l-2 border-indigo-500/30 pl-3">
-                                {{ Str::limit($tip->content, 100) }}
+                            <h4 class="text-indigo-400 font-black text-[0.65rem] uppercase tracking-widest mb-2 italic">Recomendación Técnica</h4>
+                            <p class="text-lg font-black text-white leading-tight mb-4 uppercase italic tracking-tighter">{{ $tip->title }}</p>
+                            <p class="text-slate-500 text-[0.7rem] font-black leading-relaxed italic border-l border-indigo-500/20 pl-4 uppercase tracking-wide">
+                                {{ Str::limit($tip->content, 120) }}
                             </p>
                         </div>
                     </div>
                 @endforeach
 
                 @if($tips->isEmpty())
-                     <div class="py-12 px-6 text-center border-2 border-dashed border-slate-200 rounded-3xl">
-                        <div class="text-3xl mb-3 opacity-30">✨</div>
-                        <p class="text-slate-400 font-bold uppercase tracking-widest text-[0.6rem]">No hay recomendaciones publicadas.</p>
+                     <div class="py-16 px-8 text-center bg-slate-900/40 border border-dashed border-white/5 rounded-[3rem]">
+                        <i class="fas fa-lightbulb text-slate-800 text-3xl mb-4 opacity-20"></i>
+                        <p class="text-slate-600 font-black uppercase tracking-widest text-[0.6rem] italic">SISTEMA EN ESPERA</p>
                     </div>
                 @endif
             </div>
@@ -118,46 +126,51 @@
     </div>
 </div>
 
-<!-- Modal de Información Moderno -->
-<div id="knowledgeModal" class="fixed inset-0 z-50 hidden" role="dialog" aria-modal="true">
-    <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity"></div>
+<!-- Modal de Información Moderno (DARK GLASS) -->
+<div id="knowledgeModal" class="fixed inset-0 z-[100] hidden" role="dialog" aria-modal="true">
+    <div class="absolute inset-0 bg-slate-950/90 backdrop-blur-xl transition-opacity"></div>
     <div class="fixed inset-0 z-10 overflow-y-auto">
-        <div class="flex min-h-full items-center justify-center p-4 sm:p-6">
-            <div class="relative bg-white rounded-[2.5rem] shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all border border-slate-100 flex flex-col max-h-[90vh]">
-                <!-- Botón de Cerrar -->
-                <button onclick="closeKnowledgeModal()" class="absolute right-8 top-8 text-slate-300 hover:text-slate-900 transition-all p-2 bg-slate-50 rounded-2xl hover:rotate-90 z-20">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <div class="flex min-h-full items-center justify-center p-6 sm:p-12">
+            <div class="relative bg-slate-900/80 backdrop-blur-2xl rounded-[3rem] shadow-2xl w-full max-w-2xl overflow-hidden transform transition-all border border-white/10 flex flex-col max-h-[90vh]">
+                
+                <button onclick="closeKnowledgeModal()" class="absolute right-8 top-8 text-slate-500 hover:text-white transition-all w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center hover:rotate-90 z-20">
+                    <i class="fas fa-times text-xl"></i>
                 </button>
 
-                <div class="overflow-y-auto p-10 sm:p-12">
-                    <div class="flex items-center gap-5 mb-10">
-                        <div id="modalIcon" class="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center text-4xl shadow-inner border border-slate-100 shrink-0">📖</div>
+                <div class="overflow-y-auto p-12 custom-scrollbar">
+                    <div class="flex items-center gap-6 mb-12">
+                        <div id="modalIcon" class="w-24 h-24 bg-slate-950 rounded-[2rem] flex items-center justify-center text-5xl shadow-2xl border border-white/5 shrink-0">📖</div>
                         <div>
-                            <span id="modalCategory" class="px-3 py-1 bg-indigo-50 text-[0.6rem] font-black text-indigo-600 uppercase tracking-[0.2em] italic mb-2 inline-block rounded-lg">Manual Operativo</span>
-                            <h2 id="modalTitle" class="text-3xl font-black text-slate-900 tracking-tighter italic uppercase leading-none">Título del Manual</h2>
+                            <span id="modalCategory" class="px-4 py-1.5 bg-indigo-500/10 text-[0.6rem] font-black text-indigo-400 uppercase tracking-[0.3em] italic mb-3 inline-block rounded-xl border border-indigo-500/20">Protocolo Operativo</span>
+                            <h2 id="modalTitle" class="text-3xl font-black text-white tracking-tighter italic uppercase leading-none">Título del Manual</h2>
                         </div>
                     </div>
 
-                    <div class="border-l-4 border-indigo-500 pl-6 py-2 mb-10">
-                        <p id="modalDescription" class="text-slate-600 font-medium leading-relaxed italic whitespace-pre-line text-base"></p>
+                    <div class="border-l-2 border-indigo-500/30 pl-8 py-2 mb-12">
+                        <p id="modalDescription" class="text-slate-400 font-black leading-relaxed italic whitespace-pre-line text-sm uppercase tracking-wide"></p>
                     </div>
 
-                    <div id="modalFileSection" class="mt-10 p-8 bg-slate-50 rounded-3xl border border-slate-100 hidden">
+                    <div id="modalFileSection" class="mt-12 p-8 bg-slate-950 rounded-[2rem] border border-white/5 hidden shadow-inner">
                         <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-[0.6rem] font-black text-slate-400 uppercase tracking-widest mb-1 italic">Recurso Adjunto</p>
-                                <p id="modalFileName" class="text-sm font-bold text-slate-950 truncate max-w-[200px]">documento.pdf</p>
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-white text-xl">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[0.6rem] font-black text-slate-600 uppercase tracking-widest mb-1 italic">Adjunto del Sistema</p>
+                                    <p id="modalFileName" class="text-[0.7rem] font-black text-white truncate max-w-[200px] uppercase italic">documento.pdf</p>
+                                </div>
                             </div>
-                            <a id="modalFileLink" href="#" target="_blank" class="bg-indigo-600 hover:bg-slate-900 text-white font-black px-6 py-3 rounded-xl transition-all shadow-lg text-[0.65rem] uppercase tracking-widest italic flex items-center gap-2 shrink-0">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                Descargar
+                            <a id="modalFileLink" href="#" target="_blank" class="bg-white text-slate-950 hover:bg-indigo-500 hover:text-white font-black px-8 py-4 rounded-2xl transition-all shadow-2xl text-[0.65rem] uppercase tracking-widest italic flex items-center gap-3 shrink-0">
+                                <i class="fas fa-download"></i>
+                                DESCARGAR
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <div class="p-8 bg-slate-50 border-t border-slate-100 text-center">
-                    <p class="text-[0.6rem] font-bold text-slate-400 uppercase tracking-widest italic">Base de Conocimiento TI MChP &copy; {{ date('Y') }}</p>
+                <div class="p-8 bg-slate-950/60 border-t border-white/5 text-center">
+                    <p class="text-[0.6rem] font-black text-slate-700 uppercase tracking-[0.6em] italic">Knowledge Core v4.0 • Atomic Dev 🚀</p>
                 </div>
             </div>
         </div>
@@ -191,7 +204,6 @@ function closeKnowledgeModal() {
     document.body.style.overflow = 'auto';
 }
 
-// Cerrar al hacer click fuera del modal
 window.onclick = function(event) {
     const modal = document.getElementById('knowledgeModal');
     if (event.target == modal.children[0] || event.target.classList.contains('min-h-full')) {
@@ -199,4 +211,11 @@ window.onclick = function(event) {
     }
 }
 </script>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 20px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.2); }
+</style>
 @endsection
