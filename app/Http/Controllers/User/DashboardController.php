@@ -11,6 +11,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         
         // 1. Estadísticas para el Dashboard ✨
