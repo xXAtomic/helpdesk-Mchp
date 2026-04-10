@@ -6,27 +6,24 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Ticket;
 use App\Models\TicketResponse;
-
 use App\Services\TicketService;
+use App\Services\SystemMetricsService;
 
 class AdminTicketController extends Controller
 {
     protected $ticketService;
+    protected $metricsService;
 
-    public function __construct(TicketService $ticketService)
+    public function __construct(TicketService $ticketService, SystemMetricsService $metricsService)
     {
         $this->ticketService = $ticketService;
+        $this->metricsService = $metricsService;
     }
 
     public function index()
     {
-        // Estadísticas para las tarjetas superiores
-        $stats = [
-            'open'     => Ticket::whereNull('closed_at')->count(),
-            'closed'   => Ticket::whereNotNull('closed_at')->count(),
-            'avg_time' => '2.5h', 
-            'total'    => Ticket::count(),
-        ];
+        // Delegamos las estadísticas pesadas al servicio centralizado
+        $stats = $this->metricsService->getTicketSummary();
 
         // Listado de tickets
         $tickets = Ticket::with('user')->orderBy('created_at', 'desc')->paginate(10);

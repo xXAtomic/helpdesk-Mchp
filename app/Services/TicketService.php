@@ -122,6 +122,26 @@ class TicketService
         }
     }
 
+    /**
+     * Registra la valoración (CSAT) de un ticket cerrado.
+     */
+    public function rateTicket(Ticket $ticket, array $data, $userId)
+    {
+        if ($ticket->rating) {
+            throw new \Exception('Este incidente ya ha sido valorado.');
+        }
+
+        $rating = $ticket->rating()->create([
+            'user_id' => $userId,
+            'rating' => $data['rating'],
+            'comment' => $data['comment'] ?? null,
+        ]);
+
+        $this->logActivity('rated', $ticket, $userId, ['stars' => $data['rating']]);
+
+        return $rating;
+    }
+
     private function logActivity($action, $model, $userId, $details = [])
     {
         try {

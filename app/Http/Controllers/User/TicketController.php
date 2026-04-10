@@ -8,15 +8,18 @@ use App\Models\TicketCategory;
 use App\Models\Department;
 use App\Models\Ticket;
 use App\Services\TicketService;
+use App\Services\SystemMetricsService;
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
     protected $ticketService;
+    protected $metricsService;
 
-    public function __construct(TicketService $ticketService)
+    public function __construct(TicketService $ticketService, SystemMetricsService $metricsService)
     {
         $this->ticketService = $ticketService;
+        $this->metricsService = $metricsService;
     }
 
     public function index()
@@ -24,12 +27,8 @@ class TicketController extends Controller
         $user = request()->user();
         $tickets = $user->requestedTickets()->with(['status', 'category'])->latest()->paginate(10);
         
-        // Estadísticas reales (no solo de la página actual)
-        $stats = [
-            'pending' => $user->requestedTickets()->whereHas('status', fn($q) => $q->where('is_closed', false))->count(),
-            'resolving' => $user->requestedTickets()->where('status_id', 2)->count(),
-            'closed_today' => $user->requestedTickets()->where('status_id', 3)->where('updated_at', '>=', now()->startOfDay())->count(),
-        ];
+        // Delegamos las estadísticas al servicio táctico
+        $stats = $this->metricsService->getTicketSummary($user);
 
         return view('user.tickets.index', compact('tickets', 'stats'));
     }
@@ -102,25 +101,19 @@ class TicketController extends Controller
     }
     public function rate(Request $request, Ticket $ticket)
     {
-        if ($ticket->user_id !== request()->user()->id) {
-            abort(403);
-        }
+        // Validación de pertenencia rápida
+        if ($ticket->user_id !== $request->user()->id) abort(403);
 
-        $request->validate([
+        $validated = $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'nullable|string|max:1000',
         ]);
 
-        if ($ticket->rating) {
-            return back()->with('error', '❌ ESTE TICKET YA HA SIDO CALIFICADO.');
+        try {
+            $this->ticketService->rateTicket($ticket, $validated, $request->user()->id);
+            return redirect()->route('user.tickets.show', $ticket)->with('success', '✅ ¡GRACIAS! TU VALORACIÓN HA SIDO REGISTRADA.');
+        } catch (\Exception $e) {
+            return back()->with('error', '❌ ERROR: ' . $e->getMessage());
         }
-
-        $ticket->rating()->create([
-            'user_id' => $request->user()->id,
-            'rating' => $request->rating,
-            'comment' => $request->comment,
-        ]);
-
-        return redirect()->route('user.tickets.show', $ticket)->with('success', '✅ ¡GRACIAS! TU VALORACIÓN HA SIDO REGISTRADA.');
     }
 }

@@ -40,6 +40,33 @@ class SystemMetricsService
     }
 
     /**
+     * Obtiene un resumen táctico de tickets para los dashboards.
+     * Puede ser global o filtrado por un usuario específico.
+     */
+    public function getTicketSummary($user = null)
+    {
+        $query = $user ? $user->requestedTickets() : Ticket::query();
+        
+        if ($user) {
+            // Métricas específicas para la vista del Usuario
+            return [
+                'pending' => (clone $query)->whereHas('status', fn($q) => $q->where('is_closed', false))->count(),
+                'resolving' => (clone $query)->where('status_id', 2)->count(),
+                'closed_today' => (clone $query)->whereHas('status', fn($q) => $q->where('is_closed', true))
+                                             ->where('updated_at', '>=', now()->startOfDay())->count(),
+            ];
+        }
+
+        // Métricas globales para la vista del Administrador
+        return [
+            'open'     => Ticket::whereNull('closed_at')->count(),
+            'closed'   => Ticket::whereNotNull('closed_at')->count(),
+            'avg_time' => '2.5h', 
+            'total'    => Ticket::count(),
+        ];
+    }
+
+    /**
      * Extrae las métricas financieras (Inversión, Compras, Consumo).
      */
     public function getFinancialMetrics()

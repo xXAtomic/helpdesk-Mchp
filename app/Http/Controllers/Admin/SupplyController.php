@@ -6,18 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Models\Supply;
 use App\Models\SupplyLog;
 use App\Models\User;
+use App\Services\InventoryService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class SupplyController extends Controller
 {
+    private $inventory;
+
+    public function __construct(InventoryService $inventory)
+    {
+        $this->inventory = $inventory;
+    }
+
     public function index()
     {
         $supplies = Supply::latest()->paginate(15);
         $totalItems = Supply::sum('stock');
-        $totalValue = Supply::get()->sum(function($supply) {
-            return $supply->stock * ($supply->unit_cost ?? 0);
-        });
+        $totalValue = Supply::get()->sum(fn($s) => $s->stock * ($s->unit_cost ?? 0));
         $lowStock = Supply::whereColumn('stock', '<=', 'min_stock')->count();
         $uniqueTypes = Supply::distinct('type')->count();
 
@@ -43,24 +48,14 @@ class SupplyController extends Controller
             'unit_cost' => 'nullable|numeric|min:0'
         ]);
 
-        DB::transaction(function() use ($validated) {
-            $supply = Supply::create($validated);
-            if ($supply->stock > 0) {
-                $supply->logs()->create([
-                    'admin_id' => auth()->id(),
-                    'quantity' => $supply->stock,
-                    'action' => 'RESTOCK',
-                    'notes' => 'Ingreso inicial de mercancía.'
-                ]);
-            }
-        });
+        $this->inventory->register($validated);
 
-        return redirect()->route('admin.supplies.index')->with('success', '✅ INSUMO REGISTRADO: El stock ha sido actualizado.');
+        return redirect()->route('admin.supplies.index')->with('success', '✅ INSUMO REGISTRADO: Alta de inventario exitosa.');
     }
 
     public function dispatch(Request $request, Supply $supply)
     {
-        $request->validate([
+        $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'quantity' => 'required|integer|min:1|max:' . $supply->stock,
             'action' => 'required|in:CONSUMPTION,LOAN',
@@ -68,39 +63,19 @@ class SupplyController extends Controller
             'notes' => 'nullable|string'
         ]);
 
-        DB::transaction(function() use ($request, $supply) {
-            $supply->decrement('stock', $request->quantity);
-            
-            $supply->logs()->create([
-                'user_id' => $request->user_id,
-                'admin_id' => auth()->id(),
-                'quantity' => $request->quantity,
-                'action' => $request->action,
-                'equipment_tag' => $request->equipment_tag,
-                'status' => $request->action === 'LOAN' ? 'PENDING_RETURN' : 'COMPLETED',
-                'notes' => $request->notes
-            ]);
-        });
+        $this->inventory->consume($supply, $validated);
 
-        return back()->with('success', '✅ ENTREGA REGISTRADA: El inventario se ha descontado.');
+        return back()->with('success', '✅ ENTREGA REGISTRADA: Inventario actualizado.');
     }
 
     public function restock(Request $request, Supply $supply)
     {
-        $request->validate([
+        $validated = $request->validate([
             'quantity' => 'required|integer|min:1',
             'notes' => 'nullable|string'
         ]);
 
-        DB::transaction(function() use ($request, $supply) {
-            $supply->increment('stock', $request->quantity);
-            $supply->logs()->create([
-                'admin_id' => auth()->id(),
-                'quantity' => $request->quantity,
-                'action' => 'RESTOCK',
-                'notes' => $request->notes
-            ]);
-        });
+        $this->inventory->restock($supply, $validated['quantity'], $validated['notes'] ?? null);
 
         return back()->with('success', '✅ REABASTECIMIENTO EXITOSO.');
     }
@@ -111,22 +86,9 @@ class SupplyController extends Controller
             return back()->with('error', '⚠️ Esta transacción ya fue procesada.');
         }
 
-        DB::transaction(function() use ($log) {
-            $log->supply->increment('stock', $log->quantity);
-            $log->update(['status' => 'RETURNED']);
-            
-            // Log de retorno oficial
-            $log->supply->logs()->create([
-                'user_id' => $log->user_id,
-                'admin_id' => auth()->id(),
-                'quantity' => $log->quantity,
-                'action' => 'RETURN',
-                'status' => 'COMPLETED',
-                'notes' => 'Devolución formal de material del préstamo #' . $log->id
-            ]);
-        });
+        $this->inventory->handleReturn($log);
 
-        return back()->with('success', '✅ INSUMO REINTEGRADO AL STOCK: El inventario ha sido actualizado.');
+        return back()->with('success', '✅ INSUMO REINTEGRADO AL STOCK.');
     }
 
     public function show(Supply $supply)
