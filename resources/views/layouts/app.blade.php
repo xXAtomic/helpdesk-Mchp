@@ -523,14 +523,16 @@
                 setTimeout(() => toast.remove(), 500);
             }, 5000);
         }
+    </script>
+
     <meta name="flash-success" content="{{ session('success') }}">
     <meta name="flash-error" content="{{ session('error') }}">
     <script>
         window.addEventListener('load', () => {
-            const successMsg = document.querySelector('meta[name="flash-success"]')?.content;
-            const errorMsg = document.querySelector('meta[name="flash-error"]')?.content;
-            if (successMsg) showToast(successMsg);
-            if (errorMsg) showToast(errorMsg, 'error');
+            const successMeta = document.querySelector('meta[name="flash-success"]');
+            const errorMeta = document.querySelector('meta[name="flash-error"]');
+            if (successMeta && successMeta.content) showToast(successMeta.content);
+            if (errorMeta && errorMeta.content) showToast(errorMeta.content, 'error');
         });
     </script>
 
