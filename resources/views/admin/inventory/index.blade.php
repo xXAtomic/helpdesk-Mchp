@@ -168,7 +168,7 @@
                             @endphp
                             <div class="flex flex-col items-center gap-1.5">
                                 <span class="px-3 py-1.5 rounded-xl text-[0.55rem] font-black uppercase tracking-widest border italic"
-                                      style="background-color: rgba(var(--health-{{ $hColor }}), 0.1); color: var(--health-text-{{ $hColor }}); border-color: rgba(var(--health-{{ $hColor }}), 0.2);">
+                                      style="{{ 'background-color: rgba(var(--health-'.$hColor.'), 0.1); color: var(--health-text-'.$hColor.'); border-color: rgba(var(--health-'.$hColor.'), 0.2);' }}">
                                     {{ $hStatus }}
                                 </span>
                             </div>
