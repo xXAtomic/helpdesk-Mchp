@@ -7,7 +7,7 @@
     <div class="mb-16 border-b border-white/5 pb-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
         <div>
             <h1 class="text-3xl font-black text-white tracking-tighter uppercase italic leading-none">
-                Despliegue de <span class="text-indigo-500">Nuevo Operador</span>
+                Despliegue de <span class="text-indigo-500">Nuevo Usuario</span>
             </h1>
             <p class="text-[0.6rem] font-black text-slate-500 uppercase tracking-[0.5em] mt-4 flex items-center gap-3 italic">
                 <i class="fas fa-user-plus text-indigo-400"></i>
@@ -94,7 +94,7 @@
             <div class="pt-10 flex flex-col sm:flex-row gap-6">
                 <button type="submit"
                     class="flex-1 bg-white text-slate-950 hover:bg-indigo-600 hover:text-white font-black py-8 rounded-[2rem] transition-all shadow-3xl uppercase tracking-[0.4em] italic text-[0.8rem] flex items-center justify-center gap-6 group">
-                    CONFIRMAR ALTA DEL AGENTE
+                    CONFIRMAR ALTA DEL USUARIO
                     <i class="fas fa-check-double text-[10px] group-hover:scale-125 transition-transform"></i>
                 </button>
             </div>

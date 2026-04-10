@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GRAVITY 2.0 | ALTA DE AGENTE</title>
+    <title>GRAVITY 2.0 | ALTA DE USUARIO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -121,7 +121,7 @@
             <div class="inline-flex items-center justify-center mb-10 transform transition-all hover:scale-110 duration-700">
                 <img src="{{ asset('logo.png') }}" alt="Logo" class="w-20 h-auto drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] grayscale brightness-200">
             </div>
-            <h1 class="text-4xl lg:text-5xl font-black text-white tracking-widest uppercase italic leading-none drop-shadow-2xl">Alta de <span class="text-indigo-500">Agente</span></h1>
+            <h1 class="text-4xl lg:text-5xl font-black text-white tracking-widest uppercase italic leading-none drop-shadow-2xl">Alta de <span class="text-indigo-500">Usuario</span></h1>
             <p class="text-[0.6rem] font-black text-slate-500 uppercase tracking-[0.8em] mt-6 italic flex items-center justify-center gap-3 leading-none pt-1">
                 <i class="fas fa-id-card text-indigo-400"></i>
                 Protocolo de Vinculación Operativa
@@ -206,7 +206,7 @@
 
             <div class="pt-8">
                 <button type="submit" class="w-full py-8 rounded-[2rem] btn-gravity font-black text-[0.9rem] uppercase tracking-[0.5em] italic shadow-2xl flex items-center justify-center gap-6 group">
-                    VINCULAR AGENTE <i class="fas fa-user-shield text-[0.8rem] group-hover:rotate-12 transition-transform"></i>
+                    VINCULAR USUARIO <i class="fas fa-user-shield text-[0.8rem] group-hover:rotate-12 transition-transform"></i>
                 </button>
             </div>
 

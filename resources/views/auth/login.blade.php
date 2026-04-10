@@ -172,7 +172,7 @@
                     ¿Sin credenciales de acceso?
                 </p>
                 <a href="{{ route('register') }}" class="register-link text-[0.65rem] font-black uppercase tracking-[0.3em] italic hover:scale-105 inline-block transition-transform">
-                    SOLICITAR REGISTRO DE AGENTE
+                    SOLICITAR REGISTRO DE USUARIO
                 </a>
             </div>
         </form>
