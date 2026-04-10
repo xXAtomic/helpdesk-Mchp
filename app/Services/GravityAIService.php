@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 class GravityAIService
 {
     private $apiKey;
-    private $baseUrl = "https://generativelanguage.googleapis.com/v1/models";
+    private $baseUrl = "https://generativelanguage.googleapis.com/v1beta/models";
 
     public function __construct()
     {
@@ -47,44 +47,29 @@ class GravityAIService
         }
 
         try {
-            // Usamos el modelo estándar de la v1
             $model = 'gemini-1.5-flash'; 
             $response = $this->callGemini($model, $prompt, $contextText);
 
-            // Si el modelo falla (404), intentamos con el pro
-            if ($response->status() === 404) {
-                $model = $this->autoDetectModel() ?: 'gemini-pro';
-                $response = $this->callGemini($model, $prompt, $contextText);
-            }
-
             if ($response->successful()) {
                 $data = $response->json();
-                
-                // Validación robusta de la estructura de respuesta
                 $text = $data['candidates'][0]['content']['parts'][0]['text'] ?? null;
-                
                 if ($text) return $text;
-
-                Log::warning("Gemini structure unexpected: " . json_encode($data));
-                return "Gravity Bot ha procesado tu consulta pero la respuesta fue filtrada por seguridad o vino vacía.";
             }
 
-            // Manejo de errores de servidor (503, 500, etc)
             if ($response->status() >= 500) {
-                return "🛸 **ESTADO DE SATURACIÓN**: El núcleo de IA está procesando muchas solicitudes en este segundo. Por favor, reintenta tu pregunta en un momento.";
+                return "🛸 **SATURACIÓN**: El núcleo de IA está procesando muchas solicitudes. Intenta de nuevo en unos segundos.";
             }
 
-            Log::error("Gemini API Error: " . $response->body());
             return "El núcleo reportó una anomalía (Código: " . $response->status() . ").";
 
         } catch (\Exception $e) {
-            Log::critical("GravityAIService Exception: " . $e->getMessage());
-            return "Error crítico en el proceso de pensamiento de Gravity.";
+            Log::critical("GravityAIService Error: " . $e->getMessage());
+            return "ERROR CRÍTICO: " . $e->getMessage() . " (L:" . $e->getLine() . ")";
         }
     }
 
     /**
-     * Registra un ticket evitado gracias a la ayuda de la IA o Manuales.
+     * Registra un ticket evitado.
      */
     public function recordDeflection(array $data)
     {
@@ -101,54 +86,22 @@ class GravityAIService
      */
     private function callGemini(string $model, string $prompt, string $contextText)
     {
-        $systemInstructions = "Eres GravityBot, el asistente de soporte técnico Inteligente de MChP. 
-        Personalidad: Técnica, amigable y eficiente.
-        INSTRUCCIONES:
-        1. Usa el CONTEXTO proporcionado para responder detalladamente.
-        2. Si NO está en el contexto, usa tu conocimiento general pero advierte que es una sugerencia general.
-        3. Responde siempre en Español.";
+        $fullPrompt = "Eres GravityBot, asistente técnico de MChP.\nCONTEXTO:\n{$contextText}\n\nPREGUNTA:\n{$prompt}";
 
-        $fullPrompt = "{$systemInstructions}\n\nCONTEXTO:\n{$contextText}\n\nPREGUNTA DEL USUARIO:\n{$prompt}";
-
-        return Http::retry(3, 200) // Reintenta 3 veces con 200ms entre cada intento
-            ->withHeaders(['x-goog-api-key' => $this->apiKey])
+        return Http::withHeaders(['x-goog-api-key' => $this->apiKey])
+            ->timeout(30)
             ->post("{$this->baseUrl}/{$model}:generateContent", [
-                'contents' => [['parts' => [['text' => $fullPrompt]]]]
+                'contents' => [
+                    ['parts' => [['text' => $fullPrompt]]]
+                ]
             ]);
     }
 
     /**
-     * Intenta detectar qué modelos están disponibles para esta API Key.
-     */
-    private function autoDetectModel(): ?string
-    {
-        $response = Http::withHeaders(['x-goog-api-key' => $this->apiKey])
-            ->get($this->baseUrl);
-
-        if ($response->successful()) {
-            $models = $response->json()['models'] ?? [];
-            foreach($models as $m) {
-                if (in_array('generateContent', $m['supportedGenerationMethods'] ?? [])) {
-                    return str_replace('models/', '', $m['name']);
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Respuesta de reserva si la IA no está disponible.
+     * Respuesta de reserva.
      */
     private function fallbackResponse(string $prompt)
     {
-        $context = $this->getKnowledgeContext($prompt);
-        if ($context->count() > 0) {
-            $resp = "IA no configurada. Sugerencias de manuales encontrados:\n\n";
-            foreach($context as $item) {
-                $resp .= "📍 **{$item->title}**: " . substr($item->content, 0, 150) . "...\n";
-            }
-            return $resp;
-        }
-        return "GravityBot está fuera de línea (API Key faltante). Por favor, contacta a TI.";
+        return "GravityBot fuera de línea (Configuración pendiente).";
     }
 }
