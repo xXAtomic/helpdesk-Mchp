@@ -211,7 +211,7 @@
             </div>
 
             <div class="pt-10 text-center border-t border-white/5">
-                <a href="{{ route('login') }}" class="login-link text-[0.65rem] font-black uppercase tracking-[0.4em] italic hover:scale-105 inline-block transition-transform flex items-center justify-center gap-4 group">
+                <a href="{{ route('login') }}" class="login-link text-[0.65rem] font-black uppercase tracking-[0.4em] italic hover:scale-105 inline-flex transition-transform items-center justify-center gap-4 group">
                     <i class="fas fa-arrow-left text-[0.5rem] group-hover:-translate-x-2 transition-transform"></i>
                     Regresar al Portal de Acceso
                 </a>
