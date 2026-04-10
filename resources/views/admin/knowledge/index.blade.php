@@ -100,10 +100,17 @@
                                 <div class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl shadow-inner text-white backdrop-blur-md">
                                     {{ $tip->icon ?? '💡' }}
                                 </div>
-                                <div onclick="event.stopPropagation()">
+                                <div class="flex gap-4 opacity-0 group-hover:opacity-100 transition-all" onclick="event.stopPropagation()">
                                     <a href="{{ route('admin.knowledge.edit', $tip->id) }}" class="text-white/20 hover:text-white transition-colors">
                                         <i class="fas fa-pen-nib text-xs"></i>
                                     </a>
+                                    <form action="{{ route('admin.knowledge.destroy', $tip->id) }}" method="POST" onsubmit="return confirm('¿Eyectar este Tip?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-white/20 hover:text-rose-500 transition-colors">
+                                            <i class="fas fa-trash-alt text-xs"></i>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                             <h4 class="text-indigo-400 font-black text-[0.65rem] uppercase tracking-widest mb-2 italic">Recomendación Técnica</h4>
