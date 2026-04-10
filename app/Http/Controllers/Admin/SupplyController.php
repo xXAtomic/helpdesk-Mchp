@@ -39,7 +39,8 @@ class SupplyController extends Controller
             'type' => 'required|string',
             'stock' => 'required|integer|min:0',
             'min_stock' => 'required|integer|min:0',
-            'location' => 'nullable|string'
+            'location' => 'nullable|string',
+            'unit_cost' => 'nullable|numeric|min:0'
         ]);
 
         DB::transaction(function() use ($validated) {
@@ -147,7 +148,8 @@ class SupplyController extends Controller
             'brand' => 'nullable|string|max:255',
             'type' => 'required|string',
             'min_stock' => 'required|integer|min:0',
-            'location' => 'nullable|string'
+            'location' => 'nullable|string',
+            'unit_cost' => 'nullable|numeric|min:0'
         ]);
 
         $supply->update($validated);
