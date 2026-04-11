@@ -481,6 +481,38 @@
             }
         }
 
+        function parseMarkdown(text) {
+            if (!text) return '';
+            let html = text;
+            
+            // Code Blocks
+            html = html.replace(/```[\s\S]*?\n([\s\S]*?)```/g, '<pre class="bg-slate-900 text-sky-300 p-4 rounded-xl text-xs overflow-x-auto my-3 font-mono"><code>$1</code></pre>');
+            
+            // Inline Code
+            html = html.replace(/`([^`]+)`/g, '<code class="bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded text-[0.75rem] font-black tracking-tight border border-indigo-100">$1</code>');
+            
+            // Bold
+            html = html.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-black text-slate-900">$1</strong>');
+            
+            // Italic
+            html = html.replace(/\*([^*]+)\*/g, '<em class="italic text-slate-600">$1</em>');
+            
+            // Headers
+            html = html.replace(/^### (.*$)/gim, '<h3 class="text-md font-black mt-4 mb-2 uppercase text-slate-800 tracking-tight">$1</h3>');
+            html = html.replace(/^## (.*$)/gim, '<h2 class="text-lg font-black mt-4 mb-2 uppercase text-slate-800 tracking-tight">$1</h2>');
+            html = html.replace(/^# (.*$)/gim, '<h1 class="text-xl font-black mt-4 mb-2 uppercase text-slate-900 tracking-tight">$1</h1>');
+            
+            // Lists
+            html = html.replace(/^\* (.*$)/gim, '<li class="ml-4 list-disc marker:text-indigo-500 mb-1">$1</li>');
+            html = html.replace(/^- (.*$)/gim, '<li class="ml-4 list-disc marker:text-indigo-500 mb-1">$1</li>');
+            
+            // Line Breaks (doble break para parrafos reales)
+            html = html.replace(/\n\n/gim, '<br><br>');
+            html = html.replace(/\n/gim, '<br>');
+            
+            return html;
+        }
+
         function appendMessage(type, text, id = null) {
             const container = document.getElementById('bot-messages');
             const div = document.createElement('div');
@@ -490,9 +522,11 @@
             const iconBg = type === 'user' ? 'bg-slate-200 text-slate-500' : 'bg-indigo-600 text-white';
             const bubbleBg = type === 'user' ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-white text-slate-700 rounded-tl-none border border-slate-100 shadow-sm';
 
+            const formattedText = type === 'bot' ? parseMarkdown(text) : text;
+
             div.innerHTML = `
                 <div class="w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center text-[0.7rem] font-black shrink-0">${type === 'user' ? '👤' : 'GB'}</div>
-                <div class="${bubbleBg} p-6 rounded-3xl text-sm leading-relaxed">${text}</div>
+                <div class="${bubbleBg} p-6 rounded-3xl text-sm leading-relaxed">${formattedText}</div>
             `;
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
