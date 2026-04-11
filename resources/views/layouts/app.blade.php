@@ -37,16 +37,14 @@
         /* SIDEBAR MINIMALISTA PRO (64px) */
         .sidebar { 
             width: 64px; background: var(--bg-sidebar); display: flex; flex-direction: column; 
-            align-items: center; padding: 0; border-right: 1px solid rgba(255,255,255,0.03); 
+            align-items: center; padding: 0; border-right: 1px solid rgba(245, 158, 11, 0.4); 
             transition: 0.3s; z-index: 50; 
         }
         
         .sidebar-brand {
+            width: 100%;
             padding: 1.5rem 0; display: flex; justify-content: center;
-            border-bottom: 2px solid rgba(245, 158, 11, 0.6); margin-bottom: 1.5rem;
-            width: 50%; margin-left: auto; margin-right: auto;
-            border-radius: 1px;
-            box-shadow: 0 4px 10px -2px rgba(245, 158, 11, 0.3);
+            border-bottom: 1px solid rgba(245, 158, 11, 0.4); margin-bottom: 1.5rem;
         }
 
         .nav-icon { 
