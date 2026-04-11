@@ -43,7 +43,10 @@
         
         .sidebar-brand {
             padding: 1.5rem 0; display: flex; justify-content: center;
-            border-bottom: 1px solid rgba(255,255,255,0.03); margin-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(245, 158, 11, 0.6); margin-bottom: 1.5rem;
+            width: 50%; margin-left: auto; margin-right: auto;
+            border-radius: 1px;
+            box-shadow: 0 4px 10px -2px rgba(245, 158, 11, 0.3);
         }
 
         .nav-icon { 
