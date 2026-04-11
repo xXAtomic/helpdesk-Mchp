@@ -47,8 +47,8 @@ class GravityAIService
         }
 
         try {
-            // Regresamos al modelo 1.5 debido a agotamiento de cuota de tier gratuito en 2.0
-            $model = 'gemini-1.5-flash'; 
+            // Empleamos el alias general de flash porque Google dio de baja 1.5
+            $model = 'gemini-flash-latest'; 
             $response = $this->callGemini($model, $prompt, $contextText);
 
             if ($response->successful()) {
